@@ -9,7 +9,10 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				method: "POST",
 				body: training,
 			}),
-			invalidatesTags: [{ type: "Training", id: "LIST" }],
+			invalidatesTags: [
+				{ type: "Training", id: "LIST" },
+				{ type: "Exercise", id: "LIST" },
+			],
 		}),
 		getTrainings: builder.query({
 			query: ({ search, tags, sorting, page, limit }) => {
@@ -87,6 +90,32 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				} else return [{ type: "Training", id: "LIST" }];
 			},
 		}),
+		getBoughtUserTrainings: builder.query({
+			query: (credentials) => ({
+				url: `/trainings/user/bought`,
+				method: "GET",
+				params: credentials,
+			}),
+			transformResponse: ({ trainings, total }) => {
+				const loadedTrainings = trainings.map((training) => ({
+					...training,
+					id: training._id,
+				}));
+				return { trainings: loadedTrainings, total };
+			},
+			providesTags: (result, err, arg) => {
+				if (result) {
+					return [
+						{ type: "Training", id: "LIST" },
+						...result.trainings.map((training) => ({
+							type: "Training",
+							id: training.id,
+						})),
+					];
+				} else return [{ type: "Training", id: "LIST" }];
+			},
+		}),
+
 		deleteTraining: builder.mutation({
 			query: ({ id }) => ({
 				url: `/trainings/${id}`,
@@ -95,6 +124,7 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 			invalidatesTags: (result, err, arg) => [
 				{ type: "Training", id: arg.id },
 				{ type: "Training", id: "LIST" },
+				{ type: "Exercise", id: "LIST" },
 			],
 		}),
 		trainingActions: builder.mutation({
@@ -117,6 +147,18 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				{ type: "Training", id: "LIST" },
 			],
 		}),
+		getTrainingsByOrder: builder.query({
+			query: ({ orderId }) => ({ url: `/trainings/orders/${orderId}` }),
+			transformResponse: ({ trainings, total, user }) => ({
+				trainings: trainings?.map((t) => ({ ...t, id: t._id })),
+				total,
+				user,
+			}),
+			providesTags: (result, err, arg) => [
+				{ type: "Training", id: arg.id },
+				{ type: "Training", id: "LIST" },
+			],
+		}),
 	}),
 });
 
@@ -127,4 +169,6 @@ export const {
 	useTrainingActionsMutation,
 	useGetSingleTrainingQuery,
 	useGetTrainingsQuery,
+	useGetBoughtUserTrainingsQuery,
+	useGetTrainingsByOrderQuery,
 } = trainingApiSlice;

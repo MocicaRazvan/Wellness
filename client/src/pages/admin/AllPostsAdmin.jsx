@@ -6,12 +6,14 @@ import {
 	CardContent,
 	CircularProgress,
 	Collapse,
+	Tooltip,
 	Typography,
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/reusable/Header";
 import {
 	useDeletePostMutation,
@@ -23,6 +25,7 @@ const Post = ({ post }) => {
 	const theme = useTheme();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [deletePost] = useDeletePostMutation();
+	const navigate = useNavigate();
 
 	return (
 		<Card
@@ -38,12 +41,15 @@ const Post = ({ post }) => {
 					gutterBottom>
 					{post?.tags.map((t) => `${t} `)}
 				</Typography>
-				<Typography
-					variant="h5"
-					component="div"
-					color={theme.palette.secondary[300]}>
-					{post?.title}
-				</Typography>
+				<Tooltip title="Click to see the post!" placement="bottom" arrow>
+					<Typography
+						variant="h5"
+						color={theme.palette.secondary[300]}
+						sx={{ cursor: "pointer", width: "fit-content" }}
+						onClick={() => navigate(`/posts/find/${post?.id}`)}>
+						{post?.title}
+					</Typography>
+				</Tooltip>
 				<Typography sx={{ mb: "1.5rem" }} color={theme.palette.secondary[400]}>
 					{post?.approved}
 				</Typography>
@@ -98,6 +104,7 @@ const AllPostsAdmin = () => {
 	const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
 	const { data, isLoading } = useGetPostsAdminQuery({ search });
+	console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
 
 	if (isLoading || !data)
 		return (

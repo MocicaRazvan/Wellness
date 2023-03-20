@@ -6,7 +6,10 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/reusable/Header";
 import CustomDataGrid from "../../dataGrid/CustomDataGrid";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useGetAllOrdersQuery } from "../../redux/orders/orderApi";
+import {
+	useChangeOrderStatusMutation,
+	useGetAllOrdersQuery,
+} from "../../redux/orders/orderApi";
 
 const Orders = () => {
 	const [page, setPage] = useState(0);
@@ -27,6 +30,16 @@ const Orders = () => {
 		},
 		{ skip: !user?.id },
 	);
+
+	const [changeOrderStatus] = useChangeOrderStatusMutation();
+
+	const handleOrderStatusChange = async (credentials) => {
+		try {
+			await changeOrderStatus(credentials).unwrap();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const columns = [
 		{
@@ -57,7 +70,7 @@ const Orders = () => {
 		{
 			field: "deliveryStatus",
 			headerName: "Delivery Status",
-			flex: 1,
+			flex: 0.5,
 			renderCell: ({ row: { deliveryStatus: dS } }) => (
 				<div>
 					{dS === "pending" ? (
@@ -75,27 +88,52 @@ const Orders = () => {
 		{
 			field: "actions",
 			headerName: "Actions",
-			wdith: 200,
-			renderCell: ({ row: { id } }) => (
+			flex: 1,
+			renderCell: ({ row: { id, deliveryStatus: dS } }) => (
 				<Box
-					sx={{
-						"& .btn": {
-							color: theme.palette.secondary[200],
-							bgcolor: theme.palette.background.alt,
-						},
-					}}>
+					display="flex"
+					alignItems="center"
+					gap={1}
+					// sx={{
+					// 	"& .btn": {
+					// 		color: theme.palette.secondary[200],
+					// 		bgcolor: theme.palette.background.alt,
+					// 	},
+					// }}
+				>
 					<Button
 						variant="outlined"
 						size="small"
 						disableElevation
-						className="btn"
+						// className="btn"
+						sx={{
+							color: theme.palette.secondary[200],
+							bgcolor: theme.palette.background.alt,
+						}}
 						onClick={() => void navigate(`/orders/${id}`)}>
 						View
 					</Button>
+					{dS !== "delivered" && (
+						<Button
+							variant="contained"
+							size="small"
+							disableElevation
+							color="success"
+							onClick={async () =>
+								await handleOrderStatusChange({
+									id,
+									deliveryStatus: "delivered",
+								})
+							}>
+							Confirm Receiving
+						</Button>
+					)}
 				</Box>
 			),
 		},
 	];
+
+	console.log({ search });
 
 	return (
 		<Box m="1.5rem 2.5rem">
@@ -131,8 +169,9 @@ const Dispatched = styled("div")(({ theme }) => ({
 }));
 
 const Delivered = styled("div")(({ theme }) => ({
-	color: " rgb(102, 108, 255)",
+	color: theme.palette.success.dark,
 	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	opacity: "0.9",
 	padding: " 3px 5px",
 	borderRadius: "3px",
 	fontSize: 14,

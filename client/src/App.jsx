@@ -40,6 +40,11 @@ import Geography from "./pages/admin/Geography";
 import Overview from "./pages/admin/Overview";
 import Daily from "./pages/admin/Daily";
 import Breakdown from "./pages/admin/Breakdown";
+import TermsAndConditions from "./pages/aboutUs/TermsAndConditions";
+import Faq from "./pages/customerCare/Faq";
+import BoughtTrainings from "./pages/trainings/BoughtTrainings";
+import SingleOrder from "./pages/orders/SingleOrder";
+import Calculator from "./pages/calculator/Calculator";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -60,6 +65,7 @@ function App() {
 								path="/resetPassword/:resetToken"
 								element={<ResetPassword />}
 							/>
+							<Route path="/calculator" element={<Calculator />} />
 							<Route path="/posts">
 								<Route index element={<AllPosts />} />
 								<Route path="find/:postId" element={<SinglePost />} />
@@ -86,10 +92,14 @@ function App() {
 								<Route path="/trainings">
 									<Route path="user" element={<UserTrainings />} />
 									<Route path="create" element={<CreateTraining />} />
+									<Route path="bought" element={<BoughtTrainings />} />
 								</Route>
 								<Route path="/cart" element={<Cart />} />
 								<Route path="/checkout-success" element={<CheckoutSuccess />} />
-								<Route path="/orders" element={<Orders />} />
+								<Route path="/orders">
+									<Route index element={<Orders />} />
+									<Route path=":orderId" element={<SingleOrder />} />
+								</Route>
 								<Route path="/user">
 									<Route path="profile" element={<UserProfile />} />
 									<Route path="update" element={<Register />} />
@@ -108,9 +118,18 @@ function App() {
 								<Route path="daily" element={<Daily />} />
 								<Route path="breakdown" element={<Breakdown />} />
 							</Route>
+							<Route path="/about-us">
+								<Route
+									path="terms-conditions"
+									element={<TermsAndConditions />}
+								/>
+							</Route>
+							<Route path="/customer-care">
+								<Route path="faq" element={<Faq />} />
+							</Route>
 							<Route path="*" element={<NotFound />} />
+							<Route path="test" element={<Test />} />
 						</Route>
-						<Route path="/test" element={<Test />} />
 					</Routes>
 				</ThemeProvider>
 			</BrowserRouter>

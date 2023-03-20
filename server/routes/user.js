@@ -4,6 +4,7 @@ const userController = require("../controllers/user");
 
 const router = express.Router();
 
+router.route("/single").get(verifyJwt, userController.getSingleUser);
 router.route("/countStats").get(verifyJwt, userController.getCountStats);
 router.route("/admin/totalMonth").get(verifyJwt, userController.getTotalMonth);
 router.route("/admin/all").get(verifyJwt, userController.getAllUsersAdmin);
@@ -18,5 +19,8 @@ router
 	.get(verifyJwt, userController.getAllCountsAdmin);
 router.route("/update").put(verifyJwt, userController.updateUser);
 router.route("/:userId").get(verifyJwt, userController.getUserById);
+router
+	.route("/admin/trainer/:userId")
+	.put(verifyJwt, userController.makeUserTrainer);
 
 module.exports = router;

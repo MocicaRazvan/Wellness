@@ -1,10 +1,9 @@
-import { Box } from "@mui/material";
+import { Box, Button, styled, useTheme } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/reusable/Header";
 import CustomDataGrid from "../../dataGrid/CustomDataGrid";
-import {
-	useGetAllOrdersQuery,
-} from "../../redux/orders/orderApi";
+import { useGetAllOrdersQuery } from "../../redux/orders/orderApi";
 
 const AllOrders = () => {
 	const [page, setPage] = useState(0);
@@ -12,6 +11,8 @@ const AllOrders = () => {
 	const [sort, setSort] = useState({});
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
+	const { palette } = useTheme();
+	const navigate = useNavigate();
 	const { data, isLoading } = useGetAllOrdersQuery({
 		page,
 		pageSize,
@@ -44,6 +45,19 @@ const AllOrders = () => {
 			field: "deliveryStatus",
 			headerName: "DeliveryStatus",
 			flex: 0.5,
+			renderCell: ({ row: { deliveryStatus: dS } }) => (
+				<div>
+					{dS === "pending" ? (
+						<Pending>Pending</Pending>
+					) : dS === "dispatched" ? (
+						<Dispatched>Dispatched</Dispatched>
+					) : dS === "delivered" ? (
+						<Delivered>Delivered</Delivered>
+					) : (
+						<>error</>
+					)}
+				</div>
+			),
 		},
 		{
 			field: "paymentStatus",
@@ -53,7 +67,8 @@ const AllOrders = () => {
 		{
 			field: "total",
 			headerName: "Total",
-			flex: 1,
+			flex: 0.5,
+			renderCell: ({ row: { total } }) => `$${total}`,
 		},
 		{
 			field: "phone",
@@ -64,6 +79,27 @@ const AllOrders = () => {
 					shipping: { phone },
 				},
 			}) => phone,
+		},
+		{
+			field: "actions",
+			headerName: "Actions",
+			flex: 1,
+			renderCell: ({ row: { id, deliveryStatus: dS } }) => (
+				<Box display="flex" alignItems="center" gap={1}>
+					<Button
+						variant="outlined"
+						size="small"
+						disableElevation
+						// className="btn"
+						sx={{
+							color: palette.secondary[200],
+							bgcolor: palette.background.alt,
+						}}
+						onClick={() => void navigate(`/orders/${id}`)}>
+						View
+					</Button>
+				</Box>
+			),
 		},
 	];
 
@@ -85,5 +121,29 @@ const AllOrders = () => {
 		</Box>
 	);
 };
+
+const Pending = styled("div")(({ theme }) => ({
+	color: " rgb(253, 181, 40)",
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
+const Dispatched = styled("div")(({ theme }) => ({
+	color: " rgb(38, 198, 249)",
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
+
+const Delivered = styled("div")(({ theme }) => ({
+	color: theme.palette.success.dark,
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	opacity: "0.9",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
 
 export default AllOrders;

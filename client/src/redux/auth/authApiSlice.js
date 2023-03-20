@@ -1,5 +1,5 @@
 import { apiSlice } from "../api/apiSlice";
-import { setCredentials } from "./authSlice";
+import { logOut, setCredentials } from "./authSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
@@ -14,6 +14,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
 					const { data } = await queryFulfilled;
 					dispatch(setCredentials(data));
 				} catch (error) {
+					dispatch(logOut());
 					console.log(error);
 				}
 			},

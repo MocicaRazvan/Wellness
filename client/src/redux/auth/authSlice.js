@@ -1,5 +1,4 @@
 import { createDraftSafeSelector, createSlice } from "@reduxjs/toolkit";
-import jwtDecode from "jwt-decode";
 
 const authSlice = createSlice({
 	name: "auth",
@@ -7,6 +6,7 @@ const authSlice = createSlice({
 		token: localStorage["auth"] || null,
 		user: localStorage["user"] ? JSON.parse(localStorage["user"]) : null,
 		mode: "dark",
+	
 	},
 	reducers: {
 		setCredentials: (state, action) => {
@@ -23,6 +23,13 @@ const authSlice = createSlice({
 			// 	state.user = decodedToken;
 			// }
 		},
+		updateUser: (state, action) => {
+			if (action?.payload) {
+				const { user } = action.payload;
+				state.user = { ...user, id: user._id };
+				localStorage["user"] = JSON.stringify(state.user);
+			}
+		},
 		logOut: (state) => {
 			state.token = null;
 			state.user = null;
@@ -32,10 +39,12 @@ const authSlice = createSlice({
 		setMode: (state) => {
 			state.mode = state.mode === "dark" ? "light" : "dark";
 		},
+	
 	},
 });
 
-export const { setCredentials, logOut, setMode } = authSlice.actions;
+export const { setCredentials, logOut, setMode, updateUser } =
+	authSlice.actions;
 
 export default authSlice.reducer;
 

@@ -1,4 +1,4 @@
-import { Button, useTheme } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -30,7 +30,7 @@ const Trainings = () => {
 		{ skip: !user?.id },
 	);
 	const [deleteTraining] = useDeleteTrainingMutation();
-	const handleDeleteExercise = async (id) => {
+	const handleDeleteTraining = async (id) => {
 		try {
 			await deleteTraining({ id }).unwrap();
 		} catch (error) {
@@ -77,13 +77,21 @@ const Trainings = () => {
 								View
 							</Button>
 						</Link>
-						<Button
-							className="cellBtn"
-							variant="contained"
-							size="small"
-							onClick={() => handleDeleteExercise(params.row.id)}>
-							Delete
-						</Button>
+						<Tooltip
+							title={params.row?.occurrences > 0 ? "Bought" : ""}
+							placement="right"
+							arrow>
+							<Box>
+								<Button
+									className="cellBtn"
+									variant="contained"
+									size="small"
+									disabled={params.row?.occurrences > 0}
+									onClick={() => handleDeleteTraining(params.row.id)}>
+									Delete
+								</Button>
+							</Box>
+						</Tooltip>
 					</Box>
 				);
 			},

@@ -13,7 +13,10 @@ import {
 import { Formik } from "formik";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
+import Loading from "../../components/reusable/Loading";
 import TextEditor from "../../components/reusable/TextEditor";
 import {
 	useCreateExerciseMutation,
@@ -29,12 +32,13 @@ const exerciseSchema = yup.object().shape({
 });
 
 const Form = ({ exercise }) => {
-	const [videos, setVideos] = useState([]);
 	const [body, setBody] = useState(exercise?.body || "");
 	const [message, setMessage] = useState("");
+	const [loading, setLoading] = useState({ msg: "Creating the exercise...", show: false });
 
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
+	const navigate = useNavigate();
 
 	const [createExercise] = useCreateExerciseMutation();
 	const [updateExercise] = useUpdateExerciseMutation();
@@ -67,18 +71,21 @@ const Form = ({ exercise }) => {
 		} else {
 			if (!exercise) {
 				try {
+					setLoading((prev) => ({ ...prev, show: true }));
 					const res = await createExercise({
 						body,
 						videos: values.clips,
 						title: values.title,
 						muscleGroups: values.muscleGroups,
 					});
+					setLoading((prev) => ({ ...prev, show: false }));
 					if (res.error) {
 						setMessage(res.error.data.message);
 					} else {
 						setMessage("");
 						setBody("");
 						onSubmitProps.resetForm();
+						navigate("/exercises/user");
 					}
 				} catch (error) {
 					console.log(error);
@@ -86,6 +93,7 @@ const Form = ({ exercise }) => {
 				}
 			} else {
 				try {
+					setLoading((prev) => ({ ...prev, show: true }));
 					const res = await updateExercise({
 						id: exercise?.id,
 						body,
@@ -93,12 +101,14 @@ const Form = ({ exercise }) => {
 						title: values.title,
 						muscleGroups: values.muscleGroups,
 					});
+					setLoading((prev) => ({ ...prev, show: false }));
 					if (res.error) {
 						setMessage(res.error.data.message);
 					} else {
 						setMessage("");
 						setBody("");
 						onSubmitProps.resetForm();
+						navigate("/exercises/user");
 					}
 				} catch (error) {
 					console.log(error);
@@ -109,6 +119,7 @@ const Form = ({ exercise }) => {
 	};
 	return (
 		<Box>
+			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
 				initialValues={initialValues}
@@ -189,12 +200,12 @@ const Form = ({ exercise }) => {
 										),
 									)
 										.then((urls) => {
-											setVideos(urls);
+											// setVideos(urls);
+											setFieldValue("clips", urls);
 										})
 										.catch((error) => {
 											console.error(error);
 										});
-									setFieldValue("clips", videos);
 								}}>
 								{({ getRootProps, getInputProps }) => (
 									<Box
@@ -217,13 +228,18 @@ const Form = ({ exercise }) => {
 												color={theme.palette.secondary[200]}
 												textAlign="center"
 												fontWeight="bold">
-												{values.clips.length} videos selected
+												{values.clips.length}
+												{values.clips.length === 1
+													? " video "
+													: " videos "}{" "}
+												selected
 											</Typography>
 										)}
 									</Box>
 								)}
 							</Dropzone>
 						</Box>
+
 						<Button
 							fullWidth
 							type="submit"

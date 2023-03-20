@@ -16,8 +16,8 @@ router
 router
 	.route("/admin/:orderId")
 	.get(ordersController.getSingleOrderAdmin)
-	.put(ordersController.changeOrderStatus)
 	.delete(ordersController.deleteOrder);
+router.route("/bought/:orderId").put(ordersController.changeOrderStatus);
 router
 	.route("/admin/month/:month")
 	.get(verifyJwt, ordersController.getOrdersByMonth);

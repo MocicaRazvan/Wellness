@@ -9,6 +9,7 @@ import trainingsReducer from "./trainings/trainingsSlice";
 import cartReducer from "./cart/cartSlice";
 import socketReducer from "./socket/socketSlice";
 import notificationsReducer from "./notifications/notificationsSlice";
+import messagesReducer from "./messages/messagesSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
 		cart: cartReducer,
 		socket: socketReducer,
 		notifications: notificationsReducer,
+		messages: messagesReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

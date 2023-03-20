@@ -5,8 +5,11 @@ const router = express.Router();
 
 router.route("/").get(trainingsController.getAllTrainings);
 router.route("/create").post(verifyJwt, trainingsController.createTraining);
-router.route("/user/:userId").get(trainingsController.getTrainingsByUser);
+router
+	.route("/user/bought")
+	.get(verifyJwt, trainingsController.getBoughtUserTrainings);
 router.route("/user").get(verifyJwt, trainingsController.getAllUserTrainings);
+router.route("/user/:userId").get(trainingsController.getTrainingsByUser);
 router
 	.route("/:trainingId")
 	.put(verifyJwt, trainingsController.updateTraining)
@@ -18,5 +21,6 @@ router
 router
 	.route("/action/dislikes/:trainingId")
 	.put(verifyJwt, trainingsController.dislikeTraining);
+router.route("/orders/:orderId").get(trainingsController.getTrainingsByOrder);
 
 module.exports = router;

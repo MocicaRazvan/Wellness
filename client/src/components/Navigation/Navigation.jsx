@@ -9,7 +9,11 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { LightModeOutlined, DarkModeOutlined } from "@mui/icons-material";
+import {
+	LightModeOutlined,
+	DarkModeOutlined,
+	Calculate,
+} from "@mui/icons-material";
 import {
 	Accordion,
 	AccordionDetails,
@@ -38,6 +42,7 @@ import PopupWrapper from "../Popup/PopupWrapper";
 import pathnames from "../../utils/consts/searchBarRoutes";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { useEffect } from "react";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 
 const drawerWidth = 240;
 
@@ -135,9 +140,13 @@ const Navigation = () => {
 		if (!user) {
 			navigate("/login");
 		} else if (user?.role !== "admin") {
+			dispatch(setNotReload(true));
+
 			await createConv({ id: user?.id });
 			navigate("/messenger");
 		} else if (user?.role === "admin") {
+			dispatch(setNotReload(true));
+
 			navigate("/messenger");
 		}
 	};
@@ -241,6 +250,11 @@ const Navigation = () => {
 								<ListItem disablePadding>
 									<ListItemButton onClick={handleViewTrainings}>
 										<ListItemText primary={"View Your Trainings"} />
+									</ListItemButton>
+								</ListItem>
+								<ListItem disablePadding>
+									<ListItemButton onClick={() => navigate(`/trainings/bought`)}>
+										<ListItemText primary={"View Bought Trainings"} />
 									</ListItemButton>
 								</ListItem>
 								<ListItem disablePadding>
@@ -396,6 +410,29 @@ const Navigation = () => {
 					<MenuItem onClick={handleMenuClose}>
 						<Typography
 							onClick={() => {
+								navigate(`/trainings/bought`);
+								setActive("bought");
+							}}
+							sx={{
+								backgroundColor:
+									active === "bought"
+										? theme.palette.secondary[300]
+										: "transparent",
+								color:
+									active === "bought"
+										? theme.palette.primary[600]
+										: theme.palette.secondary[200],
+								borderRadius: 5,
+								cursor: "pointer",
+								p: 0.3,
+							}}
+							variant="h6">
+							Bought Trainings
+						</Typography>
+					</MenuItem>
+					<MenuItem onClick={handleMenuClose}>
+						<Typography
+							onClick={() => {
 								navigate("/orders");
 								setActive("orders");
 							}}
@@ -459,6 +496,11 @@ const Navigation = () => {
 			</MenuItem>
 			<MenuItem onClick={handleProfileMenuOpen}>
 				<PopupWrapper />
+			</MenuItem>
+			<MenuItem onClick={handleProfileMenuOpen}>
+				<IconButton onClick={() => navigate("/calculator")}>
+					<Calculate sx={{ fontSize: "25px" }} />
+				</IconButton>
 			</MenuItem>
 			<MenuItem onClick={handleProfileMenuOpen}>
 				<Button
@@ -574,6 +616,27 @@ const Navigation = () => {
 							</Typography>
 							<Typography
 								onClick={() => {
+									navigate(`/trainings/bought`);
+									setActive("bought");
+								}}
+								sx={{
+									backgroundColor:
+										active === "bought"
+											? theme.palette.secondary[300]
+											: "transparent",
+									color:
+										active === "bought"
+											? theme.palette.primary[600]
+											: theme.palette.secondary[200],
+									borderRadius: 5,
+									cursor: "pointer",
+									p: 0.3,
+								}}
+								variant="h6">
+								Bought Trainings
+							</Typography>
+							<Typography
+								onClick={() => {
 									navigate("/orders");
 									setActive("orders");
 								}}
@@ -636,6 +699,9 @@ const Navigation = () => {
 									icon={<ShoppingCartIcon />}
 									onClick={() => void navigate("/cart")}
 								/>
+								<IconButton onClick={() => navigate("/calculator")}>
+									<Calculate sx={{ fontSize: "25px" }} />
+								</IconButton>
 
 								<PopupWrapper />
 								<IconButton

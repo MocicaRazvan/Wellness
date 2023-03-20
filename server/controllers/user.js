@@ -4,6 +4,7 @@ const Training = require("../models/Training");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
 const cloudinary = require("../utils/cloudinary");
+const { findByIdAndUpdate } = require("../models/Post");
 //get /user/countStats
 exports.getCountStats = async (req, res) => {
 	const userId = req.user._id;
@@ -52,7 +53,9 @@ exports.updateUser = async (req, res) => {
 	const isMatch = await user.mathcPasswords(password);
 
 	if (!isMatch || rest.email !== user.email) {
-		return res.status(401).json({ message: "Credentials are not valid" });
+		return res
+			.status(401)
+			.json({ message: "Credentials are not valid", update: true });
 	}
 
 	if (image) {
@@ -195,8 +198,11 @@ exports.getAdminRelativeStats = async (req, res) => {
 		},
 		{ $match: { month: prevMonth } },
 	]);
+	console.log({ users1, users2 });
 	const relativeUsers =
-		users1.length > 0 ? (users2.length - users1.length) / users1.length : 1;
+		users1.length > 0
+			? (users2.length - users1.length) / users1.length
+			: users2.length;
 	const posts2 = await Posts.aggregate([
 		{
 			$addFields: {
@@ -214,7 +220,9 @@ exports.getAdminRelativeStats = async (req, res) => {
 		{ $match: { month: prevMonth } },
 	]);
 	const relativePosts =
-		posts1.length > 0 ? (posts2.length - posts1.length) / posts1.length : 1;
+		posts1.length > 0
+			? (posts2.length - posts1.length) / posts1.length
+			: posts2.length;
 
 	const trainings2 = await Training.aggregate([
 		{
@@ -236,7 +244,7 @@ exports.getAdminRelativeStats = async (req, res) => {
 	const relativeTrainings =
 		trainings1.length > 0
 			? (trainings2.length - trainings1.length) / trainings1.length
-			: 1;
+			: trainings2.length;
 
 	const exercises2 = await Exercises.aggregate([
 		{
@@ -257,7 +265,7 @@ exports.getAdminRelativeStats = async (req, res) => {
 	const relativeExercises =
 		exercises1.length > 0
 			? (exercises2.length - exercises1.length) / exercises1.length
-			: 1;
+			: exercises2.length;
 	res.status(200).json({
 		message: "Relative Stats retrived",
 		relativeUsers,
@@ -277,4 +285,27 @@ exports.getAllCountsAdmin = async (req, res) => {
 		message: "Count stats returned succes",
 		stats: { posts, exercises, trainings, users },
 	});
+};
+
+//get: /users/single
+
+exports.getSingleUser = async (req, res) => {
+	const user = await User.findById(req.user._id).lean();
+	console.log(user);
+	return res.status(200).json({ user, message: "User retrived" });
+};
+
+//put: /users/admin/trainer/:userId
+exports.makeUserTrainer = async (req, res) => {
+	if (req.user.role !== "admin") {
+		return req.status(401).json({ message: "You are not authorized" });
+	}
+
+	await User.findByIdAndUpdate(req.params.userId, {
+		role: "trainer",
+	}).lean();
+
+	return res
+		.status(200)
+		.json({ message: `User with id ${req.params.userId} was made trainer` });
 };

@@ -10,6 +10,7 @@ import PaidIcon from "@mui/icons-material/Paid";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import HeroCarousel from "../../components/Home/HeroCarousel";
 import UserDialog from "../../components/Home/UserDialog";
+import { useEffect } from "react";
 
 const iconSize = 60;
 

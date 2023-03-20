@@ -57,6 +57,7 @@ const AllPosts = () => {
 	return (
 		<Box p={2}>
 			<Typography
+				className="text-gradient"
 				variant="h2"
 				color={theme.palette.secondary[200]}
 				fontWeight="bold"

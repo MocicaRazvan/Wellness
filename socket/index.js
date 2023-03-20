@@ -7,13 +7,13 @@ const io = require("socket.io")(8900, {
 let users = [];
 
 const addUser = (userId, socketId, mounted) =>
-	!users.some((user) => user.userId === userId) &&
+	!users.some((user) => user?.userId === userId) &&
 	users.push({ userId, socketId, mounted });
 
 const removeUser = (socketId) =>
-	(users = users.filter((user) => user.socketId !== socketId));
+	(users = users.filter((user) => user?.socketId !== socketId));
 
-const getUser = (userId) => users.find((user) => user.userId === userId);
+const getUser = (userId) => users?.find((user) => user?.userId === userId);
 
 io.on("connection", (socket) => {
 	//when connect
@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
 		const user = getUser(receiverId);
 		console.log(receiverId);
 		if (!user?.mounted) {
-			io.to(user.socketId).emit("getNotification", {
+			io.to(user?.socketId).emit("getNotification", {
 				type,
 				sender,
 				ref,
@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
 	//when diconnect
 	socket.on("disconnect", () => {
 		console.log("a user disconnected");
-		removeUser(socket.id);
+		removeUser(socket?.id);
 		io.emit("getUsers", users);
 	});
 });

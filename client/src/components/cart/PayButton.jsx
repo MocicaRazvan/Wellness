@@ -12,7 +12,6 @@ const PayButton = ({ cartItems }) => {
 	const handleCheckout = async () => {
 		try {
 			const res = await checkout({ cartItems, userId });
-			console.log(res);
 			if (res?.data?.url) {
 				console.log(res?.data?.url);
 				window.location.href = res.data.url;

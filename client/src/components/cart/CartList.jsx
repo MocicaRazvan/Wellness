@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeFormCart } from "../../redux/cart/cartSlice";
 
-const CartList = ({ cartItems }) => {
+const CartList = ({ cartItems, type = "cart" }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const theme = useTheme();
@@ -28,17 +28,19 @@ const CartList = ({ cartItems }) => {
 				</Typography>
 			</CartDetails>
 			<div>
-				<RemoveCart
-					onClick={() => void dispatch(removeFormCart({ id: item.id }))}>
-					<IconButton>
-						<RemoveIcon />
-					</IconButton>
-				</RemoveCart>
+				{type === "cart" && (
+					<RemoveCart
+						onClick={() => void dispatch(removeFormCart({ id: item.id }))}>
+						<IconButton>
+							<RemoveIcon />
+						</IconButton>
+					</RemoveCart>
+				)}
 			</div>
 			<CartControl>
 				<Button
 					color="secondary"
-					onClick={() => navigate(`/trainings/find/${item.id}`)}>
+					onClick={() => navigate(`/trainings/find/${item?.id}`)}>
 					View More
 				</Button>
 			</CartControl>

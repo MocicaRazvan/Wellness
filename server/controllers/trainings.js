@@ -1,3 +1,5 @@
+const Exercises = require("../models/Exercise");
+const Order = require("../models/Order");
 const Trainings = require("../models/Training");
 const cloudinary = require("../utils/cloudinary");
 
@@ -27,7 +29,11 @@ exports.createTraining = async (req, res) => {
 				});
 
 				const savedTraining = await training.save();
-				//console.log(savedTraining);
+
+				await Exercises.updateMany(
+					{ _id: { $in: exercises } },
+					{ $inc: { occurrences: 1 } },
+				);
 
 				return res.status(200).json({
 					message: "Training Created Successfully",
@@ -89,9 +95,6 @@ exports.getAllUserTrainings = async (req, res) => {
 				{
 					title: new RegExp(search, "i"),
 				},
-				// {
-				// 	muscleGroups: { $in: new RegExp(search, "i") },
-				// },
 			],
 		})
 			.sort(sortFormatted)
@@ -200,7 +203,7 @@ exports.getTrainingsByUser = async (req, res) => {
 	const trainings = await query.skip(skip).limit(pageSize);
 
 	return res.status(200).json({
-		message: "Post delivered successfully",
+		message: "Trainings delivered successfully",
 		trainings,
 		count: trainings.length,
 		page,
@@ -212,6 +215,7 @@ exports.getTrainingsByUser = async (req, res) => {
 exports.deleteTraining = async (req, res) => {
 	const { trainingId } = req.params;
 	const training = await Trainings.findById(trainingId);
+	const exercises = training?.exercises;
 	if (!training)
 		return res
 			.status(404)
@@ -228,6 +232,12 @@ exports.deleteTraining = async (req, res) => {
 			const deletedTraining = await Trainings.findByIdAndDelete(
 				trainingId,
 			).lean();
+
+			await Exercises.updateMany(
+				{ _id: { $in: exercises } },
+				{ $inc: { occurrences: -1 } },
+			);
+
 			return res.status(200).json({
 				message: `Training with ${trainingId} deleted successfully`,
 				deletedTraining,
@@ -237,6 +247,10 @@ exports.deleteTraining = async (req, res) => {
 		const deletedTraining = await Trainings.findByIdAndDelete(
 			trainingId,
 		).lean();
+		await Exercises.updateMany(
+			{ _id: { $in: exercises } },
+			{ $inc: { occurrences: -1 } },
+		);
 		return res.status(200).json({
 			message: `Training with ${trainingId} deleted successfully`,
 			deletedTraining,
@@ -345,4 +359,74 @@ exports.getSingleTraining = async (req, res) => {
 	res
 		.status(200)
 		.json({ message: "Training delivered successfully", training });
+};
+
+//get: /trainings/user/bought
+exports.getBoughtUserTrainings = async (req, res) => {
+	const { subscriptions } = req.user;
+
+	// const orders = await Order.find({ user: userId });
+	// // .populate("trainings")
+	// // .select("trainings -_id")
+	// // .lean();
+	// // console.log(orders.map(({ trainings }) => trainings).flat(1));
+	// // console.log(orders);
+	// console.log(orders[0].total);
+	// const trainings = Trainings.find({ _id: { $in: subscriptions } });
+	const {
+		page = 1,
+		pageSize = 20,
+		sort = null,
+		search = "",
+		userId = null,
+	} = req.query;
+	const generateSort = () => {
+		const sortParsed = JSON.parse(sort);
+		const sortFormatted = {
+			[sortParsed.field]: (sortParsed.sort = "asc" ? 1 : -1),
+		};
+		return sortFormatted;
+	};
+	const sortFormatted = Boolean(sort) ? generateSort() : {};
+
+	const trainings = await Trainings.find({
+		$or: [
+			{
+				title: new RegExp(search, "i"),
+			},
+		],
+		_id: { $in: subscriptions },
+	})
+		.sort(sortFormatted)
+		.skip(page * pageSize)
+		.limit(pageSize);
+	const total = await Trainings.countDocuments({
+		title: { $regex: search, $options: "i" },
+		_id: { $in: subscriptions },
+	});
+	return res.status(200).json({
+		total,
+		trainings,
+	});
+};
+
+// get:/trainings/orders/:orderId
+exports.getTrainingsByOrder = async (req, res) => {
+	const { orderId } = req.params;
+	if (!orderId) {
+		return res.status(500).json({ message: "No order id was found" });
+	}
+
+	const { trainings, total, user } = await Order.findById(orderId)
+		.populate("trainings")
+		.select("trainings total user -_id");
+
+	console.log(trainings, total, user);
+
+	return res.status(200).json({
+		trainings,
+		total,
+		user,
+		message: `Trainings for order ${orderId} were delivered`,
+	});
 };

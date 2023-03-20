@@ -36,6 +36,7 @@ app.use("/questionsAnswers", require("./routes/questionsAnswers"));
 app.use("/conversations", require("./routes/conversation"));
 app.use("/messages", require("./routes/message"));
 app.use("/notifications", require("./routes/notification"));
+app.use("/nft", require("./routes/nft"));
 
 app.use("/stripe", require("./routes/stripe"));
 

@@ -10,6 +10,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import { useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDeleteNotificationsByReceiverMutation } from "../../redux/notifications/notificationsApi";
+import { useDispatch } from "react-redux";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 
 export default function PopUp({ notifications, userId, setNotifications }) {
 	const [open, setOpen] = useState(false);
@@ -17,6 +19,7 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 	const theme = useTheme();
 	const navigate = useNavigate();
 	const [deleteByReceiver] = useDeleteNotificationsByReceiverMutation();
+	const dispatch = useDispatch();
 	//when open the notification the count will be 0
 
 	const handleClick = (e) => {
@@ -35,7 +38,6 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 	};
 
 	if (!notifications) return <></>;
-	console.log(notifications);
 
 	const content = notifications?.map(({ createdAt, sender, type, ref }) => (
 		<Typography
@@ -49,7 +51,10 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 				},
 			}}
 			textAlign="center"
-			onClick={() => void navigate(`/messenger?conv=${ref}`)}>
+			onClick={() => {
+				dispatch(setNotReload(true));
+				navigate(`/messenger?conv=${ref}`);
+			}}>
 			{`${sender?.username} ${type}`}
 		</Typography>
 	));

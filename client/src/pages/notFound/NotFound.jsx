@@ -8,10 +8,11 @@ const NotFound = () => {
 	const navigate = useNavigate();
 	return (
 		<Box
-			height="100vh"
+			minHeight="100vh"
 			display="flex"
 			justifyContent="center"
 			alignItems="center"
+			mt={5}
 			m={2}>
 			<Box
 				display="flex"

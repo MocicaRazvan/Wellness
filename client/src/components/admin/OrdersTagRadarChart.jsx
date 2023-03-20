@@ -12,6 +12,7 @@ import Header from "../reusable/Header";
 
 const OrdersTagRadarChart = () => {
 	const { data, isLoading } = useGetTagStatsQuery();
+	console.log(data);
 	const theme = useTheme();
 	if (isLoading || !data)
 		return (

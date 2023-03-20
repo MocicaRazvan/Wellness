@@ -17,6 +17,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import FlexBetween from "./FlexBetween";
 import SelectTags from "./SelectTags";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
 	const theme = useTheme();
@@ -59,7 +60,7 @@ const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
 							</Typography>
 							<FlexBetween>
 								<FormControlLabel
-									label="asc"
+									label={<ArrowUpwardIcon />}
 									control={
 										<Checkbox
 											checked={sorting[el] === "asc" ? true : false}
@@ -70,7 +71,7 @@ const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
 									}
 								/>
 								<FormControlLabel
-									label="desc"
+									label={<ArrowDownwardIcon />}
 									control={
 										<Checkbox
 											checked={sorting[el] === "desc" ? true : false}

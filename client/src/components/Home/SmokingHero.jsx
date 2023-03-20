@@ -3,19 +3,27 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { useTheme } from "@mui/material";
 import blackHug from "../../images/hug/blackHug.svg";
 import whiteHug from "../../images/hug/whiteHug.svg";
 import { useEffect, useRef } from "react";
+import {
+	selectNotReload,
+	setNotReload,
+} from "../../redux/messages/messagesSlice";
 const SmokingHero = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const [createConv] = useCreateSupportConversationMutation();
 	const { palette } = useTheme();
 	const heroRef = useRef();
+	const dispatch = useDispatch();
+	const notReload = useSelector(selectNotReload);
+
+	console.log({ notReload });
 	useEffect(() => {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((e) => {
@@ -31,10 +39,14 @@ const SmokingHero = () => {
 		if (!user) {
 			navigate("/login");
 		} else if (user?.role !== "admin") {
+			dispatch(setNotReload(true));
+			// dispatch(setShow(true));
 			await createConv({ id: user?.id });
-			navigate("/messenger");
+			navigate("/messenger", { state: true });
 		} else if (user?.role === "admin") {
-			navigate("/messenger");
+			dispatch(setNotReload(true));
+			// dispatch(setShow(true));
+			navigate("/messenger", { state: true });
 		}
 	};
 	return (

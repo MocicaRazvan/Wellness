@@ -1,9 +1,19 @@
-import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Typography,
+	useTheme,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
 import Carousel from "react-material-ui-carousel";
 import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { addToCart } from "../../redux/cart/cartSlice";
 
 const SingleTraining = () => {
 	const { trainingId } = useParams();
@@ -11,6 +21,13 @@ const SingleTraining = () => {
 	const { data: training, isLoading } = useGetSingleTrainingQuery({
 		id: trainingId,
 	});
+	const dispatch = useDispatch();
+	const user = useSelector(selectCurrentUser);
+	const subscriptions = user?.subscriptions;
+	const id = user?.id;
+	const isAllowed =
+		subscriptions?.includes(trainingId) || training?.user === id;
+	console.log({ subscriptions });
 
 	if (isLoading || !training)
 		return (
@@ -21,8 +38,11 @@ const SingleTraining = () => {
 			/>
 		);
 
+	const handleAddTocard = () => {
+		dispatch(addToCart(training));
+	};
+
 	const images = training?.images?.map(({ url }) => url);
-	console.log(training);
 
 	return (
 		<Box m="1.5rem 1rem" position="relative">
@@ -35,8 +55,19 @@ const SingleTraining = () => {
 					color: theme.palette.secondary[200],
 				}}
 				variant="h6"
-				fontWeight="600">
-				Liked by {training?.likes?.length} people
+				fontWeight="600"
+				fontSize={18}>
+				Liked by{" "}
+				<Typography
+					component="span"
+					variant="h6"
+					fontWeight="900"
+					color={theme.palette.secondary[400]}
+					fontSize={18}>
+					{training?.likes?.length}/
+					{training?.likes?.length + training?.dislikes?.length}
+				</Typography>{" "}
+				people
 			</Typography>
 			<Typography
 				variant="h2"
@@ -65,50 +96,68 @@ const SingleTraining = () => {
 					dangerouslySetInnerHTML={{ __html: training?.description }}
 				/>
 			</Box>
-			<Typography
-				variant="h2"
-				color={theme.palette.secondary[400]}
-				fontWeight="600"
-				textAlign="center"
-				gutterBottom>
-				Exercises in the training
-			</Typography>
-			<Box p={2}>
-				<Carousel
-					animation="fade"
-					navButtonsAlwaysVisible
-					autoPlay={false}
-					interval={6000}>
-					{training?.exercises?.map((exercise) => {
-						const urls = exercise?.videos?.map(({ url }) => url);
-						return (
-							<Box>
-								<Typography
-									variant="h2"
-									color={theme.palette.secondary[200]}
-									fontWeight="600"
-									textAlign="center"
-									gutterBottom>
-									{exercise?.title}
-								</Typography>
-								<Box mb={4}>
-									<CustomVideoCarousel videos={urls} height={500} />
-								</Box>
-								<Box p="1rem" display="flex" justifyContent="center">
-									<Typography
-										variant="h4"
-										lineHeight={1.5}
-										color={theme.palette.secondary[100]}
-										width={{ xs: "100%", md: "50%" }}
-										textAlign="center"
-										dangerouslySetInnerHTML={{ __html: exercise?.body }}
-									/>
-								</Box>
-							</Box>
-						);
-					})}
-				</Carousel>
-			</Box>
+			{isAllowed ? (
+				<>
+					<Typography
+						variant="h2"
+						color={theme.palette.secondary[400]}
+						fontWeight="600"
+						textAlign="center"
+						gutterBottom>
+						Exercises in the training
+					</Typography>
+					<Box p={2}>
+						<Carousel
+							animation="fade"
+							navButtonsAlwaysVisible
+							autoPlay={false}
+							index={1}
+							interval={6000}>
+							{training?.exercises?.map((exercise) => {
+								const urls = exercise?.videos?.map(({ url }) => url);
+								return (
+									<Box>
+										<Typography
+											variant="h2"
+											color={theme.palette.secondary[200]}
+											fontWeight="600"
+											textAlign="center"
+											gutterBottom>
+											{exercise?.title}
+										</Typography>
+										<Box mb={4}>
+											<CustomVideoCarousel videos={urls} height={500} />
+										</Box>
+										<Box p="1rem" display="flex" justifyContent="center">
+											<Typography
+												variant="h4"
+												lineHeight={1.5}
+												component="div"
+												sx={{ minHeight: "fit-content" }}
+												color={theme.palette.secondary[100]}
+												width={{ xs: "100%", md: "50%" }}
+												textAlign="center"
+												dangerouslySetInnerHTML={{ __html: exercise?.body }}
+											/>
+										</Box>
+									</Box>
+								);
+							})}
+						</Carousel>
+					</Box>
+				</>
+			) : (
+				<Box display="flex" justifyContent="center" width="100%" mt={2}>
+					<Button
+						sx={{
+							bgcolor: theme.palette.secondary[300],
+							color: theme.palette.background.alt,
+						}}
+						onClick={handleAddTocard}>
+						Buy to view more
+					</Button>
+				</Box>
+			)}
 		</Box>
 	);
 };

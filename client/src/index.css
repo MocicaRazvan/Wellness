@@ -7,10 +7,17 @@ body,
   height: 100%;
   width: 100%;
   font-family: "Inter", sans-serif;
+  scroll-behavior: smooth;
 }
 
 a {
   text-decoration: none;
   text-transform: none;
   text-indent: none;
+}
+
+.text-gradient {
+  background: -webkit-linear-gradient(#eee, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

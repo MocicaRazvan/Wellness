@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Conversation from "../../components/messenger/Conversation";
 import Message from "../../components/messenger/Message";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetConversationsByUserQuery } from "../../redux/conversation/conversationApi";
 import { useState } from "react";
@@ -22,7 +22,11 @@ import {
 import { useRef } from "react";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 import useQuery from "../../utils/hooks/useQuery";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+	selectNotReload,
+	setNotReload,
+} from "../../redux/messages/messagesSlice";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();
@@ -37,12 +41,14 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const scrollRef = useRef();
 	const navigate = useNavigate();
 	const theme = useTheme();
+	const dispatch = useDispatch();
+	const [searchParams] = useSearchParams();
 
 	const { data: conversations, isLoading } = useGetConversationsByUserQuery(
 		{ id: user?.id },
 		{ skip, pollingInterval: 100000 },
 	);
-	//console.log(socket.current?.id);
+	const notReload = useSelector(selectNotReload);
 
 	const [createMessage] = useCreateMessageMutation();
 	const [createNotification] = useCreateNotificationMutation();
@@ -52,6 +58,16 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			{ id: currentChat?.id },
 			{ skip: skipMessages, pollingInterval: 10000 },
 		);
+
+	useEffect(() => {
+		if (notReload) {
+			window.location.reload();
+		}
+
+		return () => {
+			dispatch(setNotReload(false));
+		};
+	}, [dispatch, notReload]);
 
 	useEffect(() => {
 		if (conversations) {
@@ -177,12 +193,22 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 					<div className="chatMenuWrapper">
 						{/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
 						{conversations.map((c, i) => (
-							<div
-								key={c.id + i}
-								onClick={() =>
-									void navigate(`/messenger?conv=${c.id}`, { replace: true })
-								}>
-								<Conversation conversation={c} currentUser={user} />
+							<div key={`conv-${i}-${c.id}`}>
+								<Box
+									sx={{
+										borderRadius: 2,
+										m: 2,
+										border:
+											searchParams.get("conv") === c.id &&
+											`1px solid ${theme.palette.secondary[100]}`,
+									}}
+									key={c.id + i}
+									onClick={() => {
+										dispatch(setNotReload(true));
+										void navigate(`/messenger?conv=${c.id}`, { replace: true });
+									}}>
+									<Conversation conversation={c} currentUser={user} />
+								</Box>
 								<Divider sx={{ bgcolor: theme.palette.secondary[300] }} />
 							</div>
 						))}

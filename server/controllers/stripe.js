@@ -1,6 +1,11 @@
 const Stripe = require("stripe");
 const Order = require("../models/Order");
 const User = require("../models/User");
+const Training = require("../models/Training");
+const { countrys } = require("../utils/shippingCountries");
+const mongoose = require("mongoose");
+
+//stripe listen --forward-to localhost:5000/stripe/webhook
 
 const stripe = Stripe(process.env.STRIPE_KEY);
 
@@ -20,6 +25,14 @@ const createOrder = async (customer, data, lineItems) => {
 	try {
 		const savedOrder = await newOrder.save();
 		console.log("Proccesed Order:", savedOrder);
+		await User.findByIdAndUpdate(customer.metadata.userId, {
+			$addToSet: { subscriptions: { $each: trainingIds } },
+		});
+		await Training.updateMany(
+			{ _id: { $in: trainingIds } },
+			{ $inc: { occurrences: 1 } },
+		);
+
 		//send email to the customar that order is created
 	} catch (err) {
 		console.log(err);
@@ -57,7 +70,7 @@ exports.stripeCheckout = async (req, res) => {
 	const session = await stripe.checkout.sessions.create({
 		payment_method_types: ["card"],
 		shipping_address_collection: {
-			allowed_countries: ["US", "CA", "RO"],
+			allowed_countries: countrys,
 		},
 		shipping_options: [
 			{
@@ -81,27 +94,27 @@ exports.stripeCheckout = async (req, res) => {
 					},
 				},
 			},
-			{
-				shipping_rate_data: {
-					type: "fixed_amount",
-					fixed_amount: {
-						amount: 1500,
-						currency: "usd",
-					},
-					display_name: "Next day air",
-					// Delivers in exactly 1 business day
-					delivery_estimate: {
-						minimum: {
-							unit: "business_day",
-							value: 1,
-						},
-						maximum: {
-							unit: "business_day",
-							value: 1,
-						},
-					},
-				},
-			},
+			// {
+			// 	shipping_rate_data: {
+			// 		type: "fixed_amount",
+			// 		// fixed_amount: {
+			// 		// 	amount: 1500,
+			// 		// 	currency: "usd",
+			// 		// },
+			// 		// display_name: "Next day air",
+			// 		// Delivers in exactly 1 business day
+			// 		delivery_estimate: {
+			// 			minimum: {
+			// 				unit: "business_day",
+			// 				value: 1,
+			// 			},
+			// 			maximum: {
+			// 				unit: "business_day",
+			// 				value: 1,
+			// 			},
+			// 		},
+			// 	},
+			// },
 		],
 		phone_number_collection: {
 			enabled: true,
@@ -121,9 +134,6 @@ exports.stripeCheckout = async (req, res) => {
 
 	res.status(200).json({ url: session.url });
 };
-
-// This is your Stripe CLI webhook secret for testing your endpoint locally.
-//const endpointSecret = "whsec_0b8ee4eb6effad673dfd714d0653556a6f64ffdae387f0d0bd44bcd2fbd793c8";
 
 exports.webhook = async (request, response) => {
 	const sig = request.headers["stripe-signature"];

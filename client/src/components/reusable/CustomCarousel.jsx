@@ -2,12 +2,12 @@ import { Paper } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import Carousel from "react-material-ui-carousel";
 
-const CustomCarousel = ({ images, height }) => {
+const CustomCarousel = ({ images, height, type = "image" }) => {
 	return (
 		<Container sx={{ mt: 2, width: "80%" }}>
 			<Carousel
 				animation="fade"
-				navButtonsAlwaysVisible
+				navButtonsAlwaysVisible={images?.length > 1 ? true : false}
 				autoPlay={false}
 				interval={6000}>
 				{images.map((item, i) => (
@@ -17,16 +17,30 @@ const CustomCarousel = ({ images, height }) => {
 						sx={{ height }}
 						className="HeightItem">
 						<Box sx={{ width: "100%", height: "100%" }}>
-							<img
-								src={item}
-								style={{
-									width: "100%",
-									height: "100%",
-									objectFit: "cover",
-									borderRadius: 5,
-								}}
-								alt=""
-							/>
+							{type === "image" ? (
+								<img
+									src={item}
+									style={{
+										width: "100%",
+										height: "100%",
+										objectFit: "cover",
+										borderRadius: 5,
+									}}
+									alt=""
+								/>
+							) : (
+								<video
+									src={item}
+									controls
+									style={{
+										width: "100%",
+										height: "100%",
+										objectFit: "cover",
+										borderRadius: 5,
+									}}
+									alt=""
+								/>
+							)}
 						</Box>
 					</Paper>
 				))}

@@ -1,5 +1,6 @@
 import {
 	Box,
+	Button,
 	Divider,
 	Drawer,
 	IconButton,
@@ -8,31 +9,31 @@ import {
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
+	Menu,
+	MenuItem,
 	Typography,
 	useTheme,
 } from "@mui/material";
 import {
-	SettingsOutlined,
 	ChevronLeft,
 	ChevronRightOutlined,
 	HomeOutlined,
-	ShoppingCartOutlined,
 	Groups2Outlined,
 	ReceiptLongOutlined,
 	PublicOutlined,
 	PointOfSaleOutlined,
 	TodayOutlined,
-	CalendarMonthOutlined,
-	AdminPanelSettingsOutlined,
-	TrendingUpOutlined,
 	PieChartOutlined,
 	Book,
-	Message,
+
+	ArrowDropDownCircleOutlined,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "../reusable/FlexBetween";
 import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { setNotReload } from "../../redux/messages/messagesSlice";
+import { useDispatch } from "react-redux";
 
 const navItems = [
 	{
@@ -71,25 +72,10 @@ const navItems = [
 		text: "Daily",
 		icon: <TodayOutlined />,
 	},
-	{
-		text: "Monthly",
-		icon: <CalendarMonthOutlined />,
-	},
+
 	{
 		text: "Breakdown",
 		icon: <PieChartOutlined />,
-	},
-	{
-		text: "Management",
-		icon: null,
-	},
-	{
-		text: "Admin",
-		icon: <AdminPanelSettingsOutlined />,
-	},
-	{
-		text: "Performance",
-		icon: <TrendingUpOutlined />,
 	},
 ];
 
@@ -104,6 +90,12 @@ const Sidebar = ({
 	const [active, setActive] = useState(""); //what page we are on
 	const navigate = useNavigate();
 	const theme = useTheme();
+	const [anchorEl, setAnchorEl] = useState(null);
+	const dispatch = useDispatch();
+	const isOpen = Boolean(anchorEl);
+
+	const handleClick = (event) => setAnchorEl(event.currentTarget);
+	const handleClose = () => setAnchorEl(null);
 
 	useEffect(() => {
 		setActive(pathname.split("/").at(-1));
@@ -192,7 +184,7 @@ const Sidebar = ({
 					</Box>
 					<Box mb={2}>
 						<Divider />
-						<FlexBetween textOverflow="none" gap="1rem" m="1.5rem 2rem 0 3rem">
+						{/* <FlexBetween textOverflow="none" gap="1rem" m="1.5rem 2rem 0 3rem">
 							<Box
 								component="img"
 								alt="profile"
@@ -218,6 +210,60 @@ const Sidebar = ({
 							<SettingsOutlined
 								sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
 							/>
+						</FlexBetween> */}{" "}
+						<FlexBetween textOverflow="none" gap="1rem" m="1.5rem 2rem 0 3rem">
+							<Button
+								onClick={handleClick}
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									textTransform: "none",
+									gap: "1rem",
+								}}>
+								<Box
+									component="img"
+									alt="profile"
+									src={user?.image?.url || blankUser}
+									width="32px"
+									height="32px"
+									borderRadius="50%"
+									sx={{ objectFit: "cover" }}
+								/>
+								<Box textAlign="left">
+									<Typography
+										fontWeight="bold"
+										fontSize="0.85rem"
+										sx={{ color: theme.palette.secondary[100] }}>
+										{user?.username}
+									</Typography>
+									<Typography
+										fontSize="0.75rem"
+										sx={{ color: theme.palette.secondary[200] }}>
+										{user?.occupation}
+									</Typography>
+								</Box>
+								<ArrowDropDownCircleOutlined
+									sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
+								/>
+							</Button>
+							<Menu
+								anchorEl={anchorEl}
+								open={isOpen}
+								onClose={handleClose}
+								anchorOrigin={{
+									vertical: "bottom",
+									horizontal: "center",
+								}}>
+								<MenuItem onClick={() => navigate("/")}>Go Home</MenuItem>
+								<MenuItem
+									onClick={() => {
+										dispatch(setNotReload(true));
+										navigate("/messenger");
+									}}>
+									Messenger
+								</MenuItem>
+							</Menu>
 						</FlexBetween>
 					</Box>
 				</Drawer>

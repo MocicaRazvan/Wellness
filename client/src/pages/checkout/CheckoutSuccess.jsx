@@ -1,11 +1,25 @@
 import { Button, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
+import { useEffect } from "react";
 import Lottie from "react-lottie-player";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { updateUser } from "../../redux/auth/authSlice";
+import { useGetSingleUserQuery } from "../../redux/user/userApi";
 import checkout from "../../utils/lottie/checkout.json";
 const CheckoutSuccess = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const { data: user, isLoading } = useGetSingleUserQuery();
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (user && !isLoading) {
+			console.log(user);
+			dispatch(updateUser({ user }));
+		}
+	}, [dispatch, isLoading, user]);
+
 	return (
 		<Box
 			height="100vh"

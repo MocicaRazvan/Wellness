@@ -21,9 +21,9 @@ import {
 } from "../../redux/posts/postsApiSlice";
 import TextEditor from "../../components/reusable/TextEditor";
 import Dropzone from "react-dropzone";
-import FlexBetween from "../../components/reusable/FlexBetween";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
+import { useNavigate } from "react-router-dom";
+import Loading from "../../components/reusable/Loading";
 
 const postSchema = yup.object().shape({
 	tags: yup.array().required("required"),
@@ -33,13 +33,17 @@ const postSchema = yup.object().shape({
 
 const Form = ({ post }) => {
 	const [message, setMessage] = useState("");
-	const [images, setImages] = useState([]);
+	const [loading, setLoading] = useState({
+		msg: "Creating the post...",
+		show: false,
+	});
 	const [createPost, { isLoading }] = useCreatePostMutation();
 	const [updatePost, { isLoading: isUpdateLoading }] = useUpdatePostMutation();
 	const [body, setBody] = useState(post?.body || "");
 	const [openCarousel, setOpenCarousel] = useState(false);
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
+	const navigate = useNavigate();
 
 	const initalValues = {
 		tags: post?.tags || [],
@@ -53,12 +57,16 @@ const Form = ({ post }) => {
 			const { pictures, title, tags } = values;
 			if (!post) {
 				try {
+					setLoading((prev) => ({ ...prev, show: true }));
 					const res = await createPost({ body, title, tags, images: pictures });
+					setLoading((prev) => ({ ...prev, show: false }));
 					if (res?.error) {
 						setMessage(res.error.data.message);
 					} else {
 						setMessage("");
+						setBody("");
 						onSubmitProps.resetForm();
+						navigate("/posts/user");
 					}
 				} catch (error) {
 					console.log(error);
@@ -67,6 +75,7 @@ const Form = ({ post }) => {
 				}
 			} else {
 				try {
+					setLoading((prev) => ({ ...prev, show: true }));
 					const res = await updatePost({
 						id: post.id,
 						body,
@@ -74,12 +83,14 @@ const Form = ({ post }) => {
 						tags,
 						images: pictures,
 					});
+					setLoading((prev) => ({ ...prev, show: false }));
 					if (res?.error) {
 						setMessage(res.error.data.message);
 					} else {
 						setMessage("");
 						setBody("");
 						onSubmitProps.resetForm();
+						navigate("/posts/user");
 					}
 				} catch (error) {
 					console.log(error);
@@ -101,6 +112,7 @@ const Form = ({ post }) => {
 
 	return (
 		<Box>
+			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
 				initialValues={initalValues}
@@ -179,12 +191,11 @@ const Form = ({ post }) => {
 											),
 										)
 											.then((urls) => {
-												setImages(urls);
+												setFieldValue("pictures", urls);
 											})
 											.catch((error) => {
 												console.error(error);
 											});
-										setFieldValue("pictures", images);
 									}}>
 									{({ getRootProps, getInputProps }) => (
 										<Box
@@ -199,7 +210,7 @@ const Form = ({ post }) => {
 													color={theme.palette.secondary[200]}
 													textAlign="center"
 													fontWeight="bold">
-													Add Picture 
+													Add Picture
 												</Typography>
 											) : (
 												<Typography

@@ -8,15 +8,21 @@ export const userApi = apiSlice.injectEndpoints({
 				url: "/user/countStats",
 			}),
 			transformResponse: ({ stats }) => stats,
+			providesTags: [{ type: "User", id: "LIST" }],
 		}),
 		getTotalMonth: builder.query({
 			query: () => ({ url: "/user/admin/totalMonth" }),
 			transformResponse: ({ total }) =>
 				total.map(({ total, _id }) => ({ total, month: _id })),
+			providesTags: [{ type: "User", id: "LIST" }],
 		}),
 		getUserById: builder.query({
 			query: ({ id }) => ({ url: `/user/${id}` }),
 			transformResponse: ({ user }) => ({ ...user, id: user._id }),
+			providesTags: (result, err, arg) => [
+				{ type: "User", id: arg.id },
+				{ type: "User", id: "LIST" },
+			],
 		}),
 		updateUser: builder.mutation({
 			query: (credentials) => ({
@@ -32,6 +38,10 @@ export const userApi = apiSlice.injectEndpoints({
 					console.log(error);
 				}
 			},
+			invalidatesTags: (result, err, arg) => [
+				{ type: "User", id: arg.id },
+				{ type: "User", id: "LIST" },
+			],
 		}),
 		getAllUsersAdmin: builder.query({
 			query: (params) => ({
@@ -69,7 +79,7 @@ export const userApi = apiSlice.injectEndpoints({
 							...Object.entries(cur).map(([k, v]) => ({ [k]: v }))[0],
 						}),
 						{},
-					),//{k1:v1,k2:v2}->[{k1:v1},{k2:v2}]
+					),
 			providesTags: [
 				{ type: "User", id: "LIST" },
 				{ type: "Post", id: "LIST" },
@@ -97,6 +107,22 @@ export const userApi = apiSlice.injectEndpoints({
 				{ type: "Exercise", id: "LIST" },
 			],
 		}),
+		getSingleUser: builder.query({
+			query: () => "/user/single",
+			transformResponse: ({ user }) => user,
+			providesTags: (result, err, arg) => [{ type: "User", id: "LIST" }],
+		}),
+		makeUserTrainerMutation: builder.mutation({
+			query: ({ id }) => ({
+				url: `/user/admin/trainer/${id}`,
+				method: "PUT",
+			}),
+			// transformResponse: ({ user }) => user,
+			invalidatesTags: (result, err, arg) => [
+				{ type: "User", id: arg.id },
+				{ type: "User", id: "LIST" },
+			],
+		}),
 	}),
 });
 
@@ -109,4 +135,6 @@ export const {
 	useGetAllMonthlyStatsQuery,
 	useGetAdminRelativeStatsQuery,
 	useGetAllCountAdminQuery,
+	useGetSingleUserQuery,
+	useMakeUserTrainerMutationMutation,
 } = userApi;

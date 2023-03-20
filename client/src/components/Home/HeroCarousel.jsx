@@ -1,5 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
-import backgroundImage from "../../images/HeaderHeroCrop.jpg";
+import backgroundImage from "../../images/hero/HeaderHeroCrop.jpg";
+import yogaHero from "../../images/hero/yogaHero.jpg";
+import bicepHero from "../../images/hero/bicepHero.jpg";
+import headerLast from "../../images/hero/HeaderLast.jpg";
+import motivationHero from "../../images/hero/motivationHero.jpg";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTheme } from "@mui/material";
@@ -7,7 +11,7 @@ import { useEffect, useRef } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-const images = [backgroundImage, backgroundImage, backgroundImage];
+const images = [backgroundImage, motivationHero, headerLast];
 
 const HeroCarousel = () => {
 	const navigate = useNavigate();
@@ -42,8 +46,7 @@ const HeroCarousel = () => {
 			<Box
 				position="relative"
 				sx={{
-					"& .carousel": {
-					},
+					"& .carousel": {},
 					"& .carousel .control-next.control-arrow:before ": {
 						borderLeft: `8px solid ${palette.secondary[300]} !important`,
 					},
@@ -59,14 +62,14 @@ const HeroCarousel = () => {
 				}}>
 				<Carousel
 					autoPlay
-					interval="10000"
-					transitionTime="5000"
+					interval="9000"
+					transitionTime="3000"
 					infiniteLoop
 					showStatus={false}
 					showThumbs={false}
 					className="carousel">
 					{images.map((img, i) => (
-						<div key={`img-car-${i}`}>
+						<div key={`img-hero-${i}`}>
 							<img src={img} alt="" />
 						</div>
 					))}
@@ -98,7 +101,7 @@ const HeroCarousel = () => {
 							display: { xs: "none", md: "initial" },
 						}}>
 						Enjoy being free of insecurites, and be proud of what you have
-						become
+						become!
 					</Typography>
 					<Box
 						display={{ xs: "none", md: "flex" }}
@@ -112,7 +115,7 @@ const HeroCarousel = () => {
 								size="large"
 								component="a"
 								sx={{ minWidth: 100, mt: { xs: 20, md: 0 } }}>
-								Welcome
+								Welcome!
 							</Button>
 						) : (
 							<Button

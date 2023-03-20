@@ -21,8 +21,19 @@ import {
 	useUpdateCommentMutation,
 } from "../../redux/comments/commentsApi";
 import { format } from "timeago.js";
+import Perspective from "perspective-api-client";
+import Loading from "../reusable/Loading";
+
+const perspective = new Perspective({
+	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+});
 
 const Comment = ({ comment }) => {
+	const [loading, setLoading] = useState({
+		show: false,
+		msg: "You were nice last time!",
+		color: "red",
+	});
 	const user = useSelector(selectCurrentUser);
 	const isAuth = user.id === comment.user._id || user.role === "admin";
 	const theme = useTheme();
@@ -42,21 +53,58 @@ const Comment = ({ comment }) => {
 	};
 
 	const handleBodyChange = (e) => {
-		console.log(e.target.value);
 		setBody(e.target.value);
 	};
 
+	// const handleUpdateComment = async () => {
+	// 	try {
+	// 		await updateComment({ id: comment.id, body }).unwrap();
+	// 		setEditingComm(false);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 	const handleUpdateComment = async () => {
 		try {
+			const result = await perspective.analyze({
+				comment: { text: body },
+				requestedAttributes: { TOXICITY: { scoreThreshold: 0.6 } },
+			});
+			if (result?.attributeScores?.TOXICITY) {
+				setLoading((prev) => ({ ...prev, show: true }));
+				setBody(comment?.body);
+				setEditingComm(false);
+				setTimeout(() => {
+					setLoading((prev) => ({ ...prev, show: false }));
+				}, 2500);
+				return;
+			}
 			await updateComment({ id: comment.id, body }).unwrap();
 			setEditingComm(false);
 		} catch (error) {
 			console.log(error);
+			setBody(comment?.body);
+			setEditingComm(false);
+			setLoading((prev) => ({
+				...prev,
+				show: true,
+				msg: "please write in english",
+			}));
+
+			setTimeout(() => {
+				setLoading((prev) => ({
+					...prev,
+					show: false,
+					msg: "You were nice last time!",
+				}));
+			}, 2500);
+			return;
 		}
 	};
 
 	return (
 		<Card>
+			<Loading loading={loading} type="alert" />
 			<Box sx={{ p: "15px" }}>
 				<Stack spacing={2} direction="row">
 					<Box>

@@ -1,4 +1,10 @@
-import { Box, Button, CircularProgress, useTheme } from "@mui/material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Tooltip,
+	useTheme,
+} from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -18,6 +24,7 @@ const UserExercises = () => {
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
 	const user = useSelector(selectCurrentUser);
+	const [tool, setTool] = useState(false);
 	const { data, isLoading } = useGetUsersExercisesQuery(
 		{
 			id: user?.id,
@@ -76,13 +83,28 @@ const UserExercises = () => {
 								View
 							</Button>
 						</Link>
-						<Button
-							className="cellBtn"
-							variant="contained"
-							size="small"
-							onClick={() => handleDeleteExercise(params.row.id)}>
-							Delete
-						</Button>
+						<Link
+							to={`/exercises/update/${params.row.id}`}
+							style={{ textDecoration: "none" }}>
+							<Button variant="contained" size="small" className="cellBtn">
+								Update
+							</Button>
+						</Link>
+						<Tooltip
+							title={params.row?.occurrences > 0 ? "Used" : ""}
+							placement="right"
+							arrow>
+							<Box>
+								<Button
+									className="cellBtn"
+									variant="contained"
+									size="small"
+									disabled={params.row?.occurrences > 0}
+									onClick={() => handleDeleteExercise(params.row.id)}>
+									Delete
+								</Button>
+							</Box>
+						</Tooltip>
 					</Box>
 				);
 			},

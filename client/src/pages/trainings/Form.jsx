@@ -14,7 +14,10 @@ import { Formik } from "formik";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
+import Loading from "../../components/reusable/Loading";
 import TextEditor from "../../components/reusable/TextEditor";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetAllExercisesIdsByUserQuery } from "../../redux/exercises/exercisesApi";
@@ -27,17 +30,20 @@ const trainingSchema = yup.object().shape({
 	exercises: yup.array().required("required"),
 	price: yup.number().required("required"),
 	pictures: yup.array().required("required"),
-	// description: yup.string().required("required"),
 });
 
 const Form = ({ training }) => {
 	const [description, setDescription] = useState(training?.description || "");
-	const [images, setImages] = useState(training?.images || []);
+	const [loading, setLoading] = useState({
+		msg: "Creating the training...",
+		show: false,
+	});
 	const [openCarousel, setOpenCarousel] = useState(false);
 	const [message, setMessage] = useState("");
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
 	const user = useSelector(selectCurrentUser);
+	const navigate = useNavigate();
 
 	const [createTraining] = useCreateTriningMutation();
 	const { data: ids } = useGetAllExercisesIdsByUserQuery(
@@ -76,6 +82,7 @@ const Form = ({ training }) => {
 			const { title, tags, exercises, price, pictures } = values;
 			if (!training) {
 				try {
+					setLoading((prev) => ({ ...prev, show: true }));
 					const res = await createTraining({
 						title,
 						tags,
@@ -84,11 +91,13 @@ const Form = ({ training }) => {
 						description,
 						images: pictures,
 					});
+					setLoading((prev) => ({ ...prev, show: false }));
 					if (res?.error) {
 						setMessage(res.error.data.message);
 					} else {
 						setMessage("");
 						onSubmitProps.resetForm();
+						navigate("/trainings/user");
 					}
 				} catch (error) {
 					console.log(error);
@@ -101,6 +110,7 @@ const Form = ({ training }) => {
 
 	return (
 		<Box>
+			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
 				initialValues={initialValues}
@@ -213,12 +223,11 @@ const Form = ({ training }) => {
 											),
 										)
 											.then((urls) => {
-												setImages(urls);
+												setFieldValue("pictures", urls);
 											})
 											.catch((error) => {
 												console.error(error);
 											});
-										setFieldValue("pictures", images);
 									}}>
 									{({ getRootProps, getInputProps }) => (
 										<Box
@@ -233,7 +242,7 @@ const Form = ({ training }) => {
 													color={theme.palette.secondary[200]}
 													textAlign="center"
 													fontWeight="bold">
-													Add Picture
+													Add Pictures
 												</Typography>
 											) : (
 												<Typography
@@ -247,6 +256,26 @@ const Form = ({ training }) => {
 										</Box>
 									)}
 								</Dropzone>
+								{values.pictures.length > 0 && (
+									<Box
+										gridColumn="span 4"
+										display="flex"
+										flexDirection="column"
+										alignItems="center">
+										<Button
+											variant="outlined"
+											onClick={() => setOpenCarousel((prev) => !prev)}
+											sx={{
+												color: theme.palette.secondary[200],
+												width: "50%",
+											}}>
+											{openCarousel ? "Hide" : "See"} your pictures
+										</Button>
+										{openCarousel && (
+											<CustomCarousel images={values.pictures} height={250} />
+										)}
+									</Box>
+								)}
 							</Box>
 						</Box>
 						<Button

@@ -28,12 +28,21 @@ const AdminLayout = () => {
 				setIsSideBarOpen={setIsSideBarOpen}
 			/>
 
-			<Box flexGrow={1} width={`calc(100% - ${Number(isSideBarOpen) * 250}px)`}>
-				<Navbar
-					user={user || {}}
-					isSideBarOpen={isSideBarOpen}
-					setIsSideBarOpen={setIsSideBarOpen}
-				/>
+			<Box
+				flexGrow={1}
+				marginLeft={{
+					xs: `${250 * Number(isSideBarOpen)}px`,
+					xl: 0,
+				}}
+				width={`calc(100% - ${Number(isSideBarOpen) * 250}px)`}
+				overflowX={"hidden"}>
+				<Box overflow={"hidden"}>
+					<Navbar
+						user={user || {}}
+						isSideBarOpen={isSideBarOpen}
+						setIsSideBarOpen={setIsSideBarOpen}
+					/>
+				</Box>
 				<Box sx={{ transition: "width 1.5s" }}>
 					<Outlet />
 				</Box>

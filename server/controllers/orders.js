@@ -42,7 +42,6 @@ exports.getAllOrders = async (req, res) => {
 			.sort(sortFormatted)
 			.skip(page * pageSize)
 			.limit(pageSize);
-		console.log(orders.length);
 		const total = await Orders.countDocuments({
 			user: userId,
 			deliveryStatus: { $regex: search, $options: "i" },
@@ -94,7 +93,6 @@ exports.getOrdersByUser = async (req, res) => {
 //get: orders/find/admin/:userId
 exports.getOrdersByUserAdmin = async (req, res) => {
 	const { userId } = req.params;
-	console.log(userId);
 
 	const orders = await Orders.find({ user: userId })
 		.populate("user")
@@ -129,8 +127,9 @@ exports.getSingleOrder = async (req, res) => {
 exports.getSingleOrderAdmin = async (req, res) => {
 	const { orderId } = req.params;
 
-	if (req.user.role !== "admin")
+	if (req.user.role !== "admin") {
 		return res.status(401).json({ message: "You are not authorized" });
+	}
 
 	const order = await Orders.findById(orderId)
 		.populate("user")
@@ -146,12 +145,15 @@ exports.getSingleOrderAdmin = async (req, res) => {
 		.json({ message: `Order with id ${orderId} delivered success`, order });
 };
 
-//put: orders/admin/:orderId
+//put: orders/bought/:orderId
 exports.changeOrderStatus = async (req, res) => {
 	const { orderId } = req.params;
 
-	if (req.user.role !== "admin")
+	const order = await Orders.findById(orderId).lean();
+
+	if (req.user.role !== "admin" && !req.user._id.equals(order?.user)) {
 		return res.status(401).json({ message: "You are not authorized" });
+	}
 
 	const { deliveryStatus } = req.body;
 
@@ -160,6 +162,7 @@ exports.changeOrderStatus = async (req, res) => {
 		{ deliveryStatus },
 		{ new: true },
 	);
+	console.log(newOrder);
 
 	return res.status(201).json({
 		message: `Order with id ${orderId} status changed to ${deliveryStatus}`,
@@ -270,6 +273,7 @@ exports.getTagsStats = async (req, res) => {
 		{ $unwind: "$doc.tags" },
 		{ $group: { _id: "$doc.tags", total: { $sum: 1 } } },
 	]);
+	console.log(stats);
 	res.status(200).json({ message: "Tag Stats retrived", stats });
 };
 

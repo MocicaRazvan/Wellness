@@ -6,7 +6,6 @@ const StatBox = ({ title, value, increase, icon, description }) => {
 	const theme = useTheme();
 	const col =
 		increase > 0 ? theme.palette.success.main : theme.palette.error.main;
-	console.log(increase);
 	return (
 		<Box
 			gridColumn="span 2"

@@ -1,8 +1,10 @@
 import { Box, styled, Typography, useTheme } from "@mui/material";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
 	const theme = useTheme();
+	const navigate = useNavigate();
 	return (
 		<Box
 			marginTop="70px"
@@ -27,12 +29,21 @@ const Footer = () => {
 					<CustomTypography
 						variant="h6"
 						color={theme.palette.secondary[200]}
+						mb="30px"
 						sx={{ wordWrap: "break-word" }}>
 						We are a 'family' company that just wants one thing, to make you
 						feel better and look better. If you have any problems contact the
 						support team and we will asure that they will try their best to help
 						you :).
 					</CustomTypography>
+					<Typography
+						variant="h4"
+						fontWeight="500"
+						sx={{ cursor: "pointer" }}
+						onClick={() => navigate("/nft")}
+						color={theme.palette.secondary[400]}>
+						Feeling like investing in NFT'S? Try out our sister platform!
+					</Typography>
 				</Box>
 
 				<Box>
@@ -91,7 +102,8 @@ const Footer = () => {
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
+						sx={{ cursor: "pointer" }}
+						onClick={() => navigate("/about-us/terms-conditions")}>
 						Terms & Conditions
 					</CustomTypography>
 					<CustomTypography
@@ -113,8 +125,9 @@ const Footer = () => {
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
-						Help Center
+						sx={{ cursor: "pointer" }}
+						onClick={() => navigate("/customer-care/faq")}>
+						Frequently Asked Questions
 					</CustomTypography>
 					<CustomTypography
 						mb="30px"

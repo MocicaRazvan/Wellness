@@ -1,2 +1,2 @@
-const tagValues = ["biceps", "triceps", "hometraining", "loseweight"];
+const tagValues = ["gainmuscle", "hometraining", "loseweight"];
 export default tagValues;

@@ -59,7 +59,7 @@ const UserDialog = () => {
 							fontWeight: "600",
 						}}>
 						Login or create an account in just 1 minute to embrace the full
-						experience of the site without any long term obligations
+						experience of the site without any long term obligations!
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions

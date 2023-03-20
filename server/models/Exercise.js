@@ -13,7 +13,7 @@ const exerciseSchema = new mongoose.Schema(
 		title: {
 			type: String,
 			required: [true, "Please Provide a title"],
-			unique: true,
+			// unique: true,
 		},
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +25,10 @@ const exerciseSchema = new mongoose.Schema(
 			default: false,
 		},
 		videos: { type: [Object] },
+		occurrences: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{ timestamps: true },
 );

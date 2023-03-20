@@ -5,7 +5,7 @@ const trainingSchema = new mongoose.Schema(
 		title: {
 			type: String,
 			required: [true, "Please Provide a title"],
-			unique: true,
+			// unique: true,
 		},
 		tags: {
 			type: [String],
@@ -39,6 +39,10 @@ const trainingSchema = new mongoose.Schema(
 			defualt: [],
 		},
 		images: { type: [Object], required: true },
+		occurrences: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{ timestamps: true },
 );

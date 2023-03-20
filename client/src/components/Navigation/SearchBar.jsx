@@ -1,6 +1,6 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import { alpha, styled } from "@mui/system";
-import { InputBase } from "@mui/material";
+import { Button, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
 	selectCurrentSearch,
@@ -25,15 +25,14 @@ function SearchBar() {
 		//console.log(e.target.value);
 	};
 	const handleBlur = (e) => {
-		//console.log(e.target.value);
 		if (e.target.value !== "") {
 			localStorage["searchHistory"]
 				? (localStorage["searchHistory"] = JSON.stringify([
 						...new Set(
 							[
-								...JSON.parse(localStorage["searchHistory"]),
 								e.target.value,
-							].slice(1, 11),
+								...JSON.parse(localStorage["searchHistory"]),
+							].filter((_, i, arr) => arr.length <= 10 || i < 10),
 						),
 				  ]))
 				: (localStorage["searchHistory"] = JSON.stringify([e.target.value]));
@@ -49,13 +48,13 @@ function SearchBar() {
 			</SearchIconWrapper>
 
 			<Autocomplete
-				id="combo-box-demo"
 				options={auto}
 				getOptionLabel={(option) => option}
 				style={{ width: 300 }}
 				freeSolo
 				inputValue={searchVal}
 				renderInput={({ InputLabelProps, InputProps, ...rest }) => {
+					InputProps.endAdornment = null;
 					return (
 						<StyledInputBase
 							{...InputProps}

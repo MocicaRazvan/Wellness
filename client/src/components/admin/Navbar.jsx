@@ -24,6 +24,7 @@ import { setMode } from "../../redux/auth/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "../Navigation/SearchBar";
 import PopupWrapper from "../Popup/PopupWrapper";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 
 const Navbar = ({ user, setIsSideBarOpen }) => {
 	const dispatch = useDispatch();
@@ -114,7 +115,11 @@ const Navbar = ({ user, setIsSideBarOpen }) => {
 								horizontal: "center",
 							}}>
 							<MenuItem onClick={() => navigate("/")}>Go Home</MenuItem>
-							<MenuItem onClick={() => navigate("/messenger")}>
+							<MenuItem
+								onClick={() => {
+									dispatch(setNotReload(true));
+									navigate("/messenger");
+								}}>
 								Messenger
 							</MenuItem>
 						</Menu>

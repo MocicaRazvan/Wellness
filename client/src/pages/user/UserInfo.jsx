@@ -171,7 +171,6 @@ const UserInfo = ({ user, width = "50%" }) => {
 						</>
 					))}
 			</Box>
-			<Divider />
 		</Box>
 	);
 };

@@ -165,11 +165,12 @@ const Daily = () => {
 					axisBottom={{
 						orient: "bottom",
 						tickSize: 5,
-						tickPadding: 5,
-						tickRotation: 90,
+						tickPadding: 0,
+						tickRotation: 0,
 						legend: "Month",
-						legendOffset: 60,
+						legendOffset: -10,
 						legendPosition: "middle",
+						
 					}}
 					axisLeft={{
 						orient: "left",
@@ -177,7 +178,7 @@ const Daily = () => {
 						tickPadding: 5,
 						tickRotation: 0,
 						legend: "Total",
-						legendOffset: -50,
+						legendOffset: 10,
 						legendPosition: "middle",
 					}}
 					enableGridX={false}

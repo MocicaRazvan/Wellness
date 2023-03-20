@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
 	Box,
 	Button,
@@ -18,12 +18,18 @@ import {
 	useRegisterMutation,
 } from "../../redux/auth/authApiSlice";
 import { useUpdateUserMutation } from "../../redux/user/userApi";
+import Loading from "../../components/reusable/Loading";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
 
 const registerSchema = yup.object().shape({
 	firstName: yup.string().required("required"),
 	lastName: yup.string().required("required"),
 	email: yup.string().email("invalid email").required("required"),
 	password: yup.string().required("required"),
+	retypePassword: yup
+		.string()
+		.required("Please retype your password.")
+		.oneOf([yup.ref("password")], "Your passwords do not match."),
 	location: yup.string().required("required"),
 	occupation: yup.string().required("required"),
 	picture: yup.string(),
@@ -48,9 +54,19 @@ const initialValuesLogin = {
 const Form = ({ user = null }) => {
 	const { pathname } = useLocation();
 	const [pageType, setPageType] = useState(pathname.slice(1));
-	const [image, setImage] = useState("");
+	const [credentials, setCredentials] = useState({
+		show: false,
+		msg: "",
+		color: "red",
+	});
+	const [openCarousel, setOpenCarousel] = useState(false);
+
 	const [message, setMessage] = useState("");
-	// const { state: user } = useLocation();
+	const [messageUpload, setMessageUpload] = useState("");
+	const [loading, setLoading] = useState({
+		msg: "Loading...",
+		show: false,
+	});
 	const { palette } = useTheme();
 	const navigate = useNavigate();
 	const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -70,6 +86,7 @@ const Form = ({ user = null }) => {
 		occupation: user?.occupation || "",
 		picture: "",
 		phoneNumber: user?.phoneNumber || "",
+		retypePassword: "",
 	};
 
 	const fileBase64 = (img) => {
@@ -85,8 +102,11 @@ const Form = ({ user = null }) => {
 
 	const login = async (values, onSubmitProps) => {
 		try {
-			const res = await loginUser(values);
-			if (res?.error) {
+			setLoading((prev) => ({ ...prev, show: true }));
+			const res = await loginUser(values).unwrap();
+			setLoading((prev) => ({ ...prev, show: false }));
+			if (res?.data?.error) {
+				console.log(res.error.data.message);
 				setMessage(res.error.data.message);
 			}
 			setMessage("");
@@ -94,31 +114,75 @@ const Form = ({ user = null }) => {
 			navigate("/");
 		} catch (error) {
 			console.log(error);
+			setLoading((prev) => ({ ...prev, show: false }));
+			onSubmitProps.resetForm();
+			setCredentials((prev) => ({
+				...prev,
+				show: true,
+				msg: "Credentials are not valid!",
+			}));
+
+			setTimeout(
+				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+				800,
+			);
 		}
 	};
 	const register = async (values, onSubmitProps) => {
 		try {
-			let res;
+			let res1, res2;
 			if (user) {
-				res = await updateUser(values);
+				setLoading((prev) => ({ ...prev, show: true }));
+				res2 = await updateUser(values).unwrap();
+				console.log({ res2 });
+				setLoading((prev) => ({ ...prev, show: false }));
+				navigate("/");
 			} else {
-				res = await registerUser(values);
+				setLoading((prev) => ({ ...prev, show: true }));
+				res1 = await registerUser(values).unwrap();
+				console.log({ res1 });
+				setLoading((prev) => ({ ...prev, show: false }));
 			}
-			if (res?.error) {
-				setMessage(res.error.data.message);
+			if (res1?.message && res1?.isError) {
+				setLoading((prev) => ({ ...prev, show: false }));
+
+				setMessage("User with this email already exists!");
+				setCredentials((prev) => ({
+					...prev,
+					show: true,
+					msg: "Email is taken!",
+				}));
+
+				setTimeout(
+					() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+					800,
+				);
 			}
-			setMessage("");
-			onSubmitProps.resetForm();
-			navigate("/");
 		} catch (error) {
 			console.log(error);
+			if (error.data.update) {
+				setLoading((prev) => ({ ...prev, show: false }));
+
+				setMessageUpload(
+					"If you cant't remember your passwowrd you can reset it!",
+				);
+				setCredentials((prev) => ({
+					...prev,
+					show: true,
+					msg: "Incorrect password!",
+				}));
+
+				setTimeout(
+					() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+					800,
+				);
+			}
 		}
 	};
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (isRegister) {
 			const username = `${values.firstName} ${values.lastName}`;
-			//  console.log(values.picture);
 
 			const { email, location, occupation, password, picture } = values;
 			const phoneNumber = values.phoneNumber || "";
@@ -131,7 +195,6 @@ const Form = ({ user = null }) => {
 				username,
 				phoneNumber,
 			};
-			console.log(credentials);
 			await register(credentials, onSubmitProps);
 		} else if (isLogin) {
 			await login(values, onSubmitProps);
@@ -140,6 +203,8 @@ const Form = ({ user = null }) => {
 
 	return (
 		<Box>
+			<Loading loading={loading} />
+			<Loading loading={credentials} type="alert" />
 			<Formik
 				onSubmit={handleFormSubmit}
 				initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
@@ -243,13 +308,11 @@ const Form = ({ user = null }) => {
 													),
 												)
 													.then((urls) => {
-														setImage(urls[0]);
+														setFieldValue("picture", urls[0]);
 													})
 													.catch((error) => {
 														console.error(error);
 													});
-
-												setFieldValue("picture", image);
 											}}>
 											{({ getRootProps, getInputProps }) => (
 												<Box
@@ -285,6 +348,29 @@ const Form = ({ user = null }) => {
 												</Box>
 											)}
 										</Dropzone>
+										{values.picture && (
+											<Box
+												gridColumn="span 4"
+												display="flex"
+												flexDirection="column"
+												alignItems="center">
+												<Button
+													variant="outlined"
+													onClick={() => setOpenCarousel((prev) => !prev)}
+													sx={{
+														color: palette.secondary[200],
+														width: "50%",
+													}}>
+													{openCarousel ? "Hide" : "See"} your pictures
+												</Button>
+												{openCarousel && (
+													<CustomCarousel
+														images={[values.picture]}
+														height={250}
+													/>
+												)}
+											</Box>
+										)}
 									</Box>
 								</>
 							)}
@@ -294,7 +380,10 @@ const Form = ({ user = null }) => {
 								onChange={handleChange}
 								value={values.email}
 								name="email"
-								error={Boolean(touched.email) && Boolean(errors.email)}
+								error={
+									(Boolean(touched.email) && Boolean(errors.email)) ||
+									message !== ""
+								}
 								helperText={touched.email && errors.email}
 								sx={{ gridColumn: "span 4" }}
 							/>
@@ -305,10 +394,30 @@ const Form = ({ user = null }) => {
 								onChange={handleChange}
 								value={values.password}
 								name="password"
-								error={Boolean(touched.password) && Boolean(errors.password)}
+								error={
+									(Boolean(touched.password) && Boolean(errors.password)) ||
+									messageUpload !== ""
+								}
 								helperText={touched.password && errors.password}
 								sx={{ gridColumn: "span 4" }}
 							/>
+							{!isLogin && (
+								<TextField
+									label="Retype Password"
+									type="password"
+									onBlur={handleBlur}
+									onChange={handleChange}
+									value={values.retypePassword}
+									name="retypePassword"
+									error={
+										(Boolean(touched.retypePassword) &&
+											Boolean(errors.retypePassword)) ||
+										messageUpload !== ""
+									}
+									helperText={touched.retypePassword && errors.retypePassword}
+									sx={{ gridColumn: "span 4" }}
+								/>
+							)}
 						</Box>
 						{/* buttons */}
 						<Box>
@@ -360,6 +469,11 @@ const Form = ({ user = null }) => {
 				)}
 			</Formik>
 			{message && (
+				<Typography variant="h5" sx={{ mt: 5, color: palette.secondary[200] }}>
+					{message}
+				</Typography>
+			)}
+			{messageUpload && (
 				<Typography variant="h5" sx={{ mt: 5, color: palette.secondary[200] }}>
 					{message}
 				</Typography>

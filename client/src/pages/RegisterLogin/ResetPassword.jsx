@@ -11,8 +11,12 @@ import { Box } from "@mui/system";
 
 const schema = yup.object().shape({
 	password: yup.string().min(6).max(25).required("required"),
+	retypePassword: yup
+		.string()
+		.required("Please retype your password.")
+		.oneOf([yup.ref("password")], "Your passwords do not match."),
 });
-const initialValues = { password: "" };
+const initialValues = { password: "", retypePassword: "" };
 
 const ResetPassword = () => {
 	const [message, setMessage] = useState("");
@@ -71,7 +75,8 @@ const ResetPassword = () => {
 								display="flex"
 								flexDirection="column"
 								alignItems="center"
-								justifyContent="space-around">
+								justifyContent="space-around"
+								gap={1}>
 								<Typography
 									variant="h3"
 									color={theme.palette.secondary[200]}
@@ -87,6 +92,20 @@ const ResetPassword = () => {
 									name="password"
 									error={Boolean(touched.password) && Boolean(errors.password)}
 									helperText={touched.password && errors.password}
+									sx={{ width: "80%" }}
+								/>
+								<TextField
+									label="Retype Password"
+									type="password"
+									onBlur={handleBlur}
+									onChange={handleChange}
+									value={values.retypePassword}
+									name="retypePassword"
+									error={
+										Boolean(touched.retypePassword) &&
+										Boolean(errors.retypePassword)
+									}
+									helperText={touched.retypePassword && errors.retypePassword}
 									sx={{ width: "80%" }}
 								/>
 								<Button

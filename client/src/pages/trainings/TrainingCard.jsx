@@ -15,12 +15,16 @@ import React, { useState } from "react";
 import { slideInBottom, slideInRight } from "../../animation/animations";
 import { useNavigate } from "react-router-dom";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cart/cartSlice";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const TrainingCard = ({ item }) => {
 	const [showOptions, setShowOptions] = useState(false);
 	const theme = useTheme();
+	const subscriptions = useSelector(selectCurrentUser)?.subscriptions;
+	const user = useSelector(selectCurrentUser);
+	const isBought = subscriptions?.includes(item?.id);
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -37,10 +41,12 @@ const TrainingCard = ({ item }) => {
 	};
 
 	const handleAddTocard = () => {
+		if (!user) {
+			navigate("/login");
+			return;
+		}
 		dispatch(addToCart(item));
 	};
-
-	console.log(item);
 
 	return (
 		<Card
@@ -102,15 +108,17 @@ const TrainingCard = ({ item }) => {
 					View More
 				</ProductViewMore>
 			)}
-			<ProductActionsWrapper show={showOptions}>
-				<Stack direction="column">
-					<IconButton
-						onClick={handleAddTocard}
-						sx={{ color: theme.palette.secondary[500] }}>
-						<ShoppingBasketIcon color={theme.palette.secondary[500]} />
-					</IconButton>
-				</Stack>
-			</ProductActionsWrapper>
+			{!isBought && (
+				<ProductActionsWrapper show={showOptions}>
+					<Stack direction="column">
+						<IconButton
+							onClick={handleAddTocard}
+							sx={{ color: theme.palette.secondary[500] }}>
+							<ShoppingBasketIcon color={theme.palette.secondary[500]} />
+						</IconButton>
+					</Stack>
+				</ProductActionsWrapper>
+			)}
 		</Card>
 	);
 };

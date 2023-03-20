@@ -31,7 +31,6 @@ const Dashboard = () => {
 		useGetAdminRelativeStatsQuery();
 	const { data: counts, isLoading: isCountsLoading } =
 		useGetAllCountAdminQuery();
-	console.log(relativeStats);
 	if ([!relativeStats, !counts, isStatsLoading, isCountsLoading].every(Boolean))
 		return (
 			<CircularProgress
@@ -101,7 +100,7 @@ const Dashboard = () => {
 				<StatBox
 					title="Total Trainings"
 					value={counts?.trainings}
-					increase={relativeStats?.relativeTrainings}
+					increase={relativeStats?.relativeTrainings * 100}
 					description="Since last month"
 					icon={
 						<DirectionsRun
@@ -112,7 +111,7 @@ const Dashboard = () => {
 				<StatBox
 					title="Total Exercises"
 					value={counts?.exercises}
-					increase={relativeStats?.relativeExercises}
+					increase={relativeStats?.relativeExercises * 100}
 					description="Since last month"
 					icon={
 						<FitnessCenter
