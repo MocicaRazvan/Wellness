@@ -53,6 +53,7 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 			textAlign="center"
 			onClick={() => {
 				dispatch(setNotReload(true));
+				setOpen((prev) => !prev);
 				navigate(`/messenger?conv=${ref}`);
 			}}>
 			{`${sender?.username} ${type}`}
@@ -60,7 +61,7 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 	));
 
 	return (
-		<Box>
+		<Box sx={{ zIndex: "100" }}>
 			<Popper
 				open={open}
 				anchorEl={ref?.current}
