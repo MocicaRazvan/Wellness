@@ -42,7 +42,6 @@ const MessengerWrapper = ({ admin = false }) => {
 				thickness={7}
 			/>
 		);
-	console.log({ notReload });
 	return (
 		<Box
 			m={{ xs: 0, md: 2 }}

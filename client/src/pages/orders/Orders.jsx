@@ -1,4 +1,4 @@
-import { Button, Typography, useTheme } from "@mui/material";
+import { Button, CircularProgress, Typography, useTheme } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -40,6 +40,15 @@ const Orders = () => {
 			console.log(error);
 		}
 	};
+
+	if (!user?.id)
+		return (
+			<CircularProgress
+				sx={{ position: "absolute", top: "50%", left: "50%" }}
+				size="3rem"
+				thickness={7}
+			/>
+		);
 
 	const columns = [
 		{

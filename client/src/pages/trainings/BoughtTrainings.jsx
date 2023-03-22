@@ -1,4 +1,4 @@
-import { Button, IconButton} from "@mui/material";
+import { Button, CircularProgress, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useGetBoughtUserTrainingsQuery, useTrainingActionsMutation } from "../../redux/trainings/trainingsApi";
+import {
+	useGetBoughtUserTrainingsQuery,
+	useTrainingActionsMutation,
+} from "../../redux/trainings/trainingsApi";
 import Header from "../../components/reusable/Header";
 import CustomDataGrid from "../../dataGrid/CustomDataGrid";
 
@@ -37,6 +40,15 @@ const BoughtTrainings = () => {
 			console.log(error);
 		}
 	};
+
+	if (!user?.id)
+		return (
+			<CircularProgress
+				sx={{ position: "absolute", top: "50%", left: "50%" }}
+				size="3rem"
+				thickness={7}
+			/>
+		);
 
 	const columns = [
 		{

@@ -57,6 +57,7 @@ const Navigation = () => {
 	const isAdmin = user?.role === "admin";
 	const isSearchBarOpen = pathnames.includes(pathname);
 	const isNonMobile = useMediaQuery("(min-width:900px)");
+	const isNotLogged = user === null;
 
 	const [direction, setDirection] = useState({
 		top: false,
@@ -79,9 +80,9 @@ const Navigation = () => {
 		) {
 			setActive("");
 		}
-		if (pathname.split("/").some((e) => ["messenger"].includes(e))) {
-			setActive("messenger");
-		}
+		// if (pathname.split("/").some((e) => ["messenger"].includes(e))) {
+		// 	setActive("messenger");
+		// }
 	}, [pathname]);
 
 	const toggleDrawer = (anchor, open) => (event) => {
@@ -410,75 +411,81 @@ const Navigation = () => {
 							Trainings
 						</Typography>
 					</MenuItem>
-					<MenuItem onClick={handleMenuClose}>
-						<Typography
-							onClick={() => {
-								navigate(`/trainings/bought`);
-								setActive("bought");
-							}}
-							sx={{
-								backgroundColor:
-									active === "bought"
-										? theme.palette.secondary[300]
-										: "transparent",
-								color:
-									active === "bought"
-										? theme.palette.primary[600]
-										: theme.palette.secondary[200],
-								borderRadius: 5,
-								cursor: "pointer",
-								p: 0.3,
-							}}
-							variant="h6">
-							Bought Trainings
-						</Typography>
-					</MenuItem>
-					<MenuItem onClick={handleMenuClose}>
-						<Typography
-							onClick={() => {
-								navigate("/orders");
-								setActive("orders");
-							}}
-							sx={{
-								backgroundColor:
-									active === "orders"
-										? theme.palette.secondary[300]
-										: "transparent",
-								color:
-									active === "orders"
-										? theme.palette.primary[600]
-										: theme.palette.secondary[200],
-								borderRadius: 5,
-								cursor: "pointer",
-								p: 0.3,
-							}}
-							variant="h6">
-							Orders
-						</Typography>
-					</MenuItem>
-					<MenuItem onClick={handleMenuClose}>
-						<Typography
-							onClick={() => {
-								handleSupport();
-								setActive("messenger");
-							}}
-							sx={{
-								backgroundColor:
-									active === "messenger"
-										? theme.palette.secondary[300]
-										: "transparent",
-								color:
-									active === "messenger"
-										? theme.palette.primary[600]
-										: theme.palette.secondary[200],
-								borderRadius: 5,
-								cursor: "pointer",
-								p: 0.3,
-							}}
-							variant="h6">
-							Contact Support
-						</Typography>
-					</MenuItem>
+					{!isNotLogged && (
+						<MenuItem onClick={handleMenuClose}>
+							<Typography
+								onClick={() => {
+									navigate(`/trainings/bought`);
+									setActive("bought");
+								}}
+								sx={{
+									backgroundColor:
+										active === "bought"
+											? theme.palette.secondary[300]
+											: "transparent",
+									color:
+										active === "bought"
+											? theme.palette.primary[600]
+											: theme.palette.secondary[200],
+									borderRadius: 5,
+									cursor: "pointer",
+									p: 0.3,
+								}}
+								variant="h6">
+								Bought Trainings
+							</Typography>
+						</MenuItem>
+					)}
+					{!isNotLogged && (
+						<MenuItem onClick={handleMenuClose}>
+							<Typography
+								onClick={() => {
+									navigate("/orders");
+									setActive("orders");
+								}}
+								sx={{
+									backgroundColor:
+										active === "orders"
+											? theme.palette.secondary[300]
+											: "transparent",
+									color:
+										active === "orders"
+											? theme.palette.primary[600]
+											: theme.palette.secondary[200],
+									borderRadius: 5,
+									cursor: "pointer",
+									p: 0.3,
+								}}
+								variant="h6">
+								Orders
+							</Typography>
+						</MenuItem>
+					)}
+					{!isNotLogged && (
+						<MenuItem onClick={handleMenuClose}>
+							<Typography
+								onClick={() => {
+									handleSupport();
+									setActive("messenger");
+								}}
+								sx={{
+									backgroundColor:
+										active === "messenger"
+											? theme.palette.secondary[300]
+											: "transparent",
+									color:
+										active === "messenger"
+											? theme.palette.primary[600]
+											: theme.palette.secondary[200],
+									borderRadius: 5,
+									cursor: "pointer",
+									p: 0.3,
+								}}
+								variant="h6">
+								Contact Support
+							</Typography>
+						</MenuItem>
+					)}
 				</Box>
 			)}
 			<MenuItem>
@@ -617,69 +624,75 @@ const Navigation = () => {
 								variant="h6">
 								Trainings
 							</Typography>
-							<Typography
-								onClick={() => {
-									navigate(`/trainings/bought`);
-									setActive("bought");
-								}}
-								sx={{
-									backgroundColor:
-										active === "bought"
-											? theme.palette.secondary[300]
-											: "transparent",
-									color:
-										active === "bought"
-											? theme.palette.primary[600]
-											: theme.palette.secondary[200],
-									borderRadius: 5,
-									cursor: "pointer",
-									p: 0.3,
-								}}
-								variant="h6">
-								Bought Trainings
-							</Typography>
-							<Typography
-								onClick={() => {
-									navigate("/orders");
-									setActive("orders");
-								}}
-								sx={{
-									backgroundColor:
-										active === "orders"
-											? theme.palette.secondary[300]
-											: "transparent",
-									color:
-										active === "orders"
-											? theme.palette.primary[600]
-											: theme.palette.secondary[200],
-									borderRadius: 5,
-									cursor: "pointer",
-									p: 0.3,
-								}}
-								variant="h6">
-								Orders
-							</Typography>
-							<Typography
-								onClick={() => {
-									handleSupport();
-									setActive("messenger");
-								}}
-								sx={{
-									backgroundColor:
-										active === "messenger"
-											? theme.palette.secondary[300]
-											: "transparent",
-									color:
-										active === "messenger"
-											? theme.palette.primary[600]
-											: theme.palette.secondary[200],
-									borderRadius: 5,
-									cursor: "pointer",
-									p: 0.3,
-								}}
-								variant="h6">
-								Contact Support
-							</Typography>
+							{!isNotLogged && (
+								<Typography
+									onClick={() => {
+										navigate(`/trainings/bought`);
+										setActive("bought");
+									}}
+									sx={{
+										backgroundColor:
+											active === "bought"
+												? theme.palette.secondary[300]
+												: "transparent",
+										color:
+											active === "bought"
+												? theme.palette.primary[600]
+												: theme.palette.secondary[200],
+										borderRadius: 5,
+										cursor: "pointer",
+										p: 0.3,
+									}}
+									variant="h6">
+									Bought Trainings
+								</Typography>
+							)}
+							{!isNotLogged && (
+								<Typography
+									onClick={() => {
+										navigate("/orders");
+										setActive("orders");
+									}}
+									sx={{
+										backgroundColor:
+											active === "orders"
+												? theme.palette.secondary[300]
+												: "transparent",
+										color:
+											active === "orders"
+												? theme.palette.primary[600]
+												: theme.palette.secondary[200],
+										borderRadius: 5,
+										cursor: "pointer",
+										p: 0.3,
+									}}
+									variant="h6">
+									Orders
+								</Typography>
+							)}
+							{!isNotLogged && (
+								<Typography
+									onClick={() => {
+										handleSupport();
+										setActive("messenger");
+									}}
+									sx={{
+										backgroundColor:
+											active === "messenger"
+												? theme.palette.secondary[300]
+												: "transparent",
+										color:
+											active === "messenger"
+												? theme.palette.primary[600]
+												: theme.palette.secondary[200],
+										borderRadius: 5,
+										cursor: "pointer",
+										p: 0.3,
+									}}
+									variant="h6">
+									Contact Support
+								</Typography>
+							)}
 						</Box>
 					)}
 					<Box sx={{ flexGrow: 1 }} />

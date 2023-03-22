@@ -76,12 +76,12 @@ const ResetPassword = () => {
 								flexDirection="column"
 								alignItems="center"
 								justifyContent="space-around"
-								gap={1}>
+								gap={3}>
 								<Typography
 									variant="h3"
 									color={theme.palette.secondary[200]}
 									fontWeight="bold">
-									Introduce the new password
+									Type your new password
 								</Typography>
 								<TextField
 									label="Password"
@@ -111,13 +111,14 @@ const ResetPassword = () => {
 								<Button
 									type="submit"
 									sx={{
+										mt: 2,
 										width: "50%",
 										p: "1rem",
-										backgroundColor: theme.palette.primary.main,
-										color: theme.palette.background.alt,
+										backgroundColor: theme.palette.background.default,
+										color: theme.palette.secondary[300],
 										"&:hover": { color: theme.palette.primary.main },
 									}}>
-									Send
+									Save now!
 								</Button>
 							</Box>
 						</form>

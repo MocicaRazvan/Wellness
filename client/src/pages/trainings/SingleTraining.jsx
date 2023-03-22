@@ -5,7 +5,7 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
 import Carousel from "react-material-ui-carousel";
@@ -13,7 +13,7 @@ import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { addToCart } from "../../redux/cart/cartSlice";
+import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
 
 const SingleTraining = () => {
 	const { trainingId } = useParams();
@@ -22,12 +22,18 @@ const SingleTraining = () => {
 		id: trainingId,
 	});
 	const dispatch = useDispatch();
+	const cartItems = useSelector(selectCartItems);
 	const user = useSelector(selectCurrentUser);
 	const subscriptions = user?.subscriptions;
 	const id = user?.id;
+	const navigate = useNavigate();
 	const isAllowed =
 		subscriptions?.includes(trainingId) || training?.user === id;
+	const isInCart = cartItems?.some(({ id }) => id === trainingId);
+	console.log(cartItems);
+	console.log(trainingId);
 	console.log({ subscriptions });
+	console.log({ isInCart });
 
 	if (isLoading || !training)
 		return (
@@ -146,6 +152,17 @@ const SingleTraining = () => {
 						</Carousel>
 					</Box>
 				</>
+			) : isInCart ? (
+				<Box display="flex" justifyContent="center" width="100%" mt={2}>
+					<Button
+						sx={{
+							bgcolor: theme.palette.secondary[300],
+							color: theme.palette.background.alt,
+						}}
+						onClick={() => navigate("/cart")}>
+						Go to cart to finish the purchase!
+					</Button>
+				</Box>
 			) : (
 				<Box display="flex" justifyContent="center" width="100%" mt={2}>
 					<Button

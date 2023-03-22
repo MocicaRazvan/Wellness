@@ -47,7 +47,7 @@ const AllTrainings = () => {
 	if (isLoading)
 		return (
 			<CircularProgress
-				sx={{ position: "absolute", top: "50%", left: "50%" }}
+				sx={{ position: "absolute", top: "50%", left: "50%", height: "100vh" }}
 				size="3rem"
 				thickness={7}
 			/>

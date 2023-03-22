@@ -62,6 +62,11 @@ const SinglePostCard = ({ post }) => {
 					variant="h2"
 					color={theme.palette.secondary[300]}
 					textAlign="center"
+					letterSpacing={1.5}
+					sx={{
+						textDecoration: "underline",
+						mb: 2,
+					}}
 					fontWeight="bold">
 					{post?.title}
 				</Typography>

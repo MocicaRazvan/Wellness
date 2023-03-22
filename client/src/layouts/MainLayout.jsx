@@ -20,6 +20,8 @@ const MainLayout = () => {
 	const socket = io("ws://localhost:8900");
 	const user = useSelector(selectCurrentUser);
 	const isAdminPath = useLocation().pathname.includes("admin");
+	const { pathname } = useLocation();
+
 	useEffect(() => {
 		if (token && user?.id) {
 			console.log("io initialize");
@@ -36,6 +38,10 @@ const MainLayout = () => {
 	useEffect(() => {
 		window.document.title = "Wellness";
 	}, []);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [pathname]);
 
 	useEffect(() => {
 		dispatch(setCredentials());

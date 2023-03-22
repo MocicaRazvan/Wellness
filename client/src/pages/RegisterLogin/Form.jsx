@@ -136,7 +136,7 @@ const Form = ({ user = null }) => {
 
 			setTimeout(
 				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
-				1000,
+				2000,
 			);
 		}
 	};
@@ -373,7 +373,7 @@ const Form = ({ user = null }) => {
 														color: palette.secondary[200],
 														width: "50%",
 													}}>
-													{openCarousel ? "Hide" : "See"} your pictures
+													{openCarousel ? "Hide" : "See"} your picture
 												</Button>
 												{openCarousel && (
 													<CustomCarousel
@@ -447,29 +447,31 @@ const Form = ({ user = null }) => {
 								{isLogin ? "LOGIN" : user ? "UPDATE" : "REGISTER"}
 							</Button>
 
-							<Typography
-								onClick={() => {
-									setPageType(isLogin ? "register" : "login");
-									resetForm();
-								}}
-								gutterBottom
-								sx={{
-									textDecoration: "underline",
-									color: palette.primary.main,
-									"&:hover": {
-										cursor: "pointer",
-										color: palette.primary.light,
-									},
-								}}>
-								{isLogin
-									? "Don't have an account? Sign Up here."
-									: "Already have an account? Login here."}
-							</Typography>
+							{!isUpdate && (
+								<Typography
+									onClick={() => {
+										setPageType(isLogin ? "register" : "login");
+										resetForm();
+									}}
+									gutterBottom
+									sx={{
+										textDecoration: "underline",
+										color: palette.secondary[200],
+										"&:hover": {
+											cursor: "pointer",
+											color: palette.primary.light,
+										},
+									}}>
+									{isLogin
+										? "Don't have an account? Sign Up here."
+										: "Already have an account? Login here."}
+								</Typography>
+							)}
 							<Typography
 								onClick={() => navigate("/forgotPassword")}
 								sx={{
 									textDecoration: "underline",
-									color: palette.primary.main,
+									color: palette.secondary[200],
 									"&:hover": {
 										cursor: "pointer",
 										color: palette.primary.light,

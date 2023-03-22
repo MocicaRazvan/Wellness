@@ -16,15 +16,18 @@ import { slideInBottom, slideInRight } from "../../animation/animations";
 import { useNavigate } from "react-router-dom";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../redux/cart/cartSlice";
+import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const TrainingCard = ({ item }) => {
 	const [showOptions, setShowOptions] = useState(false);
 	const theme = useTheme();
+	const cartItems = useSelector(selectCartItems);
 	const subscriptions = useSelector(selectCurrentUser)?.subscriptions;
 	const user = useSelector(selectCurrentUser);
-	const isBought = subscriptions?.includes(item?.id);
+	const isBoughtOrInCart =
+		subscriptions?.includes(item?.id) ||
+		cartItems?.some(({ id }) => id === item?.id);
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -108,7 +111,7 @@ const TrainingCard = ({ item }) => {
 					View More
 				</ProductViewMore>
 			)}
-			{!isBought && (
+			{!isBoughtOrInCart && (
 				<ProductActionsWrapper show={showOptions}>
 					<Stack direction="column">
 						<IconButton

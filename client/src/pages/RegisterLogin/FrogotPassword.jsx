@@ -72,7 +72,8 @@ const FrogotPassword = () => {
 								display="flex"
 								flexDirection="column"
 								alignItems="center"
-								justifyContent="space-around">
+								justifyContent="space-around"
+								gap={2}>
 								<Typography
 									variant="h3"
 									color={theme.palette.secondary[200]}
@@ -92,10 +93,11 @@ const FrogotPassword = () => {
 								<Button
 									type="submit"
 									sx={{
+										mt: 2,
 										width: "50%",
 										p: "1rem",
-										backgroundColor: theme.palette.primary.main,
-										color: theme.palette.background.alt,
+										backgroundColor: theme.palette.background.default,
+										color: theme.palette.secondary[300],
 										"&:hover": { color: theme.palette.primary.main },
 									}}>
 									Send

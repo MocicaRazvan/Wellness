@@ -48,7 +48,7 @@ const AllPosts = () => {
 	if (isLoading)
 		return (
 			<CircularProgress
-				sx={{ position: "absolute", top: "50%", left: "50%" }}
+				sx={{ position: "absolute", top: "50%", left: "50%", height: "100vh" }}
 				size="3rem"
 				thickness={7}
 			/>
@@ -57,7 +57,12 @@ const AllPosts = () => {
 	return (
 		<Box p={2}>
 			<Typography
-				className="text-gradient"
+				// className="text-gradient"
+				// sx={{
+				// 	background: `-webkit-linear-gradient(${theme.palette.secondary[300]}, #333)`,
+				// 	WebkitBackgroundClip: "text",
+				// 	WebkitTextFillColor: "transparent",
+				// }}
 				variant="h2"
 				color={theme.palette.secondary[200]}
 				fontWeight="bold"

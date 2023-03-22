@@ -114,7 +114,11 @@ const HeroCarousel = () => {
 								variant="contained"
 								size="large"
 								component="a"
-								sx={{ minWidth: 100, mt: { xs: 20, md: 0 } }}>
+								sx={{
+									cursor: "default",
+									minWidth: 100,
+									mt: { xs: 20, md: 0 },
+								}}>
 								Welcome!
 							</Button>
 						) : (
