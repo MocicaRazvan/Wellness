@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, CircularProgress, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
@@ -10,7 +10,7 @@ import { selectSocket } from "../../redux/socket/socketSlice";
 import Messenger from "./Messenger";
 
 const MessengerWrapper = ({ admin = false }) => {
-	const mounted = useRef(false);
+	// const mounted = useRef(false);
 	const socketRedux = useSelector(selectSocket);
 	const user = useSelector(selectCurrentUser);
 	const theme = useTheme();
@@ -18,19 +18,13 @@ const MessengerWrapper = ({ admin = false }) => {
 	const notReload = useSelector(selectNotReload);
 
 	useEffect(() => {
-		mounted.current = true;
-		if (notReload) {
-			window.location.reload();
-		}
-
 		return () => {
-			mounted.current = false;
 			dispatch(setNotReload(false));
 		};
-	}, [dispatch, notReload]);
+	}, [dispatch]);
 
 	useEffect(() => {
-		if (socketRedux && user?.id) {
+		if (socketRedux && user?.id && notReload) {
 			socketRedux.emit("mountUser", user?.id);
 		}
 		return () => {
@@ -38,10 +32,17 @@ const MessengerWrapper = ({ admin = false }) => {
 				socketRedux.emit("unMountUser", user?.id);
 			}
 		};
-	}, [socketRedux, user?.id]);
+	}, [notReload, socketRedux, user?.id]);
 
-	if (!socketRedux || !user?.id) return <></>;
-
+	if (!socketRedux || !user?.id)
+		return (
+			<CircularProgress
+				sx={{ position: "absolute", top: "50%", left: "50%" }}
+				size="3rem"
+				thickness={7}
+			/>
+		);
+	console.log({ notReload });
 	return (
 		<Box
 			m={{ xs: 0, md: 2 }}
@@ -50,7 +51,8 @@ const MessengerWrapper = ({ admin = false }) => {
 			height={{ xs: "100%", md: "90%" }}
 			sx={{ mt: "80px !important" }}
 			bgcolor={theme.palette.background.alt}>
-			<Messenger ws={socketRedux} mounted={mounted} admin={admin} />
+			{/* <Messenger ws={socketRedux} mounted={mounted} admin={admin} /> */}
+			<Messenger ws={socketRedux} mounted={notReload} admin={admin} />
 		</Box>
 	);
 };

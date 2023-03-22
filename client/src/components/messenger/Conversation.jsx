@@ -7,7 +7,6 @@ const Conversation = ({ conversation, currentUser }) => {
 	const { data: user } = useGetUserByIdQuery({
 		id: conversation?.members?.find((m) => m !== currentUser.id),
 	});
-	console.log(user);
 
 	return (
 		<ConversationWrapper>

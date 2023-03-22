@@ -26,8 +26,8 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../components/reusable/Loading";
 
 const postSchema = yup.object().shape({
-	tags: yup.array().required("required"),
-	title: yup.string().required("required"),
+	tags: yup.array().required("Please enter the tags"),
+	title: yup.string().required("Please enter the title"),
 	pictures: yup.array(),
 });
 

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-//import { store } from "../store";
 
 const initialState = {
 	messages: 0,

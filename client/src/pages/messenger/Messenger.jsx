@@ -22,11 +22,7 @@ import {
 import { useRef } from "react";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 import useQuery from "../../utils/hooks/useQuery";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import {
-	selectNotReload,
-	setNotReload,
-} from "../../redux/messages/messagesSlice";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();
@@ -39,16 +35,17 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const [messages, setMessages] = useState([]);
 	const socket = useRef();
 	const scrollRef = useRef();
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 	const theme = useTheme();
-	const dispatch = useDispatch();
-	const [searchParams] = useSearchParams();
+	// const dispatch = useDispatch();
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const quryParams = new URLSearchParams();
 
 	const { data: conversations, isLoading } = useGetConversationsByUserQuery(
 		{ id: user?.id },
 		{ skip, pollingInterval: 100000 },
 	);
-	const notReload = useSelector(selectNotReload);
 
 	const [createMessage] = useCreateMessageMutation();
 	const [createNotification] = useCreateNotificationMutation();
@@ -58,16 +55,6 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			{ id: currentChat?.id },
 			{ skip: skipMessages, pollingInterval: 10000 },
 		);
-
-	useEffect(() => {
-		if (notReload) {
-			window.location.reload();
-		}
-
-		return () => {
-			dispatch(setNotReload(false));
-		};
-	}, [dispatch, notReload]);
 
 	useEffect(() => {
 		if (conversations) {
@@ -117,17 +104,12 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	}, [mounted, ws]);
 
 	useEffect(() => {
-		//user?.id && socket.current.emit("addUser", user?.id);
-		socket.current.on("getUsers", (users) => {
-			//console.log(users);
-		});
-	}, [user]);
-
-	useEffect(() => {
 		arrivalMessage &&
 			currentChat?.members.includes(arrivalMessage.sender) &&
 			setMessages((prev) => [...prev, arrivalMessage]);
 	}, [arrivalMessage, currentChat]);
+
+	// if (notReload) return <></>;
 
 	if (isLoading || isLoadingMessages || !conversations)
 		return (
@@ -157,7 +139,11 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			text: newMessage,
 		});
 
+		console.log("message sent");
+		//once
 		socket?.current.once("getPartener", (data) => {
+			console.log(data);
+			console.log(!data?.user?.mounted);
 			if (!data?.user?.mounted) {
 				(async () => {
 					await createNotification({
@@ -193,7 +179,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 					<div className="chatMenuWrapper">
 						{/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
 						{conversations.map((c, i) => (
-							<div key={`conv-${i}-${c.id}`}>
+							<div key={`conv-${i}-${c.id}-${new Date().getTime()}`}>
 								<Box
 									sx={{
 										borderRadius: 2,
@@ -204,8 +190,11 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 									}}
 									key={c.id + i}
 									onClick={() => {
-										dispatch(setNotReload(true));
-										void navigate(`/messenger?conv=${c.id}`, { replace: true });
+										// dispatch(setNotReload(true));
+										// void navigate(`/messenger?conv=${c.id}`, { replace: true });
+										quryParams.set("conv", c?.id);
+
+										setSearchParams(quryParams);
 									}}>
 									<Conversation conversation={c} currentUser={user} />
 								</Box>
@@ -243,6 +232,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 									variant="contained"
 									color="secondary"
 									disableElevation
+									disabled={newMessage === ""}
 									onClick={handleSubmit}>
 									Send
 								</Button>

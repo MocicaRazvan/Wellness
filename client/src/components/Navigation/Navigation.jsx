@@ -51,9 +51,9 @@ const Navigation = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const theme = useTheme();
-	const cartTotal = useSelector(selectCartItems).length;
+	const cartTotal = useSelector(selectCartItems)?.length;
 	const { pathname } = useLocation();
-	const isNotUser = user?.role !== "user";
+	const isNotUser = user?.role === "trainer" || user?.role === "admin";
 	const isAdmin = user?.role === "admin";
 	const isSearchBarOpen = pathnames.includes(pathname);
 	const isNonMobile = useMediaQuery("(min-width:900px)");
@@ -78,6 +78,9 @@ const Navigation = () => {
 				.some((e) => ["posts", "trainings", "orders", "messenger"].includes(e))
 		) {
 			setActive("");
+		}
+		if (pathname.split("/").some((e) => ["messenger"].includes(e))) {
+			setActive("messenger");
 		}
 	}, [pathname]);
 
@@ -735,7 +738,8 @@ const Navigation = () => {
 										variant="h6"
 										onClick={() => {
 											navigate("/login");
-											navigate(0);
+											//reload
+											// navigate(0);
 										}}>
 										Login
 									</Typography>
@@ -749,7 +753,8 @@ const Navigation = () => {
 										variant="h6"
 										onClick={() => {
 											navigate("/register");
-											navigate(0);
+											//reload
+											// navigate(0);
 										}}>
 										Register
 									</Typography>

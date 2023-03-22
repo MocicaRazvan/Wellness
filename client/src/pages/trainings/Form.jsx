@@ -25,10 +25,10 @@ import { useCreateTriningMutation } from "../../redux/trainings/trainingsApi";
 import tags from "../../utils/consts/tags";
 
 const trainingSchema = yup.object().shape({
-	title: yup.string().required("required"),
-	tags: yup.array().required("required"),
-	exercises: yup.array().required("required"),
-	price: yup.number().required("required"),
+	title: yup.string().required("Please enter the title"),
+	tags: yup.array().required("Please enter the tags"),
+	exercises: yup.array().required("Please enter the exercises"),
+	price: yup.number().required("Please enter the price"),
 	pictures: yup.array().required("required"),
 });
 

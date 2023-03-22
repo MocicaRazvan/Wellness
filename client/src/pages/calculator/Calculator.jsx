@@ -102,7 +102,7 @@ const Calculator = () => {
 						color: palette.secondary[300],
 						fontWeight: "bold",
 					}}>
-					Just complete the inputs and find out your calorie in seconds!
+					Just complete the inputs and find out your calories in seconds!
 				</Typography>
 				<Box>
 					<Formik
@@ -242,8 +242,10 @@ const Calculator = () => {
 										justifyContent="space-between"
 										alignItems="center">
 										<FormControl sx={{ width: { xs: "100%", md: "50%" } }}>
-											<InputLabel>Activity</InputLabel>
+											<InputLabel id="activity">Activity</InputLabel>
 											<Select
+												label="Activity"
+												labelId="activity"
 												onBlur={handleBlur}
 												name="activity"
 												onChange={handleChange}
@@ -269,8 +271,10 @@ const Calculator = () => {
 										justifyContent="space-between"
 										alignItems="center">
 										<FormControl sx={{ width: { xs: "100%", md: "50%" } }}>
-											<InputLabel>Birth Gender</InputLabel>
+											<InputLabel htmlFor="gender">Birth Gender</InputLabel>
 											<Select
+												label="Birth Gender"
+												id="gender"
 												onBlur={handleBlur}
 												name="gender"
 												onChange={handleChange}

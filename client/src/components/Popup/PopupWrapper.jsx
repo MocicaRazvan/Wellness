@@ -5,9 +5,6 @@ import { selectSocket } from "../../redux/socket/socketSlice";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetNotificationsByUserQuery } from "../../redux/notifications/notificationsApi";
 
-;
-
-
 const PopupWrapper = () => {
 	const socketRedux = useSelector(selectSocket);
 	const [skip, setSkip] = useState(true);
@@ -21,7 +18,9 @@ const PopupWrapper = () => {
 		{ skip },
 	);
 
-	useEffect(() => void setSkip(false), []);
+	useEffect(() => {
+		if (user?.id) void setSkip(false);
+	}, [user?.id]);
 	useEffect(() => void setNotifications(data), [data]);
 
 	useEffect(() => {

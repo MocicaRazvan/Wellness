@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Box,
 	Button,
@@ -22,16 +22,16 @@ import Loading from "../../components/reusable/Loading";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 
 const registerSchema = yup.object().shape({
-	firstName: yup.string().required("required"),
-	lastName: yup.string().required("required"),
-	email: yup.string().email("invalid email").required("required"),
-	password: yup.string().required("required"),
+	firstName: yup.string().required("Please enter first name "),
+	lastName: yup.string().required("Please enter last name"),
+	email: yup.string().email("invalid email").required("Please enter the email"),
+	password: yup.string().required("Please enter the password"),
 	retypePassword: yup
 		.string()
 		.required("Please retype your password.")
 		.oneOf([yup.ref("password")], "Your passwords do not match."),
-	location: yup.string().required("required"),
-	occupation: yup.string().required("required"),
+	location: yup.string().required("Please enter your location"),
+	occupation: yup.string().required("Please enter your occupation"),
 	picture: yup.string(),
 	phoneNumber: yup
 		.string()
@@ -42,8 +42,8 @@ const registerSchema = yup.object().shape({
 });
 
 const loginSchema = yup.object().shape({
-	email: yup.string().email("invalid email").required("required"),
-	password: yup.string().required("required"),
+	email: yup.string().email("invalid email").required("Please enter the email"),
+	password: yup.string().required("Please enter the password"),
 });
 
 const initialValuesLogin = {
@@ -76,6 +76,18 @@ const Form = ({ user = null }) => {
 	const [loginUser] = useLoginMutation();
 	const [registerUser] = useRegisterMutation();
 	const [updateUser] = useUpdateUserMutation();
+
+	const isUpdate = useLocation()
+		.pathname?.split("/")
+		.some((e) => ["update"].includes(e));
+
+	useEffect(() => {
+		if (pathname.slice(1) === "login") {
+			setPageType("login");
+		} else if (pathname.slice(1) === "register") {
+			setPageType("register");
+		}
+	}, [pathname]);
 
 	const initialValuesRegister = {
 		firstName: user?.username.split(" ")[0] || "",
@@ -124,7 +136,7 @@ const Form = ({ user = null }) => {
 
 			setTimeout(
 				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
-				800,
+				1000,
 			);
 		}
 	};
@@ -380,6 +392,7 @@ const Form = ({ user = null }) => {
 								onChange={handleChange}
 								value={values.email}
 								name="email"
+								disabled={isUpdate}
 								error={
 									(Boolean(touched.email) && Boolean(errors.email)) ||
 									message !== ""

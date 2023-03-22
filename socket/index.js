@@ -16,36 +16,29 @@ const removeUser = (socketId) =>
 const getUser = (userId) => users?.find((user) => user?.userId === userId);
 
 io.on("connection", (socket) => {
-	//when connect
-	console.log("a user connected");
-	console.log(users);
-	// take userId and socket id from user
 	socket.on("addUser", ({ id: userId, mounted }) => {
 		addUser(userId, socket.id, mounted);
 		io.emit("getUsers", users);
-		//console.log(users);
 	});
 
 	socket.on("mountUser", (userId) => {
 		users = users.map((user) =>
 			user.userId === userId ? { ...user, mounted: true } : user,
 		);
-		console.log("mount");
-		console.log(users);
+		io.emit("getUsers", users);
 	});
 
 	socket.on("unMountUser", (userId) => {
 		users = users.map((user) =>
 			user.userId === userId ? { ...user, mounted: false } : user,
 		);
-		console.log("unMount");
-		console.log(users);
+		io.emit("getUsers", users);
 	});
 
 	socket.on("notifiUnmounted", ({ receiverId, type, sender, ref }) => {
 		const user = getUser(receiverId);
-		console.log(receiverId);
 		if (!user?.mounted) {
+			console.log("notification");
 			io.to(user?.socketId).emit("getNotification", {
 				type,
 				sender,
@@ -58,13 +51,12 @@ io.on("connection", (socket) => {
 	socket.on("sendMessage", ({ senderId, receiverId, text }) => {
 		const user = getUser(receiverId);
 		const sender = getUser(senderId);
-
-		console.log("sendmsg");
 		// console.log(user);
-		// console.log(sender);
+		console.log({ sender });
 		io.to(sender.socketId).emit("getPartener", {
 			user,
 		});
+		socket.broadcast;
 
 		if (user) {
 			io.to(user.socketId).emit("getMessage", {
@@ -72,6 +64,12 @@ io.on("connection", (socket) => {
 				text,
 			});
 		}
+	});
+
+	socket.on("unmount", () => {
+		console.log("a user unmount");
+		removeUser(socket?.id);
+		io.emit("getUsers", users);
 	});
 
 	//when diconnect

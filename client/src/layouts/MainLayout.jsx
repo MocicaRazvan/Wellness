@@ -21,37 +21,31 @@ const MainLayout = () => {
 	const user = useSelector(selectCurrentUser);
 	const isAdminPath = useLocation().pathname.includes("admin");
 	useEffect(() => {
-		if (token && user) {
+		if (token && user?.id) {
 			console.log("io initialize");
 			dispatch(initializeSocket({ socket }));
 			if (user?.id) {
 				socket.emit("addUser", { id: user?.id, mounted: false });
 			}
 		}
-	}, [dispatch, socket, token, user, user?.id]);
+		return () => {
+			socket.disconnect();
+		};
+	}, [dispatch, socket, token, user?.id]);
+
 	useEffect(() => {
 		window.document.title = "Wellness";
-		// window.document.icon = logo;
-	}, []);
-
-	// useEffect(() => {
-	// 	user?.id && socket?.current.emit("addUser", user?.id);
-	// 	socket.current.on("getUsers", (users) => {
-	// 		//console.log(users);
-	// 	});
-	// }, [socket, user]);
-	useEffect(() => {
-		window.scrollTo(0, 0);
 	}, []);
 
 	useEffect(() => {
 		dispatch(setCredentials());
 	}, [dispatch]);
+
 	useEffect(() => {
 		if (token) {
 			const expData = jwtDecode(token).exp;
 			const currentTimeInMilisenconds = Math.floor(new Date().getTime() / 1000);
-			console.log({ expData, currentTimeInMilisenconds });
+			// console.log({ expData, currentTimeInMilisenconds });
 			if (currentTimeInMilisenconds > expData) {
 				dispatch(logOut());
 			}

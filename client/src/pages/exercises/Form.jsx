@@ -26,15 +26,18 @@ import muscleGroups from "../../utils/consts/muscleGorups";
 
 const exerciseSchema = yup.object().shape({
 	clips: yup.array(),
-	title: yup.string().required("required"),
+	title: yup.string().required("Please enter the title"),
 	// body: yup.string().required("required"),
-	muscleGroups: yup.array().required("required"),
+	muscleGroups: yup.array().required("Please enter the muscle groups targeted"),
 });
 
 const Form = ({ exercise }) => {
 	const [body, setBody] = useState(exercise?.body || "");
 	const [message, setMessage] = useState("");
-	const [loading, setLoading] = useState({ msg: "Creating the exercise...", show: false });
+	const [loading, setLoading] = useState({
+		msg: "Creating the exercise...",
+		show: false,
+	});
 
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
