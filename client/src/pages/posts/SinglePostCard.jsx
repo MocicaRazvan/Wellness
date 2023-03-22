@@ -4,6 +4,8 @@ import { Box, Container } from "@mui/system";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { usePostActionsMutation } from "../../redux/posts/postsApiSlice";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const SinglePostCard = ({ post }) => {
 	const theme = useTheme();
@@ -15,42 +17,46 @@ const SinglePostCard = ({ post }) => {
 			console.log(error);
 		}
 	};
+	const user = useSelector(selectCurrentUser);
+
 	return (
 		<Container sx={{ mt: 2 }}>
 			<Box position="relative">
-				<Box
-					position={{ xs: "relative", md: "absolute" }}
-					top="0"
-					left="0"
-					display="flex"
-					alignItems="center"
-					justifyContent="start"
-					gap={0.5}>
-					<IconButton
-						onClick={async () => await handleAction(post?.id, "likes")}>
-						<ThumbUpIcon color="success" />
-					</IconButton>
-					<Typography
-						sx={{ alignSelf: "end" }}
-						gutterBottom
-						variant="body2"
-						fontSize={15}
-						color={theme.palette.secondary[300]}>
-						{post?.likes?.length} likes
-					</Typography>
-					<IconButton
-						onClick={async () => await handleAction(post?.id, "dislikes")}>
-						<ThumbDownIcon color="error" />
-					</IconButton>
-					<Typography
-						sx={{ alignSelf: "end" }}
-						gutterBottom
-						variant="body2"
-						fontSize={15}
-						color={theme.palette.secondary[300]}>
-						{post?.dislikes?.length} dislikes
-					</Typography>
-				</Box>
+				{user && (
+					<Box
+						position={{ xs: "relative", md: "absolute" }}
+						top="0"
+						left="0"
+						display="flex"
+						alignItems="center"
+						justifyContent="start"
+						gap={0.5}>
+						<IconButton
+							onClick={async () => await handleAction(post?.id, "likes")}>
+							<ThumbUpIcon color="success" />
+						</IconButton>
+						<Typography
+							sx={{ alignSelf: "end" }}
+							gutterBottom
+							variant="body2"
+							fontSize={15}
+							color={theme.palette.secondary[300]}>
+							{post?.likes?.length} likes
+						</Typography>
+						<IconButton
+							onClick={async () => await handleAction(post?.id, "dislikes")}>
+							<ThumbDownIcon color="error" />
+						</IconButton>
+						<Typography
+							sx={{ alignSelf: "end" }}
+							gutterBottom
+							variant="body2"
+							fontSize={15}
+							color={theme.palette.secondary[300]}>
+							{post?.dislikes?.length} dislikes
+						</Typography>
+					</Box>
+				)}
 				<Typography
 					gutterBottom
 					variant="h2"
