@@ -6,10 +6,13 @@ import { CircularProgress, Stack } from "@mui/material";
 
 import Core from "../../components/comments/Core";
 import SinglePostCard from "./SinglePostCard";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const SinglePost = () => {
 	const { postId } = useParams();
 	const { data, isLoading } = useGetPostByIdQuery({ id: postId });
+	const user = useSelector(selectCurrentUser);
 
 	if (isLoading)
 		return (

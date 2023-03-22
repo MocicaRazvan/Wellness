@@ -1,11 +1,13 @@
 import { CircularProgress, Container, Stack } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetCommentsQuery } from "../../redux/comments/commentsApi";
 import AddComment from "./AddComment";
 import Comment from "./Comment";
 
 const Core = ({ type, id }) => {
 	const { data, isLoading } = useGetCommentsQuery({ [type]: id });
-
+	const user = useSelector(selectCurrentUser);
 	if (isLoading)
 		return (
 			<CircularProgress
@@ -22,7 +24,7 @@ const Core = ({ type, id }) => {
 				{data?.comments?.map((comment) => (
 					<Comment key={comment.id} comment={comment} />
 				))}
-				<AddComment type={type} id={id} />
+				{user && <AddComment type={type} id={id} />}
 			</Stack>
 		</Container>
 	);

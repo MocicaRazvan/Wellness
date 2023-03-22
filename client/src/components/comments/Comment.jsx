@@ -35,7 +35,7 @@ const Comment = ({ comment }) => {
 		color: "red",
 	});
 	const user = useSelector(selectCurrentUser);
-	const isAuth = user.id === comment.user._id || user.role === "admin";
+	const isAuth = user?.id === comment?.user?._id || user?.role === "admin";
 	const theme = useTheme();
 
 	const [deleteComment] = useDeleteCommentMutation();
@@ -46,7 +46,7 @@ const Comment = ({ comment }) => {
 
 	const handleDeleteComment = async () => {
 		try {
-			await deleteComment({ id: comment.id }).unwrap();
+			await deleteComment({ id: comment?.id }).unwrap();
 		} catch (error) {
 			console.log(error);
 		}
@@ -107,9 +107,11 @@ const Comment = ({ comment }) => {
 			<Loading loading={loading} type="alert" />
 			<Box sx={{ p: "15px" }}>
 				<Stack spacing={2} direction="row">
-					<Box>
-						<Actions comment={comment} />
-					</Box>
+					{user && (
+						<Box>
+							<Actions comment={comment} />
+						</Box>
+					)}
 					<Box sx={{ width: "100%" }}>
 						<Stack
 							spacing={2}
