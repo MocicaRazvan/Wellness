@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,8 @@ import { io } from "socket.io-client";
 import { initializeSocket } from "../redux/socket/socketSlice";
 import Footer from "../components/footer/Footer";
 import { Box } from "@mui/material";
+import ScrollTop from "../components/reusable/ScrollTop";
+import { clearCart } from "../redux/cart/cartSlice";
 
 const MainLayout = () => {
 	const dispatch = useDispatch();
@@ -20,7 +22,7 @@ const MainLayout = () => {
 	const socket = io("ws://localhost:8900");
 	const user = useSelector(selectCurrentUser);
 	const isAdminPath = useLocation().pathname.includes("admin");
-	const { pathname } = useLocation();
+	const ref = useRef(null);
 
 	useEffect(() => {
 		if (token && user?.id) {
@@ -30,6 +32,7 @@ const MainLayout = () => {
 				socket.emit("addUser", { id: user?.id, mounted: false });
 			}
 		}
+
 		return () => {
 			socket.disconnect();
 		};
@@ -40,12 +43,14 @@ const MainLayout = () => {
 	}, []);
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, [pathname]);
-
-	useEffect(() => {
 		dispatch(setCredentials());
 	}, [dispatch]);
+
+	useEffect(() => {
+		if (token === null && !user?.id) {
+			dispatch(clearCart());
+		}
+	}, [dispatch, token, user?.id]);
 
 	useEffect(() => {
 		if (token) {
@@ -59,7 +64,8 @@ const MainLayout = () => {
 	}, [dispatch, token]);
 
 	return (
-		<>
+		<Box id="back-to-top-anchor" ref={ref}>
+			<ScrollTop ref={ref} />
 			{!isAdminPath && <Navigation />}
 			{!isAdminPath && (
 				<Box mt={10}>
@@ -68,7 +74,7 @@ const MainLayout = () => {
 			)}
 			{isAdminPath && <Outlet />}
 			{!isAdminPath && <Footer />}
-		</>
+		</Box>
 	);
 };
 

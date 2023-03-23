@@ -98,30 +98,42 @@ const TrainingCard = ({ item }) => {
 					))}
 				</Box>
 				<Box sx={{ m: 1 }}>
-					<Typography variant="subtitle2" color={theme.palette.secondary[300]}>
-						Made By: {item?.user?.username}
-					</Typography>
+					<Box display="flex" justifyContent="space-between">
+						<Typography
+							variant="subtitle2"
+							color={theme.palette.secondary[300]}>
+							Made By: {item?.user?.username}
+						</Typography>
+						<Typography
+							variant="subtitle1"
+							fontWeight="bold"
+							color={theme.palette.secondary[200]}>
+							Price: ${item?.price}
+						</Typography>
+					</Box>
 				</Box>
 			</CardContent>
-			{showOptions && (
-				<ProductViewMore
-					onClick={handleViewMore}
-					show={showOptions}
-					variant="contained">
-					View More
-				</ProductViewMore>
-			)}
-			{!isBoughtOrInCart && (
-				<ProductActionsWrapper show={showOptions}>
-					<Stack direction="column">
-						<IconButton
-							onClick={handleAddTocard}
-							sx={{ color: theme.palette.secondary[500] }}>
-							<ShoppingBasketIcon color={theme.palette.secondary[500]} />
-						</IconButton>
-					</Stack>
-				</ProductActionsWrapper>
-			)}
+			<Box>
+				{showOptions && (
+					<ProductViewMore
+						onClick={handleViewMore}
+						show={showOptions}
+						variant="contained">
+						View More
+					</ProductViewMore>
+				)}
+				{!isBoughtOrInCart && (
+					<ProductActionsWrapper show={showOptions}>
+						<Stack direction="column">
+							<IconButton
+								onClick={handleAddTocard}
+								sx={{ color: theme.palette.secondary[500] }}>
+								<ShoppingBasketIcon color={theme.palette.secondary[500]} />
+							</IconButton>
+						</Stack>
+					</ProductActionsWrapper>
+				)}
+			</Box>
 		</Card>
 	);
 };

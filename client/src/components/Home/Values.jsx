@@ -26,7 +26,6 @@ const Values = ({ values, links }) => {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((e) => {
 				if (e.isIntersecting) {
-					console.log(e.target);
 					e.target.classList.add("show");
 				}
 			});

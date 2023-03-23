@@ -28,8 +28,8 @@ const trainingSchema = yup.object().shape({
 	title: yup.string().required("Please enter the title"),
 	tags: yup.array().required("Please enter the tags"),
 	exercises: yup.array().required("Please enter the exercises"),
-	price: yup.number().required("Please enter the price"),
-	pictures: yup.array().required("required"),
+	price: yup.number().required("Please enter the price").min(0),
+	pictures: yup.array().required("Please enter pictures"),
 });
 
 const Form = ({ training }) => {
@@ -40,6 +40,11 @@ const Form = ({ training }) => {
 	});
 	const [openCarousel, setOpenCarousel] = useState(false);
 	const [message, setMessage] = useState("");
+	const [alert, setAlert] = useState({
+		show: false,
+		msg: "",
+		color: "red",
+	});
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
 	const user = useSelector(selectCurrentUser);
@@ -78,31 +83,54 @@ const Form = ({ training }) => {
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (!description) {
 			setMessage("Please provide a description");
+			setAlert((prev) => ({
+				...prev,
+				show: true,
+				msg: "Please provide a description",
+			}));
+
+			setTimeout(
+				() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
+				2000,
+			);
 		} else {
 			const { title, tags, exercises, price, pictures } = values;
 			if (!training) {
-				try {
-					setLoading((prev) => ({ ...prev, show: true }));
-					const res = await createTraining({
-						title,
-						tags,
-						exercises,
-						price,
-						description,
-						images: pictures,
-					});
-					setLoading((prev) => ({ ...prev, show: false }));
-					if (res?.error) {
-						setMessage(res.error.data.message);
-					} else {
-						setMessage("");
+				if (pictures?.length === 0) {
+					setAlert((prev) => ({
+						...prev,
+						show: true,
+						msg: "Please enter at least 1 picture!",
+					}));
+
+					setTimeout(
+						() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
+						2000,
+					);
+				} else {
+					try {
+						setLoading((prev) => ({ ...prev, show: true }));
+						const res = await createTraining({
+							title,
+							tags,
+							exercises,
+							price,
+							description,
+							images: pictures,
+						});
+						setLoading((prev) => ({ ...prev, show: false }));
+						if (res?.error) {
+							setMessage(res.error.data.message);
+						} else {
+							setMessage("");
+							onSubmitProps.resetForm();
+							navigate("/trainings/user");
+						}
+					} catch (error) {
+						console.log(error);
+						setDescription("");
 						onSubmitProps.resetForm();
-						navigate("/trainings/user");
 					}
-				} catch (error) {
-					console.log(error);
-					setDescription("");
-					onSubmitProps.resetForm();
 				}
 			}
 		}
@@ -110,6 +138,8 @@ const Form = ({ training }) => {
 
 	return (
 		<Box>
+			{" "}
+			<Loading loading={alert} type="alert" />
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
@@ -150,6 +180,9 @@ const Form = ({ training }) => {
 								value={values.price}
 								name="price"
 								type="number"
+								InputProps={{
+									inputProps: { min: 0, step: 1, type: "number" },
+								}}
 								error={Boolean(touched.price) && Boolean(errors.price)}
 								helperText={touched.price && errors.price}
 								sx={{ gridColumn: "span 2" }}

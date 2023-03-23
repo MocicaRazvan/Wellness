@@ -29,7 +29,9 @@ const PostCard = ({ item }) => {
 				boxShadow: `2px 2px 20px 2px ${theme.palette.background.alt}`,
 				borderRadius: 3,
 			}}>
-			<CardActionArea disableRipple>
+			<CardActionArea
+				disableRipple
+				onClick={() => void navigate(`/posts/find/${item.id}`)}>
 				<CardMedia sx={{ height: 240 }} image={item.images[0].url} />
 				<CardContent>
 					<Typography

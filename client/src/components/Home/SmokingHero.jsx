@@ -23,7 +23,6 @@ const SmokingHero = () => {
 	const dispatch = useDispatch();
 	const notReload = useSelector(selectNotReload);
 
-	console.log({ notReload });
 	useEffect(() => {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((e) => {

@@ -8,7 +8,7 @@ const Loading = ({ loading, type = "loading" }) => {
 	const { palette } = useTheme();
 	return (
 		<Box
-			zIndex="10"
+			zIndex="100"
 			position="fixed"
 			top="0"
 			left="0"

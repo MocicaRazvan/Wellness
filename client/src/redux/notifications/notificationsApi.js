@@ -46,7 +46,23 @@ export const notificationsApiSlice = apiSlice.injectEndpoints({
 				if (res) {
 					return [
 						{ type: "Notification", id: "LIST" },
-						...res.ids.map((_id) => ({ type: "Notification", id: _id })),
+						...res?.ids.map((_id) => ({ type: "Notification", id: _id })),
+					];
+				} else {
+					return [{ type: "Notification", id: "LIST" }];
+				}
+			},
+		}),
+		deleteNotifcationsBySender: builder.mutation({
+			query: ({ senderId }) => ({
+				url: `/notifications/receiver/${senderId}`,
+				method: "DELETE",
+			}),
+			invalidatesTags: (res, err, arg) => {
+				if (res) {
+					return [
+						{ type: "Notification", id: "LIST" },
+						...res?.ids.map((_id) => ({ type: "Notification", id: _id })),
 					];
 				} else {
 					return [{ type: "Notification", id: "LIST" }];
@@ -61,4 +77,5 @@ export const {
 	useGetNotificationsByUserQuery,
 	useDeleteNotificationByIdMutation,
 	useDeleteNotificationsByReceiverMutation,
+	useDeleteNotifcationsBySenderMutation,
 } = notificationsApiSlice;

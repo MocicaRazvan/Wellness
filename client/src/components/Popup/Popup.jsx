@@ -9,7 +9,10 @@ import IconBtn from "../reusable/IconBtn";
 import MailIcon from "@mui/icons-material/Mail";
 import { useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDeleteNotificationsByReceiverMutation } from "../../redux/notifications/notificationsApi";
+import {
+	useDeleteNotifcationsBySenderMutation,
+	useDeleteNotificationsByReceiverMutation,
+} from "../../redux/notifications/notificationsApi";
 import { useDispatch } from "react-redux";
 import { setNotReload } from "../../redux/messages/messagesSlice";
 
@@ -19,6 +22,7 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 	const theme = useTheme();
 	const navigate = useNavigate();
 	const [deleteByReceiver] = useDeleteNotificationsByReceiverMutation();
+	const [deleteBySender] = useDeleteNotifcationsBySenderMutation();
 	const dispatch = useDispatch();
 	//when open the notification the count will be 0
 
@@ -37,6 +41,25 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 		setOpen((prev) => !prev);
 	};
 
+	const handleItemClick = (e, { _id }) => {
+		if (e) {
+			(async () => {
+				try {
+					const ids = await deleteBySender({ senderId: _id }).unwrap();
+					console.log({ ids });
+					setNotifications((prev) =>
+						prev.filter(({ sender }) => sender._id !== _id),
+					);
+					console.log({ notifications });
+				} catch (error) {
+					console.log(error);
+				}
+			})();
+		}
+		setOpen((prev) => !prev);
+	};
+	console.log(notifications);
+
 	if (!notifications) return <></>;
 
 	const content = notifications?.map(({ createdAt, sender, type, ref }) => (
@@ -51,9 +74,9 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 				},
 			}}
 			textAlign="center"
-			onClick={() => {
+			onClick={(e) => {
+				handleItemClick(e, sender);
 				dispatch(setNotReload(true));
-				setOpen((prev) => !prev);
 				navigate(`/messenger?conv=${ref}`);
 			}}>
 			{`${sender?.username} ${type}`}

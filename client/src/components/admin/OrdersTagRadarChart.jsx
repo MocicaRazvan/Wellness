@@ -36,12 +36,12 @@ const OrdersTagRadarChart = () => {
 				<RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
 					<PolarGrid />
 					<PolarAngleAxis dataKey="tag" />
-					<PolarRadiusAxis domain={[0, max]} />
+					<PolarRadiusAxis domain={[0, max]} orientation="right" rotate={270} />
 					<Radar
 						dataKey="total"
 						stroke={theme.palette.secondary.main}
 						fill={theme.palette.secondary.main}
-						fillOpacity={0.4}
+						fillOpacity={0.5}
 					/>
 				</RadarChart>
 			</ResponsiveContainer>

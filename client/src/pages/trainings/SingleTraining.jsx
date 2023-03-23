@@ -30,10 +30,10 @@ const SingleTraining = () => {
 	const isAllowed =
 		subscriptions?.includes(trainingId) || training?.user === id;
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
-	console.log(cartItems);
-	console.log(trainingId);
-	console.log({ subscriptions });
-	console.log({ isInCart });
+	// console.log(cartItems);
+	// console.log(trainingId);
+	// console.log({ subscriptions });
+	// console.log({ isInCart });
 
 	if (isLoading || !training)
 		return (
@@ -52,29 +52,52 @@ const SingleTraining = () => {
 
 	return (
 		<Box m="1.5rem 1rem" position="relative">
-			<Typography
+			<Box
 				sx={{
 					position: "absolute",
 					top: 0,
 					left: 0,
-					width: { xs: 30, md: 200 },
-					color: theme.palette.secondary[200],
-				}}
-				variant="h6"
-				fontWeight="600"
-				fontSize={18}>
-				Liked by{" "}
+				}}>
 				<Typography
-					component="span"
+					sx={{
+						// position: "absolute",
+						// top: 0,
+						// left: 0,
+						width: { xs: 30, md: 200 },
+						color: theme.palette.secondary[200],
+					}}
 					variant="h6"
-					fontWeight="900"
-					color={theme.palette.secondary[400]}
+					fontWeight="600"
 					fontSize={18}>
-					{training?.likes?.length}/
-					{training?.likes?.length + training?.dislikes?.length}
-				</Typography>{" "}
-				people
-			</Typography>
+					Liked by{" "}
+					<Typography
+						component="span"
+						variant="h6"
+						fontWeight="900"
+						color={theme.palette.secondary[400]}
+						fontSize={18}>
+						{training?.likes?.length}/
+						{training?.likes?.length + training?.dislikes?.length}
+					</Typography>{" "}
+					people
+				</Typography>
+				{!isAllowed && (
+					<Typography
+						variant="subtitle1"
+						fontWeight="bold"
+						color={theme.palette.secondary[200]}>
+						Price:{" "}
+						<Typography
+							component="span"
+							variant="h6"
+							fontWeight="900"
+							color={theme.palette.secondary[400]}
+							fontSize={18}>
+							${training?.price}
+						</Typography>{" "}
+					</Typography>
+				)}
+			</Box>
 			<Typography
 				variant="h2"
 				color={theme.palette.secondary[200]}

@@ -6,7 +6,6 @@ const authSlice = createSlice({
 		token: localStorage["auth"] || null,
 		user: localStorage["user"] ? JSON.parse(localStorage["user"]) : null,
 		mode: "dark",
-	
 	},
 	reducers: {
 		setCredentials: (state, action) => {
@@ -39,7 +38,6 @@ const authSlice = createSlice({
 		setMode: (state) => {
 			state.mode = state.mode === "dark" ? "light" : "dark";
 		},
-	
 	},
 });
 

@@ -67,3 +67,26 @@ exports.deleteUserNotifications = async (req, res) => {
 		.status(200)
 		.json({ message: `Notifications for user ${receiverId} deleted`, ids });
 };
+
+//delete notifications/receiver/:senderId
+exports.deleteNotificaionsBySender = async (req, res) => {
+	const { senderId } = req.params;
+
+	const ids = await Notification.find({ sender: senderId }).select("_id");
+	if (!ids)
+		return res.status(400).json({
+			message: `Notifications with sender ${senderId} is not valid`,
+		});
+
+	const deleteRes = await Notification.deleteMany({ sender: senderId });
+
+	if (!deleteRes?.acknowledged)
+		return res.status(400).json({
+			message: `Notifications with sender ${senderId} is not valid`,
+		});
+
+	return res.status(200).json({
+		message: `Notifications with sender ${senderId} deleted`,
+		ids,
+	});
+};
