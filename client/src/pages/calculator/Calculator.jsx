@@ -65,7 +65,7 @@ const Calculator = () => {
 	const [inPds, setInPds] = useState(false);
 	const [submitted, setSubmitted] = useState({ show: false, BMR: 0 });
 
-	const isNonMobile = useMediaQuery("(min-width:600px)");
+	const isNonMobile = useMediaQuery("(min-width:1000px)");
 	const { palette } = useTheme();
 
 	const handleFormSubmit = async (
@@ -89,7 +89,7 @@ const Calculator = () => {
 	return (
 		<Box>
 			<Box
-				width={isNonMobile ? "50%" : "93%"}
+				width={isNonMobile ? "42%" : "93%"}
 				p="2rem"
 				m="2rem auto"
 				borderRadius="1.5rem"

@@ -468,7 +468,11 @@ const Form = ({ user = null }) => {
 								</Typography>
 							)}
 							<Typography
-								onClick={() => navigate("/forgotPassword")}
+								onClick={() =>
+									isUpdate
+										? navigate("/forgotPassword", { state: user?.email })
+										: navigate("/forgotPassword")
+								}
 								sx={{
 									textDecoration: "underline",
 									color: palette.secondary[200],
