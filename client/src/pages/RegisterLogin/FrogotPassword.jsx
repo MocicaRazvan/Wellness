@@ -6,7 +6,7 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
@@ -15,7 +15,7 @@ import { useForgotPasswordMutation } from "../../redux/auth/authApiSlice";
 import { Formik } from "formik";
 
 const schema = yup.object().shape({
-	email: yup.string().email("invalid email").required("required"),
+	email: yup.string().email("invalid email").required("Please enter the email"),
 });
 
 const FrogotPassword = () => {
@@ -28,7 +28,7 @@ const FrogotPassword = () => {
 	const theme = useTheme();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 	const initialValues = { email: userEmail || "" };
-	if (user) navigate("/");
+	const [first, setFirst] = useState(true);
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		try {
@@ -44,6 +44,7 @@ const FrogotPassword = () => {
 			onSubmitProps.resetForm();
 		}
 	};
+
 	return (
 		<Box>
 			<Box
@@ -68,7 +69,7 @@ const FrogotPassword = () => {
 					}) => (
 						<form onSubmit={handleSubmit}>
 							<Box
-								height="20vh"
+								height="fit-content"
 								display="flex"
 								flexDirection="column"
 								alignItems="center"
@@ -86,6 +87,7 @@ const FrogotPassword = () => {
 									onChange={handleChange}
 									value={values.email}
 									name="email"
+									disabled={user ? true : false}
 									error={Boolean(touched.email) && Boolean(errors.email)}
 									helperText={touched.email && errors.email}
 									sx={{ width: "80%" }}

@@ -69,7 +69,7 @@ const UserDialog = () => {
 						},
 					}}>
 					<Button onClick={handleClose} variant="contained" className="btn">
-						Disagree
+						Maybe Later
 					</Button>
 					<Button
 						onClick={() => {

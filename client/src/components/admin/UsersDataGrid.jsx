@@ -102,7 +102,7 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 
 const User = styled("div")(({ theme }) => ({
 	color: theme.palette.error.dark,
-	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	// backgroundColor: " rgba(253, 181, 40, 0.12)",
 	padding: " 3px 5px",
 	borderRadius: "3px",
 	cursor: "pointer",
@@ -111,7 +111,7 @@ const User = styled("div")(({ theme }) => ({
 }));
 const Trainer = styled("div")(({ theme }) => ({
 	color: theme.palette.success.dark,
-	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	// backgroundColor: " rgba(253, 181, 40, 0.12)",
 	opacity: "0.9",
 	padding: " 3px 5px",
 	borderRadius: "3px",
@@ -121,7 +121,7 @@ const Trainer = styled("div")(({ theme }) => ({
 
 const Admin = styled("div")(({ theme }) => ({
 	color: theme.palette.warning.dark,
-	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	// backgroundColor: " rgba(253, 181, 40, 0.12)",
 	padding: " 3px 5px",
 	borderRadius: "3px",
 	fontWeight: 600,

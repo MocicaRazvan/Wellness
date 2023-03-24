@@ -16,6 +16,7 @@ import {
 	useGetUsersExercisesQuery,
 } from "../../redux/exercises/exercisesApi";
 import Header from "../../components/reusable/Header";
+import UserAgreement from "../../components/reusable/UserAgreement";
 
 const UserExercises = () => {
 	const [page, setPage] = useState(0);
@@ -24,7 +25,8 @@ const UserExercises = () => {
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
 	const user = useSelector(selectCurrentUser);
-	const [tool, setTool] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [deleteId, setDeleteId] = useState(null);
 	const { data, isLoading } = useGetUsersExercisesQuery(
 		{
 			id: user?.id,
@@ -36,6 +38,7 @@ const UserExercises = () => {
 		{ skip: !user?.id },
 	);
 	const [deleteExercise] = useDeleteExerciseMutation();
+
 	const handleDeleteExercise = async (id) => {
 		try {
 			await deleteExercise({ id }).unwrap();
@@ -100,7 +103,10 @@ const UserExercises = () => {
 									variant="contained"
 									size="small"
 									disabled={params.row?.occurrences > 0}
-									onClick={() => handleDeleteExercise(params.row.id)}>
+									onClick={() => {
+										setDeleteId(params.row.id);
+										setOpen(true);
+									}}>
 									Delete
 								</Button>
 							</Box>
@@ -112,6 +118,15 @@ const UserExercises = () => {
 	];
 	return (
 		<Box m="1.5rem 2.5rem">
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to delete this exercise? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleDeleteExercise(deleteId)}
+			/>
 			<Header title="Your Exercises" subtitle="Manage your exercises" />
 			<CustomDataGrid
 				isLoading={isLoading || !data}

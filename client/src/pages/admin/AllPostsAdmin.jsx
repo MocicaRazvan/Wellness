@@ -37,7 +37,7 @@ const Post = ({ post }) => {
 			<CardContent>
 				<Typography
 					sx={{ fontSize: 14 }}
-					color={theme.palette.secondary[700]}
+					color={theme.palette.secondary[500]}
 					gutterBottom>
 					{post?.tags.map((t) => `${t} `)}
 				</Typography>

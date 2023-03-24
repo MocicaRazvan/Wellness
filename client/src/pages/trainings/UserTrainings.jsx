@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Header from "../../components/reusable/Header";
+import UserAgreement from "../../components/reusable/UserAgreement";
 import CustomDataGrid from "../../dataGrid/CustomDataGrid";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
@@ -17,6 +18,8 @@ const Trainings = () => {
 	const [sort, setSort] = useState({});
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
+	const [open, setOpen] = useState(false);
+	const [deleteId, setDeleteId] = useState(null);
 	const user = useSelector(selectCurrentUser);
 
 	const { data, isLoading } = useGetUserTrainingsQuery(
@@ -87,7 +90,10 @@ const Trainings = () => {
 									variant="contained"
 									size="small"
 									disabled={params.row?.occurrences > 0}
-									onClick={() => handleDeleteTraining(params.row.id)}>
+									onClick={() => {
+										setDeleteId(params.row.id);
+										setOpen(true);
+									}}>
 									Delete
 								</Button>
 							</Box>
@@ -100,6 +106,15 @@ const Trainings = () => {
 
 	return (
 		<Box m="1.5rem 2.5rem">
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to delete this training? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleDeleteTraining(deleteId)}
+			/>
 			<Header title="Your Trainings" subtitle="Manage your trainings" />
 			<CustomDataGrid
 				isLoading={isLoading || !data}

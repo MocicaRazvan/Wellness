@@ -114,9 +114,9 @@ const Form = ({ user = null }) => {
 
 	const login = async (values, onSubmitProps) => {
 		try {
-			setLoading((prev) => ({ ...prev, show: true }));
+			// setLoading((prev) => ({ ...prev, show: true }));
 			const res = await loginUser(values).unwrap();
-			setLoading((prev) => ({ ...prev, show: false }));
+			// setLoading((prev) => ({ ...prev, show: false }));
 			if (res?.data?.error) {
 				console.log(res.error.data.message);
 				setMessage(res.error.data.message);
@@ -126,7 +126,7 @@ const Form = ({ user = null }) => {
 			navigate("/");
 		} catch (error) {
 			console.log(error);
-			setLoading((prev) => ({ ...prev, show: false }));
+			// setLoading((prev) => ({ ...prev, show: false }));
 			onSubmitProps.resetForm();
 			setCredentials((prev) => ({
 				...prev,
@@ -144,10 +144,10 @@ const Form = ({ user = null }) => {
 		try {
 			let res1, res2;
 			if (user) {
-				setLoading((prev) => ({ ...prev, show: true }));
+				// setLoading((prev) => ({ ...prev, show: true }));
 				res2 = await updateUser(values).unwrap();
 				console.log({ res2 });
-				setLoading((prev) => ({ ...prev, show: false }));
+				// setLoading((prev) => ({ ...prev, show: false }));
 				navigate("/");
 			} else {
 				setLoading((prev) => ({ ...prev, show: true }));
@@ -156,7 +156,7 @@ const Form = ({ user = null }) => {
 				setLoading((prev) => ({ ...prev, show: false }));
 			}
 			if (res1?.message && res1?.isError) {
-				setLoading((prev) => ({ ...prev, show: false }));
+				// setLoading((prev) => ({ ...prev, show: false }));
 
 				setMessage("User with this email already exists!");
 				setCredentials((prev) => ({

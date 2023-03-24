@@ -10,7 +10,7 @@ import { Button, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
 
 const schema = yup.object().shape({
-	password: yup.string().min(6).max(25).required("required"),
+	password: yup.string().min(6).max(25).required("Please enter the password"),
 	retypePassword: yup
 		.string()
 		.required("Please retype your password.")
@@ -71,7 +71,7 @@ const ResetPassword = () => {
 					}) => (
 						<form onSubmit={handleSubmit}>
 							<Box
-								height="20vh"
+								height="fit-content"
 								display="flex"
 								flexDirection="column"
 								alignItems="center"

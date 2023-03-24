@@ -22,7 +22,7 @@ const MainLayout = () => {
 	const socket = io("ws://localhost:8900");
 	const user = useSelector(selectCurrentUser);
 	const isAdminPath = useLocation().pathname.includes("admin");
-	const ref = useRef(null);
+	const { pathname } = useLocation();
 
 	useEffect(() => {
 		if (token && user?.id) {
@@ -63,9 +63,13 @@ const MainLayout = () => {
 		}
 	}, [dispatch, token]);
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [pathname]);
+
 	return (
-		<Box id="back-to-top-anchor" ref={ref}>
-			<ScrollTop ref={ref} />
+		<Box>
+			<ScrollTop />
 			{!isAdminPath && <Navigation />}
 			{!isAdminPath && (
 				<Box mt={10}>

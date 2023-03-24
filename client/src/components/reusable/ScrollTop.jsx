@@ -1,9 +1,9 @@
 import React, { forwardRef } from "react";
-import { Box, Zoom, Fab, useTheme, Tooltip } from "@mui/material";
+import { Box, Zoom, Fab, useTheme, Tooltip, Fade } from "@mui/material";
 import { KeyboardArrowUp } from "@mui/icons-material";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 
-const ScrollTop = (_, ref) => {
+const ScrollTop = () => {
 	const trigger = useScrollTrigger({
 		disableHysteresis: true,
 		threshold: 100,
@@ -13,17 +13,12 @@ const ScrollTop = (_, ref) => {
 	const handleClick = (e) => {
 		e.preventDefault();
 
-		const anchor = ref.current;
-		if (anchor) {
-			console.log(anchor);
-			anchor.scrollIntoView({
-				block: "start",
-			});
-		}
+		window.scrollTo(0, 0);
 	};
 
 	return (
 		<Zoom in={trigger}>
+			{/* <Tooltip title="Scroll To Top" arrow> */}
 			<Box
 				onClick={handleClick}
 				role="presentation"
@@ -33,12 +28,11 @@ const ScrollTop = (_, ref) => {
 					right: 16,
 					zIndex: 100,
 				}}>
-				<Tooltip title="Scroll To Top" arrow>
-					<Fab size="small" sx={{ bgcolor: palette.secondary[300] }}>
-						<KeyboardArrowUp sx={{ color: palette.background.default }} />
-					</Fab>
-				</Tooltip>
+				<Fab size="small" sx={{ bgcolor: palette.secondary[300] }}>
+					<KeyboardArrowUp sx={{ color: palette.background.default }} />
+				</Fab>
 			</Box>
+			{/* </Tooltip> */}
 		</Zoom>
 	);
 };
