@@ -14,16 +14,27 @@ import {
 	useMediaQuery,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import FlexBetween from "./FlexBetween";
 import SelectTags from "./SelectTags";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
+const Filter = ({
+	sorting,
+	isLoading,
+	setSorting,
+	isError,
+	tags,
+	setTags,
+	type = "post",
+}) => {
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:600px)");
+	const [first, setFirst] = useState(true);
 
-	const srotingBy = ["title", "createdAt"];
+	const srotingBy =
+		type === "post" ? ["createdAt", "title"] : ["createdAt", "title", "price"];
 
 	if (isLoading)
 		return (
@@ -45,12 +56,13 @@ const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
 				<Box
 					flex={2}
 					display="flex"
-					flexDirection="row"
+					flexDirection={isNonMobile ? "row" : "column"}
 					flexWrap="wrap"
 					justifyContent="start"
 					alignItems="center"
+					mb={isNonMobile ? 0 : 2}
 					gap={5}>
-					{srotingBy.map((el) => (
+					{srotingBy.map((el, i) => (
 						<Box key={el}>
 							<Typography
 								variant="h5"
@@ -63,10 +75,17 @@ const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
 									label={<ArrowUpwardIcon />}
 									control={
 										<Checkbox
-											checked={sorting[el] === "asc" ? true : false}
-											onChange={() =>
-												setSorting((prev) => ({ ...prev, [el]: "asc" }))
+											checked={
+												sorting[el] === "asc"
+													? true
+													: false || (i === 0 && first)
 											}
+											onChange={() => {
+												setSorting((prev) => ({ ...prev, [el]: "asc" }));
+												if (first) {
+													setFirst(false);
+												}
+											}}
 										/>
 									}
 								/>
@@ -75,9 +94,12 @@ const Filter = ({ sorting, isLoading, setSorting, isError, tags, setTags }) => {
 									control={
 										<Checkbox
 											checked={sorting[el] === "desc" ? true : false}
-											onChange={() =>
-												setSorting((prev) => ({ ...prev, [el]: "desc" }))
-											}
+											onChange={() => {
+												setSorting((prev) => ({ ...prev, [el]: "desc" }));
+												if (first) {
+													setFirst(false);
+												}
+											}}
 										/>
 									}
 								/>

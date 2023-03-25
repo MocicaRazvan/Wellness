@@ -70,6 +70,7 @@ const AllTrainings = () => {
 				tags={tags}
 				setSorting={setSorting}
 				setTags={setTags}
+				type="training"
 			/>
 			<GridList items={data?.trainings}>
 				<TrainingCard />
