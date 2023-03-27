@@ -1,6 +1,6 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import { alpha, styled } from "@mui/system";
-import { Button, InputBase } from "@mui/material";
+import { Button, InputBase, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
 	selectCurrentSearch,
@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 
 //getLimitTagsText
 function SearchBar() {
+	const isNonMobile = useMediaQuery("(min-width:900px)");
 	const searchVal = useSelector(selectCurrentSearch);
 	const [auto, setAuto] = useState(
 		(localStorage["searchHistory"] &&
@@ -50,7 +51,7 @@ function SearchBar() {
 			<Autocomplete
 				options={auto}
 				getOptionLabel={(option) => option}
-				style={{ width: 300 }}
+				style={{ width: isNonMobile ? 300 : 140 }}
 				freeSolo
 				inputValue={searchVal}
 				renderInput={({ InputLabelProps, InputProps, ...rest }) => {

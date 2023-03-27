@@ -349,6 +349,7 @@ const Navigation = () => {
 			</MenuItem>
 		</Menu>
 	);
+
 	const renderMobileMenu = (
 		<Menu
 			anchorEl={mobileMoreAnchorEl}
@@ -582,6 +583,15 @@ const Navigation = () => {
 							mr={10}
 							gap={5}
 							width="100%">
+							{isNotLogged && (
+								<IconButton onClick={() => dispatch(setMode())}>
+									{theme.palette.mode === "dark" ? (
+										<DarkModeOutlined sx={{ fontSize: "25px" }} />
+									) : (
+										<LightModeOutlined sx={{ fontSize: "25px" }} />
+									)}
+								</IconButton>
+							)}
 							<Typography
 								onClick={() => {
 									navigate("/posts");
@@ -742,36 +752,98 @@ const Navigation = () => {
 					) : (
 						<>
 							<Stack spacing={2} direction="row">
-								<Button
-									variant="outlined"
-									sx={{ border: `1px solid ${theme.palette.secondary[200]}` }}
-									disableElevation>
+								<Box
+									display={isNonMobile ? "none" : "flex"}
+									justifyContent="flex-end"
+									alignItems="center"
+									gap={5}
+									width="100%">
+									<IconButton onClick={() => dispatch(setMode())}>
+										{theme.palette.mode === "dark" ? (
+											<DarkModeOutlined sx={{ fontSize: "25px" }} />
+										) : (
+											<LightModeOutlined sx={{ fontSize: "25px" }} />
+										)}
+									</IconButton>
 									<Typography
-										color={theme.palette.secondary[200]}
-										variant="h6"
 										onClick={() => {
-											navigate("/login");
-											//reload
-											// navigate(0);
-										}}>
-										Login
+											navigate("/posts");
+											setActive("posts");
+										}}
+										sx={{
+											backgroundColor:
+												active === "posts"
+													? theme.palette.secondary[300]
+													: "transparent",
+											color:
+												active === "posts"
+													? theme.palette.primary[600]
+													: theme.palette.secondary[200],
+											borderRadius: 5,
+											cursor: "pointer",
+											p: 0.3,
+										}}
+										variant="h6">
+										Posts
 									</Typography>
-								</Button>
-								<Button
-									variant="outlined"
-									sx={{ border: `1px solid ${theme.palette.secondary[200]}` }}
-									disableElevation>
 									<Typography
-										color={theme.palette.secondary[200]}
-										variant="h6"
 										onClick={() => {
-											navigate("/register");
-											//reload
-											// navigate(0);
-										}}>
-										Register
+											navigate("/trainings");
+											setActive("trainings");
+										}}
+										sx={{
+											backgroundColor:
+												active === "trainings"
+													? theme.palette.secondary[300]
+													: "transparent",
+											color:
+												active === "trainings"
+													? theme.palette.primary[600]
+													: theme.palette.secondary[200],
+											borderRadius: 5,
+											cursor: "pointer",
+											p: 0.3,
+										}}
+										variant="h6">
+										Trainings
 									</Typography>
-								</Button>
+								</Box>
+
+								<Stack
+									spacing={2}
+									direction="row"
+									sx={{ display: isNonMobile ? "flex" : "none" }}>
+									<Button
+										variant="outlined"
+										sx={{ border: `1px solid ${theme.palette.secondary[200]}` }}
+										disableElevation>
+										<Typography
+											color={theme.palette.secondary[200]}
+											variant="h6"
+											onClick={() => {
+												navigate("/login");
+												//reload
+												// navigate(0);
+											}}>
+											Login
+										</Typography>
+									</Button>
+									<Button
+										variant="outlined"
+										sx={{ border: `1px solid ${theme.palette.secondary[200]}` }}
+										disableElevation>
+										<Typography
+											color={theme.palette.secondary[200]}
+											variant="h6"
+											onClick={() => {
+												navigate("/register");
+												//reload
+												// navigate(0);
+											}}>
+											Register
+										</Typography>
+									</Button>
+								</Stack>
 							</Stack>
 						</>
 					)}
