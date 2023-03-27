@@ -12,6 +12,7 @@ import {
 	Checkbox,
 	useTheme,
 	useMediaQuery,
+	checkboxClasses,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
@@ -75,6 +76,7 @@ const Filter = ({
 									label={<ArrowUpwardIcon />}
 									control={
 										<Checkbox
+											color="secondary"
 											checked={
 												sorting[el] === "asc"
 													? true
@@ -93,6 +95,7 @@ const Filter = ({
 									label={<ArrowDownwardIcon />}
 									control={
 										<Checkbox
+											color="secondary"
 											checked={sorting[el] === "desc" ? true : false}
 											onChange={() => {
 												setSorting((prev) => ({ ...prev, [el]: "desc" }));
