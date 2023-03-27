@@ -91,6 +91,18 @@ const HeroCarousel = () => {
 						sx={{ fontSize: { xs: 24, sm: 45 } }}>
 						Upgrade your Body
 					</Typography>
+
+					<Box display={{ xs: "flex", md: "none" }} justifyContent="center">
+						<Button
+							color="secondary"
+							variant="contained"
+							size="large"
+							sx={{ minWidth: 80, mt: 5 }}
+							onClick={() => void navigate("/register")}>
+							Register
+						</Button>
+					</Box>
+
 					<Typography
 						color={palette.secondary[200]}
 						align="center"

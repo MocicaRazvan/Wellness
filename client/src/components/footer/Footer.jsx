@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Footer = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();
+
 	return (
 		<Box
 			marginTop="70px"
@@ -36,14 +37,6 @@ const Footer = () => {
 						support team and we will asure that they will try their best to help
 						you :).
 					</CustomTypography>
-					{/* <Typography
-						variant="h4"
-						fontWeight="500"
-						sx={{ cursor: "pointer" }}
-						onClick={() => navigate("/nft")}
-						color={theme.palette.secondary[400]}>
-						Feeling like investing in NFT'S? Try out our sister platform!
-					</Typography> */}
 				</Box>
 
 				<Box>
