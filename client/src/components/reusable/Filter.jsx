@@ -84,7 +84,7 @@ const Filter = ({
 											}
 											onChange={() => {
 												setSorting((prev) => ({ ...prev, [el]: "asc" }));
-												if (first) {
+												if (first && i === 0) {
 													setFirst(false);
 												}
 											}}
@@ -99,7 +99,7 @@ const Filter = ({
 											checked={sorting[el] === "desc" ? true : false}
 											onChange={() => {
 												setSorting((prev) => ({ ...prev, [el]: "desc" }));
-												if (first) {
+												if (first && i === 0) {
 													setFirst(false);
 												}
 											}}
