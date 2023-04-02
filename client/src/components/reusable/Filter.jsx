@@ -30,6 +30,7 @@ const Filter = ({
 	setTags,
 	type = "post",
 }) => {
+	console.log(sorting);
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const [first, setFirst] = useState(true);
@@ -87,6 +88,12 @@ const Filter = ({
 												if (first && i === 0) {
 													setFirst(false);
 												}
+												if (i !== 0 && sorting[el] === "asc") {
+													setSorting((prev) => {
+														delete prev[el];
+														return prev;
+													});
+												}
 											}}
 										/>
 									}
@@ -101,6 +108,12 @@ const Filter = ({
 												setSorting((prev) => ({ ...prev, [el]: "desc" }));
 												if (first && i === 0) {
 													setFirst(false);
+												}
+												if (i !== 0 && sorting[el] === "desc") {
+													setSorting((prev) => {
+														delete prev[el];
+														return prev;
+													});
 												}
 											}}
 										/>

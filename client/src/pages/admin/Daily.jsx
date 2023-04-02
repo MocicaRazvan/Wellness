@@ -28,6 +28,8 @@ const Daily = () => {
 		}
 	}, [data]);
 
+	// console.log({ data });
+
 	const [formattedData] = useMemo(() => {
 		if (!data) return [];
 
@@ -49,7 +51,7 @@ const Daily = () => {
 
 				totalSalesLine.data = [
 					...totalSalesLine.data,
-					{ x: splitDate, y: totalSales },
+					{ x: splitDate, y: totalSales / 100 },
 				];
 				totalUnitsLine.data = [
 					...totalUnitsLine.data,
@@ -71,40 +73,23 @@ const Daily = () => {
 			/>
 		);
 
+	console.log({ formattedData });
+
 	return (
 		<Box m="1.5rem 2.5rem" overflow="hidden">
 			<Header title="DAILY SALES" subtitle="Chart of daily sales" />
 			<Box height="75vh">
 				<Box display="flex" justifyContent="flex-end">
-					{/* <Box>
-						<DatePicker
-							selected={startDate}
-							onChange={(date) => setStartDate(date)}
-							selectsStart
-							startDate={startDate}
-							endDate={endDate}
-						/>
-					</Box>
-					<Box>
-						<DatePicker
-							selected={endDate}
-							onChange={(date) => setEndDate(date)}
-							selectsEnd
-							startDate={startDate}
-							endDate={endDate}
-							minDate={startDate}
-						/>
-					</Box> */}
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<DesktopDatePicker
 							maxDate={endDate}
-							minDate={startDate}
+							// minDate={startDate}
 							value={startDate}
 							onChange={(date) => setStartDate(date)}
 							renderInput={(params) => <TextField {...params} />}
 						/>
 						<DesktopDatePicker
-							maxDate={endDate}
+							// maxDate={endDate}
 							minDate={startDate}
 							value={endDate}
 							onChange={(date) => setEndDate(date)}
@@ -144,7 +129,8 @@ const Daily = () => {
 						},
 						tooltip: {
 							container: {
-								color: theme.palette.primary.main,
+								color: theme.palette.secondary[300],
+								backgroundColor: theme.palette.primary.main,
 							},
 						},
 					}}
@@ -170,7 +156,6 @@ const Daily = () => {
 						legend: "Month",
 						legendOffset: -10,
 						legendPosition: "middle",
-						
 					}}
 					axisLeft={{
 						orient: "left",
@@ -184,7 +169,7 @@ const Daily = () => {
 					enableGridX={false}
 					enableGridY={false}
 					pointSize={10}
-					pointColor={{ theme: "background" }}
+					pointColor={{ theme: `background` }}
 					pointBorderWidth={2}
 					pointBorderColor={{ from: "serieColor" }}
 					pointLabelYOffset={-12}
@@ -203,7 +188,7 @@ const Daily = () => {
 							itemOpacity: 0.75,
 							symbolSize: 12,
 							symbolShape: "circle",
-							symbolBorderColor: "rgba(0, 0, 0, .5)",
+							symbolBorderColor: "rgba(24, 24, 24, 0.5)",
 							effects: [
 								{
 									on: "hover",

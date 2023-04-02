@@ -24,7 +24,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 
 		Object.values(data).reduce(
 			(acc, { month, totalSales, totalUnits }) => {
-				const curSales = acc.sales + totalSales;
+				const curSales = acc.sales + totalSales / 100;
 				const curUnits = acc.units + totalUnits;
 
 				totalSalesLine.data = [
@@ -86,7 +86,8 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 				},
 				tooltip: {
 					container: {
-						color: theme.palette.primary.main,
+						color: theme.palette.secondary[300],
+						backgroundColor: theme.palette.primary.main,
 					},
 				},
 			}}
