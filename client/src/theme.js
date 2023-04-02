@@ -1,3 +1,5 @@
+import { darkScrollbar } from "@mui/material";
+import { grey } from "@mui/material/colors";
 // color design tokens export
 export const tokensDark = {
 	grey: {
@@ -142,6 +144,20 @@ export const themeSettings = (mode) => {
 			h6: {
 				fontFamily: ["Inter", "sans-serif"].join(","),
 				fontSize: 14,
+			},
+		},
+		components: {
+			MuiCssBaseline: {
+				styleOverrides: (themeParam) => ({
+					body:
+						themeParam.palette.mode === "dark"
+							? darkScrollbar()
+							: darkScrollbar({
+									track: "#fff",
+									thumb: grey[400],
+									active: grey[600],
+							  }),
+				}),
 			},
 		},
 	};
