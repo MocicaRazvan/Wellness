@@ -153,7 +153,7 @@ export const themeSettings = (mode) => {
 						themeParam.palette.mode === "dark"
 							? darkScrollbar()
 							: darkScrollbar({
-									track: "#fff",
+									track: grey[100],
 									thumb: grey[400],
 									active: grey[600],
 							  }),

@@ -128,9 +128,7 @@ exports.getAllTrainings = async (req, res) => {
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
-			// const sortFormatted = {
-			// 	[sortParsed.field]: (sortParsed.sort = "asc" ? 1 : -1),
-			// };
+	
 			const sortFormatted = Object.entries(sortParsed).map(([k, v]) => [
 				k,
 				v === "asc" ? 1 : -1,

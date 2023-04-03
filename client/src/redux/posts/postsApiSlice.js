@@ -152,12 +152,12 @@ export const postApiSlice = apiSlice.injectEndpoints({
 				method: "GET",
 				params,
 			}),
-			transformResponse: ({ posts }) => {
+			transformResponse: ({ posts, total }) => {
 				const loadedPosts = posts.map((post) => ({
 					...post,
 					id: post._id,
 				}));
-				return { posts: loadedPosts };
+				return { posts: loadedPosts, total };
 			},
 			providesTags: (result, err, arg) => {
 				if (result) {

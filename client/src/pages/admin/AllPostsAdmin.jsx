@@ -102,8 +102,10 @@ const Post = ({ post }) => {
 const AllPostsAdmin = () => {
 	const search = useSelector(selectCurrentSearch);
 	const isNonMobile = useMediaQuery("(min-width: 1000px)");
+	const [limit, setLimit] = useState(25);
+	const { palette } = useTheme();
 
-	const { data, isLoading } = useGetPostsAdminQuery({ search });
+	const { data, isLoading } = useGetPostsAdminQuery({ search, limit });
 	console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
 
 	if (isLoading || !data)
@@ -133,6 +135,22 @@ const AllPostsAdmin = () => {
 					<Post key={post?.id} post={post} />
 				))}
 			</Box>
+			{data?.total > limit && (
+				<Box display="flex" justifyContent="center" m={4} p={2}>
+					<Button
+						onClick={() => setLimit((prev) => prev + 25)}
+						sx={{
+							color: palette.background.default,
+							bgcolor: palette.secondary[300],
+							"&:hover": {
+								color: palette.secondary[300],
+								bgcolor: palette.primary.main,
+							},
+						}}>
+						Load More
+					</Button>
+				</Box>
+			)}
 		</Box>
 	);
 };
