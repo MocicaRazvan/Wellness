@@ -302,7 +302,7 @@ exports.dislikePost = async (req, res) => {
 
 //get: /posts/admin
 exports.getAllPostsAdmin = async (req, res) => {
-	const { limit = 5 } = req.query;
+	const { limit = 24 } = req.query;
 	const user = req.user;
 	if (user.role !== "admin")
 		return res.status(401).json({ message: "You are not authorized" });

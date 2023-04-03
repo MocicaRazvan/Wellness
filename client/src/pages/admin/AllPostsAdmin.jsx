@@ -102,7 +102,7 @@ const Post = ({ post }) => {
 const AllPostsAdmin = () => {
 	const search = useSelector(selectCurrentSearch);
 	const isNonMobile = useMediaQuery("(min-width: 1000px)");
-	const [limit, setLimit] = useState(25);
+	const [limit, setLimit] = useState(24);
 	const { palette } = useTheme();
 
 	const { data, isLoading } = useGetPostsAdminQuery({ search, limit });
@@ -138,7 +138,7 @@ const AllPostsAdmin = () => {
 			{data?.total > limit && (
 				<Box display="flex" justifyContent="center" m={4} p={2}>
 					<Button
-						onClick={() => setLimit((prev) => prev + 25)}
+						onClick={() => setLimit((prev) => prev + 24)}
 						sx={{
 							color: palette.background.default,
 							bgcolor: palette.secondary[300],
