@@ -16,7 +16,7 @@ const OrdersTagRadarChart = () => {
 	const theme = useTheme();
 	const max = useMemo(
 		() =>
-			data.reduce((acc, { total }) => (total > acc ? (acc = total) : acc), 0),
+			data?.reduce((acc, { total }) => (total > acc ? (acc = total) : acc), 0),
 
 		[data],
 	);
