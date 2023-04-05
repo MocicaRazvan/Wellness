@@ -10,7 +10,6 @@ import CustomCarousel from "../../components/reusable/CustomCarousel";
 import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
 import Carousel from "react-material-ui-carousel";
 import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
@@ -30,10 +29,6 @@ const SingleTraining = () => {
 	const isAllowed =
 		subscriptions?.includes(trainingId) || training?.user === id;
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
-	// console.log(cartItems);
-	// console.log(trainingId);
-	// console.log({ subscriptions });
-	// console.log({ isInCart });
 
 	if (isLoading || !training)
 		return (
@@ -45,6 +40,9 @@ const SingleTraining = () => {
 		);
 
 	const handleAddTocard = () => {
+		if (!user) {
+			navigate("/login");
+		}
 		dispatch(addToCart(training));
 	};
 

@@ -31,7 +31,7 @@ const StatBox = ({ title, value, increase, icon, description }) => {
 			</Typography>
 			<FlexBetween gap="1rem">
 				<Typography variant="h5" fontStyle="italic" sx={{ color: col }}>
-					{increase}%
+					{Math.ceil(increase)}%
 				</Typography>
 				<Typography sx={{ color: theme.palette.secondary[300] }}>
 					{description}

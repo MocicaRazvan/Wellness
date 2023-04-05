@@ -383,7 +383,7 @@ const Navigation = () => {
 										: theme.palette.secondary[200],
 								borderRadius: 5,
 								cursor: "pointer",
-								p: 0.3,
+								p: 0.9,
 							}}
 							variant="h6">
 							Posts
@@ -406,7 +406,7 @@ const Navigation = () => {
 										: theme.palette.secondary[200],
 								borderRadius: 5,
 								cursor: "pointer",
-								p: 0.3,
+								p: 0.9,
 							}}
 							variant="h6">
 							Trainings
@@ -430,7 +430,7 @@ const Navigation = () => {
 											: theme.palette.secondary[200],
 									borderRadius: 5,
 									cursor: "pointer",
-									p: 0.3,
+									p: 0.9,
 								}}
 								variant="h6">
 								Bought Trainings
@@ -455,7 +455,7 @@ const Navigation = () => {
 											: theme.palette.secondary[200],
 									borderRadius: 5,
 									cursor: "pointer",
-									p: 0.3,
+									p: 0.9,
 								}}
 								variant="h6">
 								Orders
@@ -480,7 +480,7 @@ const Navigation = () => {
 											: theme.palette.secondary[200],
 									borderRadius: 5,
 									cursor: "pointer",
-									p: 0.3,
+									p: 0.9,
 								}}
 								variant="h6">
 								Contact Support
@@ -608,7 +608,7 @@ const Navigation = () => {
 											: theme.palette.secondary[200],
 									borderRadius: 5,
 									cursor: "pointer",
-									p: 0.3,
+									p: 0.9,
 								}}
 								variant="h6">
 								Posts
@@ -629,7 +629,7 @@ const Navigation = () => {
 											: theme.palette.secondary[200],
 									borderRadius: 5,
 									cursor: "pointer",
-									p: 0.3,
+									p: 0.9,
 								}}
 								variant="h6">
 								Trainings
@@ -651,7 +651,7 @@ const Navigation = () => {
 												: theme.palette.secondary[200],
 										borderRadius: 5,
 										cursor: "pointer",
-										p: 0.3,
+										p: 0.9,
 									}}
 									variant="h6">
 									Bought Trainings
@@ -674,7 +674,7 @@ const Navigation = () => {
 												: theme.palette.secondary[200],
 										borderRadius: 5,
 										cursor: "pointer",
-										p: 0.3,
+										p: 0.9,
 									}}
 									variant="h6">
 									Orders
@@ -697,7 +697,7 @@ const Navigation = () => {
 												: theme.palette.secondary[200],
 										borderRadius: 5,
 										cursor: "pointer",
-										p: 0.3,
+										p: 0.9,
 									}}
 									variant="h6">
 									Contact Support
@@ -781,7 +781,7 @@ const Navigation = () => {
 													: theme.palette.secondary[200],
 											borderRadius: 5,
 											cursor: "pointer",
-											p: 0.3,
+											p: 0.9,
 										}}
 										variant="h6">
 										Posts
@@ -802,7 +802,7 @@ const Navigation = () => {
 													: theme.palette.secondary[200],
 											borderRadius: 5,
 											cursor: "pointer",
-											p: 0.3,
+											p: 0.9,
 										}}
 										variant="h6">
 										Trainings

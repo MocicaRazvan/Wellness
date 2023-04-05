@@ -79,16 +79,18 @@ const Filter = ({
 										<Checkbox
 											color="secondary"
 											checked={
-												sorting[el] === "asc"
-													? true
-													: false || (i === 0 && first)
+												sorting[el] === "asc" ? true : false
+												//|| (i === 0 && first)
 											}
 											onChange={() => {
 												setSorting((prev) => ({ ...prev, [el]: "asc" }));
-												if (first && i === 0) {
-													setFirst(false);
-												}
-												if (i !== 0 && sorting[el] === "asc") {
+												// if (first && i === 0) {
+												// 	setFirst(false);
+												// }
+												if (
+													//i !== 0&&
+													sorting[el] === "asc"
+												) {
 													setSorting((prev) => {
 														delete prev[el];
 														return prev;
@@ -106,10 +108,13 @@ const Filter = ({
 											checked={sorting[el] === "desc" ? true : false}
 											onChange={() => {
 												setSorting((prev) => ({ ...prev, [el]: "desc" }));
-												if (first && i === 0) {
-													setFirst(false);
-												}
-												if (i !== 0 && sorting[el] === "desc") {
+												// if (first && i === 0) {
+												// 	setFirst(false);
+												// }
+												if (
+													//i !== 0 &&
+													sorting[el] === "desc"
+												) {
 													setSorting((prev) => {
 														delete prev[el];
 														return prev;

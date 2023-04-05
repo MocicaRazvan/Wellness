@@ -6,7 +6,7 @@ import Header from "../../components/reusable/Header";
 const AllUsers = () => {
 	return (
 		<Box m="1.5rem 2.5rem">
-			<Header title="Trainings" subtitle="Manage users" />
+			<Header title="Users" subtitle="Manage users" />
 			<UsersDataGrid />
 		</Box>
 	);

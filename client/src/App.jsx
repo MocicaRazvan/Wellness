@@ -45,6 +45,7 @@ import Faq from "./pages/customerCare/Faq";
 import BoughtTrainings from "./pages/trainings/BoughtTrainings";
 import SingleOrder from "./pages/orders/SingleOrder";
 import Calculator from "./pages/calculator/Calculator";
+import AdminTrainings from "./pages/admin/AdminTrainings";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -117,6 +118,7 @@ function App() {
 								<Route path="overview" element={<Overview />} />
 								<Route path="daily" element={<Daily />} />
 								<Route path="breakdown" element={<Breakdown />} />
+								<Route path="trainings" element={<AdminTrainings />} />
 							</Route>
 							<Route path="/about-us">
 								<Route

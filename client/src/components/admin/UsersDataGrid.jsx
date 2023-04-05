@@ -5,6 +5,7 @@ import {
 	useGetAllUsersAdminQuery,
 	useMakeUserTrainerMutationMutation,
 } from "../../redux/user/userApi";
+import UserAgreement from "../reusable/UserAgreement";
 
 const UsersDataGrid = ({ height = "80vh" }) => {
 	const [page, setPage] = useState(0);
@@ -22,11 +23,16 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 		search,
 	});
 
-	const handleMakeTrainer = async ({ id }) => {
-		try {
-			await makeTrainer({ id }).unwrap();
-		} catch (error) {
-			console.log(error);
+	const [open, setOpen] = useState(false);
+	const [trainerId, settrainerId] = useState(null);
+
+	const handleMakeTrainer = async (id) => {
+		if (trainerId) {
+			try {
+				await makeTrainer({ id }).unwrap();
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	};
 
@@ -69,7 +75,11 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 				<Box>
 					{role === "user" ? (
 						<Tooltip title="Make Trainer" arrow placement="right">
-							<User onClick={async () => await handleMakeTrainer({ id })}>
+							<User
+								onClick={() => {
+									settrainerId(id);
+									setOpen((prev) => !prev);
+								}}>
 								{role}
 							</User>
 						</Tooltip>
@@ -84,19 +94,30 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 	];
 
 	return (
-		<CustomDataGrid
-			isLoading={isLoading || !data}
-			rows={data?.users || []}
-			columns={columns}
-			rowCount={data?.total || 0}
-			page={page}
-			setPage={setPage}
-			setPageSize={setPageSize}
-			setSort={setSort}
-			pageSize={pageSize}
-			toolbar={{ searchInput, setSearchInput, setSearch }}
-			height={height}
-		/>
+		<>
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm update"}
+				text={
+					"Are you sure you want to make this person a trainer? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleMakeTrainer(trainerId)}
+			/>
+			<CustomDataGrid
+				isLoading={isLoading || !data}
+				rows={data?.users || []}
+				columns={columns}
+				rowCount={data?.total || 0}
+				page={page}
+				setPage={setPage}
+				setPageSize={setPageSize}
+				setSort={setSort}
+				pageSize={pageSize}
+				toolbar={{ searchInput, setSearchInput, setSearch }}
+				height={height}
+			/>
+		</>
 	);
 };
 

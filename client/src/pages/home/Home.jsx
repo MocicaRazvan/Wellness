@@ -55,19 +55,14 @@ const values2 = [
 	},
 ];
 
-const insideStyles = {
-	background: "white",
-	padding: 20,
-	position: "absolute",
-	top: "50%",
-	left: "50%",
-	transform: "translate(-50%,-50%)",
-};
-
 const Home = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const { palette } = useTheme();
+	if (!jump) {
+		return;
+	}
+
 	return (
 		<>
 			<Box mt={-5}>

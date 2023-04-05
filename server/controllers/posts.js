@@ -69,27 +69,27 @@ exports.getAllPosts = async (req, res) => {
 		// console.log(sortFormatted);
 
 		// sortFormatted.forEach((e) => {
-		// 	// if (e[0] === "createdAt") {
-		// 	// 	console.log("object");
-		// 	// 	// query.sort({})
-		// 	// 	query = query.aggregate([
-		// 	// 		{
-		// 	// 			$group: {
-		// 	// 				_id: {
-		// 	// 					month: { $month: "$createdAt" },
-		// 	// 					year: { $year: "$createdAt" },
-		// 	// 					day: { $dayOfYear: "$createdAt" },
-		// 	// 				},
-		// 	// 				transactions: { $push: "$$ROOT" },
-		// 	// 			},
-		// 	// 		},
-		// 	// 		{ $sort: { month: e[1], year: e[1], day: e[1] } },
-		// 	// 	]);
-		// 	// } else {
-		// 	// 	query = query.sort([e]);
-		// 	// }
-		// 	query = query.sort([e]);
+		// 	if (e[0] === "createdAt") {
+		// 		// query.sort({})
+		// 		query = query.sort(
+		// 			{
+		// 				$group: {
+		// 					_id: {
+		// 						month: { $month: "$createdAt" },
+		// 						year: { $year: "$createdAt" },
+		// 						day: { $dayOfYear: "$createdAt" },
+		// 					},
+		// 					transactions: { $push: "$$ROOT" },
+		// 				},
+		// 			},
+		// 			{ $sort: { month: e[1], year: e[1], day: e[1] } },
+		// 		);
+		// 	} else {
+		// 		query = query.sort([e]);
+		// 	}
+		// 	// query = query.sort([e]);
 		// });
+
 		query = query.sort(sortFormatted);
 	}
 	if (q.search) {

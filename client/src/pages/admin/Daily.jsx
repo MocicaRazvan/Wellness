@@ -1,6 +1,6 @@
 import { CircularProgress, TextField, useTheme } from "@mui/material";
 import moment from "moment";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useGetdDailyEarningsQuery } from "../../redux/orders/orderApi";
 // import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
@@ -13,16 +13,27 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 const Daily = () => {
 	const { data, isLoading } = useGetdDailyEarningsQuery();
-	console.log("🚀 ~ file: Daily.jsx:13 ~ Daily ~ data", data);
 	const theme = useTheme();
 
 	const [startDate, setStartDate] = useState(new Date("2020-01-01"));
 	const [endDate, setEndDate] = useState(new Date("2030-01-01"));
+	const [firstStartDate, setFirstStartDate] = useState(null);
+	const [firstEndDate, setFirstEndDate] = useState(null);
+	const dateRef = useRef({ start: null, end: null });
 	useEffect(() => {
 		const sortedDates = data
 			?.map(({ date }) => date)
 			?.sort((a, b) => (moment(a) > moment(b) ? 1 : -1));
 		if (sortedDates) {
+			if (dateRef.current.start === null) {
+				dateRef.current.start = true;
+				setFirstStartDate(new Date(sortedDates[0]));
+			}
+
+			if (dateRef.current.end === null) {
+				dateRef.current.end = true;
+				setFirstEndDate(new Date(sortedDates.at(-1)));
+			}
 			setStartDate(new Date(sortedDates[0]));
 			setEndDate(new Date(sortedDates.at(-1)));
 		}
@@ -73,22 +84,23 @@ const Daily = () => {
 			/>
 		);
 
-
 	return (
 		<Box m="1.5rem 2.5rem" overflow="hidden">
 			<Header title="DAILY SALES" subtitle="Chart of daily sales" />
 			<Box height="75vh">
 				<Box display="flex" justifyContent="flex-end">
-					<LocalizationProvider dateAdapter={AdapterDateFns}>
+					<LocalizationProvider children dateAdapter={AdapterDateFns}>
 						<DesktopDatePicker
 							maxDate={endDate}
-							minDate={startDate}
+							minDate={
+								dateRef.current.start !== null ? firstStartDate : startDate
+							}
 							value={startDate}
 							onChange={(date) => setStartDate(date)}
 							renderInput={(params) => <TextField {...params} />}
 						/>
 						<DesktopDatePicker
-							maxDate={endDate}
+							maxDate={dateRef.current.end !== null ? firstEndDate : endDate}
 							minDate={startDate}
 							value={endDate}
 							onChange={(date) => setEndDate(date)}

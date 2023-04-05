@@ -20,11 +20,13 @@ import {
 	useGetPostsAdminQuery,
 } from "../../redux/posts/postsApiSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
+import { format } from "date-fns";
+import UserAgreement from "../../components/reusable/UserAgreement";
 
-const Post = ({ post }) => {
+const Post = ({ post, setDeleteId, setOpen }) => {
 	const theme = useTheme();
 	const [isExpanded, setIsExpanded] = useState(false);
-	const [deletePost] = useDeletePostMutation();
+	// const [deletePost] = useDeletePostMutation();
 	const navigate = useNavigate();
 
 	return (
@@ -67,7 +69,7 @@ const Post = ({ post }) => {
 					variant="primary"
 					size="small"
 					onClick={() => setIsExpanded((prev) => !prev)}>
-					See More
+					{!isExpanded ? "See More" : "See Less"}
 				</Button>
 			</CardActions>
 			<Collapse
@@ -78,20 +80,68 @@ const Post = ({ post }) => {
 					color: theme.palette.neutral[300],
 				}}>
 				<CardContent>
-					<Typography>id: {post?.id}</Typography>
-					<Typography>Author: {post?.user?.username}</Typography>
-					<Typography>CreatedAt: {post?.createdAt}</Typography>
-					<Typography gutterBottom>UpdatedAt: {post?.updatedAt}</Typography>
+					<Box
+						m={1}
+						display={"flex"}
+						justifyContent="space-start"
+						gap={2}
+						alignItems={"center"}
+						width="100%">
+						<Typography>id: </Typography>
+						<Typography>{post?.id}</Typography>
+					</Box>
+					<Box
+						m={1}
+						display={"flex"}
+						justifyContent="space-start"
+						gap={2}
+						alignItems={"center"}
+						width="100%">
+						<Typography>Author: </Typography>
+						<Typography>{post?.user?.username} </Typography>
+					</Box>
+					<Box
+						m={1}
+						display={"flex"}
+						justifyContent="space-start"
+						gap={2}
+						alignItems={"center"}
+						width="100%">
+						<Typography>CreatedAt:</Typography>
+						<Typography>
+							{format(new Date(post?.createdAt), "dd/MM/yyyy")}
+						</Typography>
+					</Box>
+					<Box
+						m={1}
+						display={"flex"}
+						justifyContent="space-start"
+						gap={2}
+						alignItems={"center"}
+						width="100%">
+						<Typography>UpdatedAt:</Typography>
+						<Typography>
+							{" "}
+							{format(new Date(post?.updatedAt), "dd/MM/yyyy")}
+						</Typography>
+					</Box>
 					<Button
 						color="error"
-						onClick={async () => {
-							try {
-								await deletePost({ id: post?.id }).unwrap();
-							} catch (error) {
-								console.log(error);
+						onClick={
+							() => {
+								setDeleteId(post?.id);
+								setOpen((prev) => !prev);
 							}
-						}}>
-						DELTE
+
+							// 	async () => {
+							// 	try {
+							// 		await deletePost({ id: post?.id }).unwrap();
+							// 	} catch (error) {
+							// 		console.log(error);
+							// 	}
+							// }
+						}>
+						DELETE
 					</Button>
 				</CardContent>
 			</Collapse>
@@ -104,6 +154,19 @@ const AllPostsAdmin = () => {
 	const isNonMobile = useMediaQuery("(min-width: 1000px)");
 	const [limit, setLimit] = useState(24);
 	const { palette } = useTheme();
+	const [deletePost] = useDeletePostMutation();
+	const [open, setOpen] = useState(false);
+	const [deleteId, setDeleteId] = useState(null);
+
+	const handleDelete = async (id) => {
+		if (deleteId) {
+			try {
+				await deletePost({ id }).unwrap();
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
 
 	const { data, isLoading } = useGetPostsAdminQuery({ search, limit });
 	console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
@@ -118,6 +181,15 @@ const AllPostsAdmin = () => {
 		);
 	return (
 		<Box m="1.5rem 2.5rem">
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to delete this post? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleDelete(deleteId)}
+			/>
 			<Header title="Posts" subtitle="See the list of posts." />
 			<Box
 				mt="20px"
@@ -132,7 +204,12 @@ const AllPostsAdmin = () => {
 					},
 				}}>
 				{data?.posts.map((post) => (
-					<Post key={post?.id} post={post} />
+					<Post
+						key={post?.id}
+						post={post}
+						setDeleteId={setDeleteId}
+						setOpen={setOpen}
+					/>
 				))}
 			</Box>
 			{data?.total > limit && (

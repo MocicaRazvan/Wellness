@@ -25,8 +25,8 @@ import {
 	TodayOutlined,
 	PieChartOutlined,
 	Book,
-
 	ArrowDropDownCircleOutlined,
+	MonitorHeartOutlined,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -60,6 +60,7 @@ const navItems = [
 		text: "Geography",
 		icon: <PublicOutlined />,
 	},
+	{ text: "Trainings", icon: <MonitorHeartOutlined /> },
 	{
 		text: "Sales",
 		icon: null,
