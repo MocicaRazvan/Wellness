@@ -11,7 +11,6 @@ import FlexBetween from "../../components/reusable/FlexBetween";
 import UserImage from "../../components/reusable/UserImage";
 import {
 	ManageAccountsOutlined,
-	EditOutlined,
 	LocationOnOutlined,
 	WorkOutlineOutlined,
 } from "@mui/icons-material";
@@ -25,9 +24,12 @@ import { useNavigate } from "react-router-dom";
 const UserInfo = ({ user, width = "50%" }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const theme = useTheme();
-	const { data, isLoading } = useGetCountStatsQuery();
+	const { data, isLoading } = useGetCountStatsQuery(null, {
+		refetchOnMountOrArgChange: true,
+	});
 	const navigate = useNavigate();
 	const open = Boolean(anchorEl);
+	const isAbove = user?.role === "trainer" || user?.role === "admin";
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -36,7 +38,7 @@ const UserInfo = ({ user, width = "50%" }) => {
 		setAnchorEl(null);
 	};
 
-	if (isLoading)
+	if (isLoading || !data)
 		return (
 			<CircularProgress
 				sx={{ position: "absolute", top: "50%", left: "50%" }}
@@ -135,41 +137,34 @@ const UserInfo = ({ user, width = "50%" }) => {
 						{data?.comments}
 					</Typography>
 				</FlexBetween>
-				{user.role === "trainer" ||
-					(user.role === "admin" && (
-						<>
-							<FlexBetween mb="0.5rem">
-								<Typography color={theme.palette.secondary[200]}>
-									How many posts you have created
-								</Typography>
-								<Typography
-									color={theme.palette.secondary[300]}
-									fontWeight="500">
-									{data?.posts}
-								</Typography>
-							</FlexBetween>
-							<FlexBetween mb="0.5rem">
-								<Typography color={theme.palette.secondary[200]}>
-									How many exercises you have created
-								</Typography>
-								<Typography
-									color={theme.palette.secondary[300]}
-									fontWeight="500">
-									{data?.exercises}
-								</Typography>
-							</FlexBetween>
-							<FlexBetween mb="0.5rem">
-								<Typography color={theme.palette.secondary[200]}>
-									How many trainings you have created
-								</Typography>
-								<Typography
-									color={theme.palette.secondary[300]}
-									fontWeight="500">
-									{data?.trainings}
-								</Typography>
-							</FlexBetween>
-						</>
-					))}
+				{isAbove && (
+					<>
+						<FlexBetween mb="0.5rem">
+							<Typography color={theme.palette.secondary[200]}>
+								How many posts you have created
+							</Typography>
+							<Typography color={theme.palette.secondary[300]} fontWeight="500">
+								{data?.posts}
+							</Typography>
+						</FlexBetween>
+						<FlexBetween mb="0.5rem">
+							<Typography color={theme.palette.secondary[200]}>
+								How many exercises you have created
+							</Typography>
+							<Typography color={theme.palette.secondary[300]} fontWeight="500">
+								{data?.exercises}
+							</Typography>
+						</FlexBetween>
+						<FlexBetween mb="0.5rem">
+							<Typography color={theme.palette.secondary[200]}>
+								How many trainings you have created
+							</Typography>
+							<Typography color={theme.palette.secondary[300]} fontWeight="500">
+								{data?.trainings}
+							</Typography>
+						</FlexBetween>
+					</>
+				)}
 			</Box>
 		</Box>
 	);
