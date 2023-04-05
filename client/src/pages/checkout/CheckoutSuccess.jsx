@@ -2,14 +2,16 @@ import { Button, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect } from "react";
 import Lottie from "react-lottie-player";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { updateUser } from "../../redux/auth/authSlice";
+import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { useGetSingleUserQuery } from "../../redux/user/userApi";
 import checkout from "../../utils/lottie/checkout.json";
 const CheckoutSuccess = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const cartItems = useSelector(selectCartItems);
 	const { data: user, isLoading } = useGetSingleUserQuery();
 	const dispatch = useDispatch();
 
@@ -19,6 +21,11 @@ const CheckoutSuccess = () => {
 			dispatch(updateUser({ user }));
 		}
 	}, [dispatch, isLoading, user]);
+	useEffect(() => {
+		if (cartItems?.length > 0) {
+			dispatch(clearCart());
+		}
+	}, [cartItems?.length, dispatch]);
 
 	return (
 		<Box
