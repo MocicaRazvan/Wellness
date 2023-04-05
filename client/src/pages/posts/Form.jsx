@@ -24,6 +24,8 @@ import Dropzone from "react-dropzone";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/reusable/Loading";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const postSchema = yup.object().shape({
 	tags: yup.array().required("Please enter the tags"),
@@ -32,6 +34,7 @@ const postSchema = yup.object().shape({
 });
 
 const Form = ({ post }) => {
+	const user = useSelector(selectCurrentUser);
 	const [message, setMessage] = useState("");
 	const [loading, setLoading] = useState({
 		msg: "Creating the post...",
@@ -109,6 +112,9 @@ const Form = ({ post }) => {
 			fileReader.readAsDataURL(img);
 		});
 	};
+	if (post && user?.id !== post?.user) {
+		navigate("/");
+	}
 
 	return (
 		<Box>
@@ -171,7 +177,11 @@ const Form = ({ post }) => {
 								mb={2}
 								display="flex"
 								justifyContent="center">
-								<TextEditor name="body" setValue={setBody} />
+								<TextEditor
+									name="body"
+									setValue={setBody}
+									value={post?.body || ""}
+								/>
 							</Box>
 							<Box
 								gridColumn="span 4"
@@ -205,13 +215,23 @@ const Form = ({ post }) => {
 											sx={{ "&:hover": { cursor: "pointer" } }}>
 											<input {...getInputProps()} />
 											{!values.pictures.length > 0 ? (
-												<Typography
-													variant="h5"
-													color={theme.palette.secondary[200]}
-													textAlign="center"
-													fontWeight="bold">
-													Add Picture
-												</Typography>
+												!post ? (
+													<Typography
+														variant="h5"
+														color={theme.palette.secondary[200]}
+														textAlign="center"
+														fontWeight="bold">
+														Add Picture
+													</Typography>
+												) : (
+													<Typography
+														variant="h5"
+														color={theme.palette.secondary[200]}
+														textAlign="center"
+														fontWeight="bold">
+														If not pictures are added the old ones will stay
+													</Typography>
+												)
 											) : (
 												<Typography
 													variant="h5"

@@ -14,7 +14,7 @@ import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_64
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
-const PostCard = ({ item }) => {
+const PostCard = ({ item, user }) => {
 	const navigate = useNavigate();
 	const theme = useTheme();
 
@@ -67,7 +67,16 @@ const PostCard = ({ item }) => {
 							{moment(item.createdAt).format("YYYY-MM-DD")}
 						</Typography>
 					</Box>
-				</Box>
+				</Box>{" "}
+				{user === "true" && (
+					<Button
+						size="medium"
+						sx={{ color: theme.palette.secondary[300] }}
+						focusRipple={true}
+						onClick={() => void navigate(`/posts/user/edit/${item.id}`)}>
+						Update
+					</Button>
+				)}
 				<Button
 					size="medium"
 					onClick={() => void navigate(`/posts/find/${item.id}`)}>

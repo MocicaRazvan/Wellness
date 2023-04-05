@@ -5,16 +5,23 @@ import {
 	Typography,
 	CircularProgress,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 import Form from "./Form";
 
 const UpdatePost = () => {
 	const theme = useTheme();
+
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 	const { postId } = useParams();
 
-	const { data, isLoading } = useGetPostByIdQuery({ id: postId });
+	const { data, isLoading } = useGetPostByIdQuery(
+		{ id: postId },
+		{ skip: !postId },
+	);
+
 	if (isLoading)
 		return (
 			<CircularProgress
@@ -38,7 +45,7 @@ const UpdatePost = () => {
 					letterSpacing={1.5}
 					variant="h3"
 					sx={{ mb: "1.5rem" }}>
-					Create a post from the bottom of your heart
+					Update your post so your soul will be fullfield
 				</Typography>
 				<Form post={data?.post} />
 			</Box>

@@ -48,7 +48,7 @@ const UsersPosts = () => {
 	return (
 		<Box p={2}>
 			<Typography
-				className="text-gradient"
+				// className="text-gradient"
 				variant="h2"
 				color={theme.palette.secondary[200]}
 				fontWeight="bold"
@@ -64,7 +64,7 @@ const UsersPosts = () => {
 				setSorting={setSorting}
 				setTags={setTags}
 			/>
-			<GridList items={data?.posts}>
+			<GridList items={data?.posts} user="true">
 				<PostCard />
 			</GridList>
 			<CustomPagination

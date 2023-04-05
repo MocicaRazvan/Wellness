@@ -13,11 +13,13 @@ import {
 import { Formik } from "formik";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import Loading from "../../components/reusable/Loading";
 import TextEditor from "../../components/reusable/TextEditor";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
 	useCreateExerciseMutation,
 	useUpdateExerciseMutation,
@@ -32,6 +34,8 @@ const exerciseSchema = yup.object().shape({
 });
 
 const Form = ({ exercise }) => {
+	const user = useSelector(selectCurrentUser);
+
 	const [body, setBody] = useState(exercise?.body || "");
 	const [message, setMessage] = useState("");
 	const [loading, setLoading] = useState({
@@ -52,10 +56,10 @@ const Form = ({ exercise }) => {
 		// body: exercise?.body || "",
 		muscleGroups: exercise?.muscleGroups || [],
 	};
-	if (exercise) {
-		const urls = exercise?.videos?.map(({ url }) => url);
-		initialValues.clips = urls;
-	}
+	// if (exercise) {
+	// 	const urls = exercise?.videos?.map(({ url }) => url);
+	// 	initialValues.clips = urls;
+	// }
 
 	const fileBase64 = (img) => {
 		return new Promise((resolve, reject) => {
@@ -67,6 +71,10 @@ const Form = ({ exercise }) => {
 			fileReader.readAsDataURL(img);
 		});
 	};
+
+	if (exercise && user?.id !== exercise?.user) {
+		navigate("/");
+	}
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (!body) {
@@ -184,7 +192,11 @@ const Form = ({ exercise }) => {
 								mb={6}
 								display="flex"
 								justifyContent="center">
-								<TextEditor name="body" setValue={setBody} />
+								<TextEditor
+									name="body"
+									setValue={setBody}
+									value={exercise?.body || ""}
+								/>
 							</Box>
 						</Box>
 						<Box
@@ -218,13 +230,23 @@ const Form = ({ exercise }) => {
 										sx={{ "&:hover": { cursor: "pointer" } }}>
 										<input {...getInputProps()} />
 										{!values.clips.length > 0 ? (
-											<Typography
-												variant="h5"
-												color={theme.palette.secondary[200]}
-												textAlign="center"
-												fontWeight="bold">
-												Add Videos{" "}
-											</Typography>
+											!exercise ? (
+												<Typography
+													variant="h5"
+													color={theme.palette.secondary[200]}
+													textAlign="center"
+													fontWeight="bold">
+													Add Videos{" "}
+												</Typography>
+											) : (
+												<Typography
+													variant="h5"
+													color={theme.palette.secondary[200]}
+													textAlign="center"
+													fontWeight="bold">
+													If no videos are selected the old ones will stay
+												</Typography>
+											)
 										) : (
 											<Typography
 												variant="h5"

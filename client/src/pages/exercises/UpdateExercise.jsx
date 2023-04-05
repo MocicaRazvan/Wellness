@@ -1,19 +1,33 @@
 import { useTheme } from "@emotion/react";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress, Typography, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+	Navigate,
+	useLocation,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useGetExerciseByIdQuery } from "../../redux/exercises/exercisesApi";
 import Form from "./Form";
 
 const UpdateExercise = () => {
-	const { state: exercise } = useLocation();
-	const user = useSelector(selectCurrentUser);
-	const isAuth = user?.id === exercise?.user;
-	const navigate = useNavigate();
+	const exerciseId = useParams()?.exerciseId;
 	const theme = useTheme();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+	const { data: exercise, isLoading } = useGetExerciseByIdQuery(
+		{ id: exerciseId },
+		{ skip: !exerciseId },
+	);
 
-	if (!isAuth) navigate("/");
+		if (isLoading)
+			return (
+				<CircularProgress
+					sx={{ position: "absolute", top: "50%", left: "50%" }}
+					size="3rem"
+					thickness={7}
+				/>
+			);
 
 	return (
 		<Box>

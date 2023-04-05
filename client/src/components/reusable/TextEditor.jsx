@@ -3,7 +3,7 @@ import "quill/dist/quill.snow.css";
 import { useEffect } from "react";
 import { Box } from "@mui/system";
 
-const TextEditor = ({ setValue }) => {
+const TextEditor = ({ setValue, value = "" }) => {
 	const modules = {
 		toolbar: [["bold", "italic", "underline", "strike"]],
 	};
@@ -11,11 +11,12 @@ const TextEditor = ({ setValue }) => {
 
 	useEffect(() => {
 		if (quill) {
+			quill.clipboard.dangerouslyPasteHTML(value);
 			quill.on("text-change", () => {
 				setValue(quillRef.current.firstChild.innerHTML);
 			});
 		}
-	}, [quill, quillRef, setValue]);
+	}, [quill, quillRef, setValue, value]);
 
 	return (
 		<Box
