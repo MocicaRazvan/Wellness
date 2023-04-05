@@ -5,9 +5,7 @@ import {
 	Typography,
 	CircularProgress,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useParams } from "react-router-dom";
 import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 import Form from "./Form";
 

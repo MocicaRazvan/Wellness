@@ -81,7 +81,7 @@ const Form = ({ training }) => {
 	};
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
-		if (!description) {
+		if (description === "") {
 			setMessage("Please provide a description");
 			setAlert((prev) => ({
 				...prev,

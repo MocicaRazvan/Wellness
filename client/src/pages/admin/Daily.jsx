@@ -73,7 +73,6 @@ const Daily = () => {
 			/>
 		);
 
-	console.log({ formattedData });
 
 	return (
 		<Box m="1.5rem 2.5rem" overflow="hidden">
@@ -83,13 +82,13 @@ const Daily = () => {
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<DesktopDatePicker
 							maxDate={endDate}
-							// minDate={startDate}
+							minDate={startDate}
 							value={startDate}
 							onChange={(date) => setStartDate(date)}
 							renderInput={(params) => <TextField {...params} />}
 						/>
 						<DesktopDatePicker
-							// maxDate={endDate}
+							maxDate={endDate}
 							minDate={startDate}
 							value={endDate}
 							onChange={(date) => setEndDate(date)}

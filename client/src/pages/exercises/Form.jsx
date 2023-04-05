@@ -16,7 +16,6 @@ import Dropzone from "react-dropzone";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import CustomCarousel from "../../components/reusable/CustomCarousel";
 import Loading from "../../components/reusable/Loading";
 import TextEditor from "../../components/reusable/TextEditor";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
@@ -46,6 +45,11 @@ const Form = ({ exercise }) => {
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const [credentials, setCredentials] = useState({
+		show: false,
+		msg: "",
+		color: "red",
+	});
 
 	const [createExercise] = useCreateExerciseMutation();
 	const [updateExercise] = useUpdateExerciseMutation();
@@ -77,30 +81,51 @@ const Form = ({ exercise }) => {
 	}
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
-		if (!body) {
-			setMessage("Please provide a body to the exercise");
+		if (body === "") {
+			setMessage("Plese provide a body to the exercise");
+			setCredentials((prev) => ({
+				...prev,
+				show: true,
+				msg: "Plese provide a body to the exercise",
+			}));
+			setTimeout(
+				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+				2000,
+			);
 		} else {
 			if (!exercise) {
-				try {
-					setLoading((prev) => ({ ...prev, show: true }));
-					const res = await createExercise({
-						body,
-						videos: values.clips,
-						title: values.title,
-						muscleGroups: values.muscleGroups,
-					});
-					setLoading((prev) => ({ ...prev, show: false }));
-					if (res.error) {
-						setMessage(res.error.data.message);
-					} else {
-						setMessage("");
-						setBody("");
+				if (values?.clips.length === 0) {
+					setCredentials((prev) => ({
+						...prev,
+						show: true,
+						msg: "Please enter at least one video!",
+					}));
+					setTimeout(
+						() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+						2000,
+					);
+				} else {
+					try {
+						setLoading((prev) => ({ ...prev, show: true }));
+						const res = await createExercise({
+							body,
+							videos: values.clips,
+							title: values.title,
+							muscleGroups: values.muscleGroups,
+						});
+						setLoading((prev) => ({ ...prev, show: false }));
+						if (res.error) {
+							setMessage(res.error.data.message);
+						} else {
+							setMessage("");
+							setBody("");
+							onSubmitProps.resetForm();
+							navigate("/exercises/user");
+						}
+					} catch (error) {
+						console.log(error);
 						onSubmitProps.resetForm();
-						navigate("/exercises/user");
 					}
-				} catch (error) {
-					console.log(error);
-					onSubmitProps.resetForm();
 				}
 			} else {
 				try {
@@ -130,6 +155,8 @@ const Form = ({ exercise }) => {
 	};
 	return (
 		<Box>
+			{" "}
+			<Loading loading={credentials} type="alert" />
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}

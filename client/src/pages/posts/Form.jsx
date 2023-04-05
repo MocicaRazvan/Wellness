@@ -1,6 +1,4 @@
 import {
-	Checkbox,
-	ListItemText,
 	Select,
 	TextField,
 	useMediaQuery,
@@ -47,6 +45,11 @@ const Form = ({ post }) => {
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const [credentials, setCredentials] = useState({
+		show: false,
+		msg: "",
+		color: "red",
+	});
 
 	const initalValues = {
 		tags: post?.tags || [],
@@ -54,27 +57,53 @@ const Form = ({ post }) => {
 		pictures: [],
 	};
 	const handleFormSubmit = async (values, onSubmitProps) => {
-		if (!body) {
+		if (body === "") {
 			setMessage("Plese provide a body to the post");
+			setCredentials((prev) => ({
+				...prev,
+				show: true,
+				msg: "Plese provide a body to the post",
+			}));
+			setTimeout(
+				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+				2000,
+			);
 		} else {
 			const { pictures, title, tags } = values;
 			if (!post) {
-				try {
-					setLoading((prev) => ({ ...prev, show: true }));
-					const res = await createPost({ body, title, tags, images: pictures });
-					setLoading((prev) => ({ ...prev, show: false }));
-					if (res?.error) {
-						setMessage(res.error.data.message);
-					} else {
-						setMessage("");
+				if (pictures.length === 0) {
+					setCredentials((prev) => ({
+						...prev,
+						show: true,
+						msg: "Please enter at least one picture!",
+					}));
+					setTimeout(
+						() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+						2000,
+					);
+				} else {
+					try {
+						setLoading((prev) => ({ ...prev, show: true }));
+						const res = await createPost({
+							body,
+							title,
+							tags,
+							images: pictures,
+						});
+						setLoading((prev) => ({ ...prev, show: false }));
+						if (res?.error) {
+							setMessage(res.error.data.message);
+						} else {
+							setMessage("");
+							setBody("");
+							onSubmitProps.resetForm();
+							navigate("/posts/user");
+						}
+					} catch (error) {
+						console.log(error);
 						setBody("");
 						onSubmitProps.resetForm();
-						navigate("/posts/user");
 					}
-				} catch (error) {
-					console.log(error);
-					setBody("");
-					onSubmitProps.resetForm();
 				}
 			} else {
 				try {
@@ -118,6 +147,7 @@ const Form = ({ post }) => {
 
 	return (
 		<Box>
+			<Loading loading={credentials} type="alert" />
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}

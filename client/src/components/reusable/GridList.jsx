@@ -22,8 +22,6 @@ const GridList = ({ items, children, type, user = "false" }) => {
 	);
 };
 const Wrapper = styled(Box)(({ theme }) => ({
-	//backgroundColor: alpha(theme.palette.primary.main, 0.15),
-	// height: "100vh",
 	padding: 40,
 	[theme.breakpoints.up("sm")]: {},
 }));
