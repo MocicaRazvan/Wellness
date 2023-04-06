@@ -27,7 +27,10 @@ const TrainingCard = ({ item }) => {
 	const user = useSelector(selectCurrentUser);
 	const isBoughtOrInCart =
 		subscriptions?.includes(item?.id) ||
-		cartItems?.some(({ id }) => id === item?.id);
+		cartItems?.some(({ id }) => id === item?.id) ||
+		item?.user?._id === user?.id;
+
+	console.log(item);
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();

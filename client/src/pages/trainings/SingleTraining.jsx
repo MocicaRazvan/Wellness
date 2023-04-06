@@ -27,7 +27,7 @@ const SingleTraining = () => {
 	const id = user?.id;
 	const navigate = useNavigate();
 	const isAllowed =
-		subscriptions?.includes(trainingId) || training?.user === id;
+		subscriptions?.includes(trainingId) || training?.user === id    ;
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
 
 	if (isLoading || !training)
