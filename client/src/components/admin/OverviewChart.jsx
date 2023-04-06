@@ -43,7 +43,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 
 		return [[totalSalesLine], [totalUnitsLine]];
 	}, [data, theme.palette.secondary]);
-	console.log(data);
+	console.log({ data });
 
 	if (isLoading || !data)
 		return (
@@ -57,6 +57,12 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 	return (
 		<ResponsiveLine
 			data={view === "sales" ? totalSalesLine : totalUnitsLine}
+			enableArea={true}
+			areaBaselineValue={
+				view === "sales"
+					? totalSalesLine[0]?.data[0]?.y
+					: totalUnitsLine[0]?.data[0]?.y
+			}
 			theme={{
 				axis: {
 					domain: {

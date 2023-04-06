@@ -103,7 +103,7 @@ const Comment = ({ comment }) => {
 	};
 
 	return (
-		<Card>
+		<Card sx={{ bgcolor: theme.palette.primary.main }}>
 			<Loading loading={loading} type="alert" />
 			<Box sx={{ p: "15px" }}>
 				<Stack spacing={2} direction="row">
@@ -137,7 +137,7 @@ const Comment = ({ comment }) => {
 									<Button
 										startIcon={<Delete />}
 										sx={{
-											color: theme.palette.secondary[200],
+											color: theme.palette.secondary[300],
 											fontWeight: 500,
 											textTransform: "capitalize",
 										}}
@@ -152,7 +152,7 @@ const Comment = ({ comment }) => {
 										sx={{
 											fontWeight: 500,
 											textTransform: "capitalize",
-											color: theme.palette.primary[200],
+											color: theme.palette.secondary[300],
 										}}
 										startIcon={<Edit />}
 										onClick={() => setEditingComm(!editingComm)}>
@@ -186,7 +186,7 @@ const Comment = ({ comment }) => {
 							</>
 						) : (
 							<Typography
-								sx={{ color: theme.palette.secondary[200], p: "20px 0" }}>
+								sx={{ color: theme.palette.secondary[300], p: "20px 0" }}>
 								{body}
 							</Typography>
 						)}

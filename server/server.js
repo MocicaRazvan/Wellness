@@ -32,7 +32,6 @@ app.use("/exercises", require("./routes/exercises"));
 app.use("/trainings", require("./routes/trainings"));
 app.use("/user", require("./routes/user"));
 app.use("/orders", require("./routes/orders"));
-app.use("/questionsAnswers", require("./routes/questionsAnswers"));
 app.use("/conversations", require("./routes/conversation"));
 app.use("/messages", require("./routes/message"));
 app.use("/notifications", require("./routes/notification"));

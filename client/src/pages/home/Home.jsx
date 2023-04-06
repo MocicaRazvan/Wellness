@@ -140,7 +140,7 @@ const Home = () => {
 				</Parallax>
 			</Box>
 			<Values values={values1} links={["/posts", "/trainings", "/trainings"]} />
-			<Parallax bgImage={salad} strength={-300}>
+			<Parallax bgImage={salad} strength={-500}>
 				<div style={{ height: "100vh", backgroundColor: "rgba(0,0,0,0.2)" }}>
 					<Box
 						position="absolute"

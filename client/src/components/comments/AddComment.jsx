@@ -6,6 +6,7 @@ import {
 	TextField,
 	ThemeProvider,
 	Box,
+	useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import { useCreateCommentMutation } from "../../redux/comments/commentsApi";
@@ -28,6 +29,7 @@ const AddComment = ({ type, id }) => {
 		color: "red",
 	});
 	const user = useSelector(selectCurrentUser);
+	const { palette } = useTheme();
 
 	const handleAddComment = async () => {
 		try {
@@ -61,7 +63,7 @@ const AddComment = ({ type, id }) => {
 	};
 
 	return (
-		<Card>
+		<Card sx={{ bgcolor: palette.primary.main }}>
 			<Loading loading={loading} type="alert" />
 			<Box sx={{ p: "15px" }}>
 				<Stack direction="row" spacing={2} alignItems="flex-start">
@@ -70,8 +72,20 @@ const AddComment = ({ type, id }) => {
 						multiline
 						fullWidth
 						minRows={4}
-						id="outlined-multilined"
 						placeholder="Add a comment"
+						inputProps={{
+							style: { color: palette.secondary[400] },
+						}}
+						sx={{
+							"& label.Mui-focused": {
+								color: palette.secondary[400],
+							},
+							" & .MuiOutlinedInput-root": {
+								"&.Mui-focused fieldset": {
+									borderColor: palette.background.default,
+								},
+							},
+						}}
 						value={body}
 						onChange={(e) => {
 							setBody(e.target.value);

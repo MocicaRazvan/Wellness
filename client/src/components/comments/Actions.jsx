@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import React, { useContext, useState } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
@@ -14,6 +14,7 @@ const Actions = ({ comment }) => {
 
 	const user = useSelector(selectCurrentUser);
 	const isAuth = user.id === comment.user._id || user.role === "admin";
+	const { palette } = useTheme();
 
 	const handleActions = async (action) => {
 		try {
@@ -38,9 +39,9 @@ const Actions = ({ comment }) => {
 				onClick={() => {
 					handleActions("likes");
 				}}>
-				<ThumbUpIcon sx={{ height: "20px", width: " 20px", color: "" }} />
+				<ThumbUpIcon color="success" sx={{ height: "20px", width: " 20px" }} />
 			</IconButton>
-			<Typography sx={{ color: "custom.moderateBlue", fontWeight: 500 }}>
+			<Typography sx={{ color: palette.secondary[400], fontWeight: 500 }}>
 				{comment?.likes?.length - comment?.dislikes?.length}
 			</Typography>
 			<IconButton
@@ -49,7 +50,7 @@ const Actions = ({ comment }) => {
 				onClick={() => {
 					handleActions("dislikes");
 				}}>
-				<ThumbDownIcon sx={{ height: "20px", width: " 20px", color: "" }} />
+				<ThumbDownIcon color="error" sx={{ height: "20px", width: " 20px" }} />
 			</IconButton>
 		</Box>
 	);
