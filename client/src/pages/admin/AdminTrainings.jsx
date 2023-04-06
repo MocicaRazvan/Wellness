@@ -109,6 +109,8 @@ const AdminTrainings = () => {
 		},
 	];
 
+	console.log({ data });
+
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title="Trainings" subtitle="See the list of trainings." />
@@ -125,7 +127,7 @@ const AdminTrainings = () => {
 				isLoading={isLoading || !data}
 				rows={data?.trainings || []}
 				columns={columns}
-				rowCount={data?.total || 0}
+				rowCount={data?.count || 0}
 				page={page}
 				setPage={setPage}
 				setPageSize={setPageSize}
