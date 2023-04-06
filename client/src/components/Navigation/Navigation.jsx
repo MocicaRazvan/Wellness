@@ -43,6 +43,7 @@ import pathnames from "../../utils/consts/searchBarRoutes";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { useEffect } from "react";
 import { setNotReload } from "../../redux/messages/messagesSlice";
+import CartPopper from "../cart/CartPopper";
 
 const drawerWidth = 240;
 
@@ -66,6 +67,7 @@ const Navigation = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 	const [active, setActive] = useState("");
+	const [cartAnchor, setCartAnchor] = useState(null);
 	// const activeValue = pathname.split('') === "messenger" ? "contact support" : pathname;
 
 	const isMenuOpen = Boolean(anchorEl);
@@ -95,6 +97,11 @@ const Navigation = () => {
 		}
 
 		setDirection({ ...direction, [anchor]: open });
+	};
+
+	const handleCartAnchor = (e) => {
+		console.log(e);
+		setCartAnchor(e.currentTarget);
 	};
 
 	const handleProfileMenuOpen = (event) => {
@@ -498,22 +505,22 @@ const Navigation = () => {
 					)}
 				</IconButton>
 			</MenuItem>
-			<MenuItem onClick={handleProfileMenuOpen}>
+			<MenuItem onClick={handleMenuClose}>
 				<IconBtn
 					badgeContent={cartTotal}
 					icon={<ShoppingCartIcon />}
 					onClick={() => void navigate("/cart")}
 				/>
 			</MenuItem>
-			<MenuItem onClick={handleProfileMenuOpen}>
+			<MenuItem onClick={handleMenuClose}>
 				<PopupWrapper />
 			</MenuItem>
-			<MenuItem onClick={handleProfileMenuOpen}>
+			<MenuItem onClick={handleMenuClose}>
 				<IconButton onClick={() => navigate("/calculator")}>
 					<Calculate sx={{ fontSize: "25px" }} />
 				</IconButton>
 			</MenuItem>
-			<MenuItem onClick={handleProfileMenuOpen}>
+			<MenuItem onClick={handleMenuClose}>
 				<Button
 					variant="outlined"
 					color="inherit"
@@ -720,11 +727,17 @@ const Navigation = () => {
 										<LightModeOutlined sx={{ fontSize: "25px" }} />
 									)}
 								</IconButton>
-								<IconBtn
-									badgeContent={cartTotal}
-									icon={<ShoppingCartIcon />}
-									onClick={() => void navigate("/cart")}
-								/>
+								<div onClick={handleCartAnchor}>
+									<IconBtn
+										badgeContent={cartTotal}
+										icon={<ShoppingCartIcon />}
+										stopPropagation="false"
+										onClick={(e) => {
+											// void navigate("/cart");
+											// handleCartAnchor(e);
+										}}
+									/>
+								</div>
 								<IconButton onClick={() => navigate("/calculator")}>
 									<Calculate sx={{ fontSize: "25px" }} />
 								</IconButton>
@@ -876,6 +889,7 @@ const Navigation = () => {
 					{list("top")}
 				</SwipeableDrawer>
 			)}
+			<CartPopper setAnchorEl={setCartAnchor} anchorEl={cartAnchor} />
 		</Box>
 	);
 };

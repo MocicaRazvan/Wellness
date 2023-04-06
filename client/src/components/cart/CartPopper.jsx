@@ -1,24 +1,14 @@
-import {
-	Box,
-	Button,
-	Divider,
-	Popover,
-	Typography,
-	useTheme,
-} from "@mui/material";
-import React from "react";
+import { Button, Divider, Popover, Typography, useTheme } from "@mui/material";
+import { Box } from "@mui/system";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectCartItems } from "../redux/cart/cartSlice";
+import { selectCartItems } from "../../redux/cart/cartSlice";
 
-const Test = () => {
+const CartPopper = ({ setAnchorEl, anchorEl }) => {
 	const cartItems = useSelector(selectCartItems);
-	const [anchorEl, setAnchorEl] = React.useState(null);
 	const total = cartItems?.reduce((acc, cur) => (acc += cur.price), 0);
 	const { palette } = useTheme();
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
+
 	const navigate = useNavigate();
 
 	const handleClose = () => {
@@ -30,11 +20,7 @@ const Test = () => {
 	console.log(cartItems);
 
 	return (
-		<div style={{ textAlign: "center" }}>
-			<Button variant="contained" onClick={handleClick}>
-				Open Popover
-			</Button>
-
+		<div>
 			<Popover
 				open={open}
 				anchorEl={anchorEl}
@@ -60,7 +46,12 @@ const Test = () => {
 									<Typography
 										color={palette.secondary[300]}
 										fontSize={15}
-										fontWeight={900}>
+										fontWeight={900}
+										sx={{ cursor: "pointer" }}
+										onClick={() => {
+											navigate(`/trainings/find/${id}`);
+											handleClose();
+										}}>
 										{title}
 									</Typography>
 									<Typography color={palette.secondary[300]}>
@@ -88,7 +79,10 @@ const Test = () => {
 								}}
 								size="medium"
 								variant="contained"
-								onClick={() => navigate("/cart")}>
+								onClick={() => {
+									navigate("/cart");
+									handleClose();
+								}}>
 								BUY
 							</Button>
 							<Typography
@@ -107,7 +101,10 @@ const Test = () => {
 						textAlign="center"
 						sx={{ p: 1, cursor: "pointer" }}
 						fontWeight={900}
-						onClick={() => navigate("/trainings")}>
+						onClick={() => {
+							navigate("/trainings");
+							handleClose();
+						}}>
 						No itmes, go shopping!
 					</Typography>
 				)}
@@ -116,4 +113,4 @@ const Test = () => {
 	);
 };
 
-export default Test;
+export default CartPopper;

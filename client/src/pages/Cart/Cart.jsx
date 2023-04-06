@@ -15,13 +15,19 @@ import { useNavigate } from "react-router-dom";
 import { selectCartItems } from "../../redux/cart/cartSlice";
 import CartList from "../../components/cart/CartList";
 import PayButton from "../../components/cart/PayButton";
-import { CartItems, CartTotal, StackContainer } from "../../components/reusable/CartWrappers";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import {
+	CartItems,
+	CartTotal,
+	StackContainer,
+} from "../../components/reusable/CartWrappers";
 
 const Cart = () => {
 	const cartItems = useSelector(selectCartItems);
 	const navigate = useNavigate();
 	const theme = useTheme();
-	const total = cartItems.reduce((acc, cur) => (acc += cur.price), 0);
+	const total = cartItems?.reduce((acc, cur) => (acc += cur.price), 0);
 	if (cartItems?.length === 0) {
 		return (
 			<Container
@@ -68,6 +74,21 @@ const Cart = () => {
 	return (
 		<CartItems>
 			<StackContainer>
+				<Box mb={2} display={"flex"} justifyContent="start" width="100%">
+					<Button
+						sx={{
+							bgcolor: theme.palette.secondary[300],
+							color: theme.palette.background.default,
+							"&:hover": {
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.background.default,
+							},
+						}}
+						variant="outlined"
+						startIcon={<DeleteIcon />}>
+						Clear Cart
+					</Button>
+				</Box>
 				<CartList cartItems={cartItems} />
 			</StackContainer>
 			<CartTotal sx={{ position: "sticky", top: 100 }}>
