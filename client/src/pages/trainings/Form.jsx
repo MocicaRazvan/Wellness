@@ -26,8 +26,14 @@ import tags from "../../utils/consts/tags";
 
 const trainingSchema = yup.object().shape({
 	title: yup.string().required("Please enter the title"),
-	tags: yup.array().required("Please enter the tags"),
-	exercises: yup.array().required("Please enter the exercises"),
+	tags: yup
+		.array()
+		.required("Please enter the tags")
+		.min(1, "Please enter at least one tag"),
+	exercises: yup
+		.array()
+		.required("Please enter the exercises")
+		.min(1, "Please enter at least one exercise"),
 	price: yup.number().required("Please enter the price").min(0),
 	pictures: yup.array().required("Please enter pictures"),
 });
