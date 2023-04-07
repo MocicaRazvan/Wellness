@@ -33,6 +33,7 @@ const Values = ({ values, links }) => {
 		itemsRef.current.forEach((e) => observer.observe(e));
 	}, [itemsRef]);
 
+
 	return (
 		<Box
 			component="section"
