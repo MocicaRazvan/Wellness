@@ -11,7 +11,7 @@ import {
 	useTrainingActionsMutation,
 } from "../../redux/trainings/trainingsApi";
 import Header from "../../components/reusable/Header";
-import CustomDataGrid from "../../dataGrid/CustomDataGrid";
+import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 
 const BoughtTrainings = () => {
 	const [page, setPage] = useState(0);

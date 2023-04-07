@@ -8,7 +8,6 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import CustomDataGrid from "../../dataGrid/CustomDataGrid";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 import {
@@ -17,6 +16,7 @@ import {
 } from "../../redux/exercises/exercisesApi";
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
+import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 
 const UserExercises = () => {
 	const [page, setPage] = useState(0);

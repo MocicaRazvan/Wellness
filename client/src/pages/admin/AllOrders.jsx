@@ -1,8 +1,8 @@
 import { Box, Button, styled, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
-import CustomDataGrid from "../../dataGrid/CustomDataGrid";
 import { useGetAllOrdersQuery } from "../../redux/orders/orderApi";
 
 const AllOrders = () => {

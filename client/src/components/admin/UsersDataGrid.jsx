@@ -1,10 +1,10 @@
 import { Box, styled, Tooltip } from "@mui/material";
 import React, { useState } from "react";
-import CustomDataGrid from "../../dataGrid/CustomDataGrid";
 import {
 	useGetAllUsersAdminQuery,
 	useMakeUserTrainerMutationMutation,
 } from "../../redux/user/userApi";
+import CustomDataGrid from "../dataGrid/CustomDataGrid";
 import UserAgreement from "../reusable/UserAgreement";
 
 const UsersDataGrid = ({ height = "80vh" }) => {
