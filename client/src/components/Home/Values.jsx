@@ -27,12 +27,13 @@ const Values = ({ values, links }) => {
 			entries.forEach((e) => {
 				if (e.isIntersecting) {
 					e.target.classList.add("show");
+				} else {
+					// e.target.classList.remove("show");
 				}
 			});
 		});
 		itemsRef.current.forEach((e) => observer.observe(e));
 	}, [itemsRef]);
-
 
 	return (
 		<Box

@@ -10,10 +10,7 @@ import { useTheme } from "@mui/material";
 import blackHug from "../../images/hug/blackHug.svg";
 import whiteHug from "../../images/hug/whiteHug.svg";
 import { useEffect, useRef } from "react";
-import {
-	selectNotReload,
-	setNotReload,
-} from "../../redux/messages/messagesSlice";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 const SmokingHero = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
@@ -21,13 +18,14 @@ const SmokingHero = () => {
 	const { palette } = useTheme();
 	const heroRef = useRef();
 	const dispatch = useDispatch();
-	const notReload = useSelector(selectNotReload);
 
 	useEffect(() => {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((e) => {
 				if (e.isIntersecting) {
 					e.target.classList.add("show");
+				} else {
+					e.target.classList.remove("show");
 				}
 			});
 		});

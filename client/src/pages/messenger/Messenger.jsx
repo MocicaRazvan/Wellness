@@ -193,12 +193,14 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 										// dispatch(setNotReload(true));
 										// void navigate(`/messenger?conv=${c.id}`, { replace: true });
 										quryParams.set("conv", c?.id);
-
+											
 										setSearchParams(quryParams);
 									}}>
 									<Conversation conversation={c} currentUser={user} />
 								</Box>
-								<Divider sx={{ bgcolor: theme.palette.secondary[300] }} />
+								{i !== conversations?.length - 1 && (
+									<Divider sx={{ bgcolor: theme.palette.secondary[300] }} />
+								)}
 							</div>
 						))}
 					</div>

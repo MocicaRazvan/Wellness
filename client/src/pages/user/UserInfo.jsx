@@ -63,13 +63,14 @@ const UserInfo = ({ user, width = "50%" }) => {
 							variant="h4"
 							color={theme.palette.secondary[300]}
 							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: theme.palette.primary.light,
-									cursor: "pointer",
-								},
-							}}>
-							{user.username}
+							// sx={{
+							// 	"&:hover": {
+							// 		color: theme.palette.primary.light,
+							// 		cursor: "pointer",
+							// 	},
+							// }}
+						>
+							{user?.username}
 						</Typography>
 						<Typography color={theme.palette.secondary[200]}>
 							{user.email}
@@ -113,7 +114,7 @@ const UserInfo = ({ user, width = "50%" }) => {
 						sx={{ color: theme.palette.secondary[400] }}
 					/>
 					<Typography color={theme.palette.secondary[200]}>
-						{user.location || "No location added"}
+						{user?.location || "No location added"}
 					</Typography>
 				</Box>
 				<Box display="flex" alignItems="center" gap="1rem">
@@ -122,7 +123,7 @@ const UserInfo = ({ user, width = "50%" }) => {
 						sx={{ color: theme.palette.secondary[400] }}
 					/>
 					<Typography color={theme.palette.secondary[200]}>
-						{user.occupation || "No occupation added"}
+						{user?.occupation || "No occupation added"}
 					</Typography>
 				</Box>
 			</Box>

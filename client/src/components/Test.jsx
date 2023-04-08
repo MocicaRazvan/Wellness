@@ -4,14 +4,14 @@ import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantity
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import PaidIcon from "@mui/icons-material/Paid";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
+import HotelIcon from "@mui/icons-material/Hotel";
 import jump from "../images/parallax/jump.jpg";
 import salad from "../images/parallax/salad.jpg";
 import success from "../images/parallax/success.jpg";
 import { Parallax } from "react-parallax";
-import { alpha, Box, Button, Typography } from "@mui/material";
+import { alpha, Box, Button, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useTheme } from "@emotion/react";
 import Values from "../components/Home/Values";
 import SmokingHero from "../components/Home/SmokingHero";
 import UserDialog from "../components/Home/UserDialog";
@@ -20,6 +20,11 @@ import { useTrail, a } from "@react-spring/web";
 import React, { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
+import {
+	VerticalTimeline,
+	VerticalTimelineElement,
+} from "react-vertical-timeline-component";
+import "react-vertical-timeline-component/style.min.css";
 
 const iconSize = 60;
 
@@ -81,6 +86,119 @@ const Trail = ({ open, children, h = "80px" }) => {
 				</a.div>
 			))}
 		</div>
+	);
+};
+
+const items = [
+	{
+		date: "Prepare",
+		title: "Be aware",
+		text: `Realize your problems and target them. Don't be afraid to make changes that you are making you uncomfortable.`,
+		icon: <BookIcon sx={{ fontSize: iconSize }} />,
+	},
+
+	{
+		date: "",
+		title: "Get comfortable with being afraid",
+		text: `It is normal to feel overwhelmed and to be inscure about getting started. Don't let this feelings stop you. `,
+		icon: <BookIcon sx={{ fontSize: iconSize }} />,
+	},
+
+	{
+		date: "",
+		title: "Make a plan",
+		text: `Plan ahead and be very structural. Make realistic targets and try to do things your way, don't let others decide your journey.`,
+		icon: <BookIcon sx={{ fontSize: iconSize }} />,
+	},
+
+	{
+		date: "Start working",
+		title: "Step by step",
+		text: `Be patiente and know that your life is a marathon not a sprint. Don't seek for fast fiexes just be happy with every little progress.`,
+		icon: <DirectionsRunIcon sx={{ fontSize: iconSize }} />,
+	},
+
+	{
+		date: "",
+		title: "Work you ass off",
+		text: `Working hard pays off. Realize that every change needs some sacrfices and be prepared to make some. In the end you will thank yourself.`,
+		icon: <DirectionsRunIcon sx={{ fontSize: iconSize }} />,
+	},
+	{
+		date: "",
+		title: "Becoming comfortable with your new life",
+		text: `After some time evrything you said it was to hard will become a trivial part of your life. When this happen you can pat yourself on the back and see your true progress.`,
+		icon: <DirectionsRunIcon sx={{ fontSize: iconSize }} />,
+	},
+	{
+		date: "Stay consistent",
+		title: "Don't let the results slow you down",
+		text: `Don't get to comfortable and think that you can't lose what you achived. This is where the difference between the sprint and the marathon is made.`,
+		icon: <HotelIcon sx={{ fontSize: iconSize }} />,
+	},
+];
+
+const Timeline = ({ items }) => {
+	const { palette } = useTheme();
+	return (
+		<VerticalTimeline lineColor={palette.secondary[300]}>
+			{items.map(({ date, title, text, icon }) => (
+				<VerticalTimelineElement
+					className="vertical-timeline-element--work"
+					contentStyle={{
+						backgroundColor: palette.primary.main,
+						boxShadow: `0 3px 0 ${palette.secondary[300]}`,
+					}}
+					contentArrowStyle={{
+						borderRight: `7px solid ${palette.secondary[300]}`,
+					}}
+					date={
+						<Typography
+							align="center"
+							variant="h2"
+							textAlign="start"
+							fontWeight={700}
+							sx={{
+								fontSize: 45,
+								color: `${
+									palette.mode === "dark"
+										? palette.secondary[200]
+										: palette.secondary[500]
+								}!important`,
+							}}>
+							{date}
+						</Typography>
+					}
+					iconStyle={{ background: palette.secondary[500], boxShadow: "none" }}
+					icon={icon}>
+					<Typography
+						align="center"
+						variant="h2"
+						textAlign="center"
+						fontWeight={900}
+						sx={{
+							fontSize: 45,
+							color: `${palette.secondary[400]}!important`,
+							mb: 2,
+						}}>
+						{title}
+					</Typography>
+					<Box display="flex" alignItems="center" justifyContent="center">
+						<Typography
+							align="center"
+							variant="h2"
+							textAlign="center"
+							fontWeight={500}
+							sx={{
+								fontSize: { xs: 24, sm: 33, md: 45 },
+								color: `${palette.secondary[200]}!important`,
+							}}>
+							{text}
+						</Typography>
+					</Box>
+				</VerticalTimelineElement>
+			))}
+		</VerticalTimeline>
 	);
 };
 
@@ -273,10 +391,10 @@ const Home = () => {
 			/>
 			<Parallax
 				bgImage={success}
-				strength={200}
+				strength={500}
 				renderLayer={(percentage) => (
 					<div>
-						<Box
+						{/* <Box
 							style={{
 								display: "flex",
 								flexDirection: "column",
@@ -310,10 +428,19 @@ const Home = () => {
 								sx={{ fontSize: { xs: 80 * percentage, md: 80 * percentage } }}>
 								EXCUSES
 							</Typography>
-						</Box>
+						</Box> */}
 					</div>
 				)}>
-				<div style={{ height: "100vh" }}></div>
+				<div
+					style={{
+						minHeight: "100vh",
+						backgroundColor: `rgba(0,0,0,${
+							palette.mode === "dark" ? "0.3" : "0.3"
+						})`,
+					}}>
+					{" "}
+					<Timeline items={items} />{" "}
+				</div>
 			</Parallax>
 
 			<SmokingHero />
