@@ -27,7 +27,11 @@ const Geography = () => {
 			<Box
 				mt="40px"
 				height="75vh"
-				bgcolor={theme.palette.background.alt}
+				bgcolor={
+					theme.palette.mode === "dark"
+						? theme.palette.background.alt
+						: theme.palette.secondary[800]
+				}
 				border={`1px solid ${theme.palette.secondary[200]}`}
 				borderRadius="4px">
 				<ResponsiveChoropleth
@@ -61,7 +65,8 @@ const Geography = () => {
 						},
 						tooltip: {
 							container: {
-								color: theme.palette.background.alt,
+								color: theme.palette.secondary[300],
+								backgroundColor: theme.palette.background.alt,
 							},
 						},
 					}}
