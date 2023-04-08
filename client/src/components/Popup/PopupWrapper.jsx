@@ -15,7 +15,7 @@ const PopupWrapper = () => {
 
 	const { data, isLoading } = useGetNotificationsByUserQuery(
 		{ receiverId: user?.id },
-		{ skip },
+		{ skip, refetchOnMountOrArgChange: true, refetchOnReconnect: true },
 	);
 
 	useEffect(() => {

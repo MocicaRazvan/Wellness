@@ -53,7 +53,11 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const { data: dataMessages, isLoading: isLoadingMessages } =
 		useGetMessagesByConversationQuery(
 			{ id: currentChat?.id },
-			{ skip: skipMessages, pollingInterval: 10000 },
+			{
+				skip: skipMessages,
+				pollingInterval: 10000,
+				refetchOnMountOrArgChange: true,
+			},
 		);
 
 	useEffect(() => {
@@ -193,7 +197,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 										// dispatch(setNotReload(true));
 										// void navigate(`/messenger?conv=${c.id}`, { replace: true });
 										quryParams.set("conv", c?.id);
-											
+
 										setSearchParams(quryParams);
 									}}>
 									<Conversation conversation={c} currentUser={user} />
@@ -211,14 +215,24 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 					{currentChat ? (
 						<>
 							<div className="chatBoxTop">
-								{messages?.map((m, indx) => (
-									<div key={m.id + indx} ref={scrollRef}>
-										<Message
-											message={m}
-											own={m?.sender === user?.id ? "true" : null}
-										/>
-									</div>
-								))}
+								{messages?.length === 0 ? (
+									<Typography
+										fontSize={33}
+										textAlign="center"
+										fontWeight={600}
+										color={theme.palette.secondary[300]}>
+										Write your thoughts here
+									</Typography>
+								) : (
+									messages?.map((m, indx) => (
+										<div key={m.id + indx} ref={scrollRef}>
+											<Message
+												message={m}
+												own={m?.sender === user?.id ? "true" : null}
+											/>
+										</div>
+									))
+								)}
 							</div>
 							<div className="chatBoxBottom">
 								<TextField
@@ -228,13 +242,20 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 									placeholder="Write something..."
 									sx={{ width: "80%" }}
 									value={newMessage}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											(async () => {
+												newMessage.trim() !== "" && (await handleSubmit(e));
+											})();
+										}
+									}}
 									onChange={(e) => void setNewMessage(e.target.value)}
 								/>
 								<Button
 									variant="contained"
 									color="secondary"
 									disableElevation
-									disabled={newMessage === ""}
+									disabled={newMessage.trim() === ""}
 									onClick={handleSubmit}>
 									Send
 								</Button>

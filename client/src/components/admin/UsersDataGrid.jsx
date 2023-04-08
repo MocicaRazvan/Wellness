@@ -1,4 +1,4 @@
-import { Box, styled, Tooltip } from "@mui/material";
+import { Box, Button, styled, Tooltip, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import {
 	useGetAllUsersAdminQuery,
@@ -6,6 +6,8 @@ import {
 } from "../../redux/user/userApi";
 import CustomDataGrid from "../dataGrid/CustomDataGrid";
 import UserAgreement from "../reusable/UserAgreement";
+import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
+import { useNavigate } from "react-router-dom";
 
 const UsersDataGrid = ({ height = "80vh" }) => {
 	const [page, setPage] = useState(0);
@@ -13,6 +15,9 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 	const [sort, setSort] = useState({});
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
+	const [createConv] = useCreateSupportConversationMutation();
+	const { palette } = useTheme();
+	const navigate = useNavigate();
 
 	const [makeTrainer] = useMakeUserTrainerMutationMutation();
 
@@ -50,7 +55,7 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 		{
 			field: "email",
 			headerName: "Email",
-			flex: 1,
+			flex: 0.9,
 		},
 		{
 			field: "phoneNumber",
@@ -65,12 +70,12 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 		{
 			field: "occupation",
 			headerName: "Occupation",
-			flex: 0.7,
+			flex: 0.5,
 		},
 		{
 			field: "role",
 			headerName: "Role",
-			flex: 1,
+			flex: 0.6,
 			renderCell: ({ row: { role, id } }) => (
 				<Box>
 					{role === "user" ? (
@@ -90,6 +95,36 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 					)}
 				</Box>
 			),
+		},
+		{
+			field: "contact",
+			headerName: "Contact",
+			flex: 0.6,
+			renderCell: ({ row: { role, id } }) =>
+				role !== "admin" && (
+					<Button
+						size="small"
+						onClick={async () => {
+							try {
+								const res = await createConv({ id }).unwrap();
+								navigate(`/messenger/?conv=${res?.savedConversation?._id}`, {
+									state: true,
+								});
+							} catch (error) {
+								console.log(error);
+							}
+						}}
+						sx={{
+							bgcolor: palette.background.default,
+							color: palette.secondary[400],
+							"&:hover": {
+								color: palette.background.default,
+								bgcolor: palette.secondary[400],
+							},
+						}}>
+						Contact
+					</Button>
+				),
 		},
 	];
 

@@ -4,10 +4,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import IconBtn from "../reusable/IconBtn";
 import MailIcon from "@mui/icons-material/Mail";
-import { useTheme } from "@mui/material";
+import { Tooltip, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
 	useDeleteNotifcationsBySenderMutation,
@@ -41,47 +41,127 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 		setOpen((prev) => !prev);
 	};
 
-	const handleItemClick = (e, { _id }) => {
-		if (e) {
-			(async () => {
-				try {
-					const ids = await deleteBySender({ senderId: _id }).unwrap();
-					console.log({ ids });
-					setNotifications((prev) =>
-						prev.filter(({ sender }) => sender._id !== _id),
-					);
-					console.log({ notifications });
-				} catch (error) {
-					console.log(error);
+	const cont = useMemo(() => {
+		if (notifications) {
+			const parsed = notifications?.reduce(
+				(acc, { sender: { _id, username }, ref }) => {
+					acc[_id]
+						? acc[_id].total++
+						: (acc[_id] = { total: 1, user: username, ref });
+					return acc;
+				},
+				{},
+			);
+			const handleItemClick = (e, { _id }) => {
+				if (e) {
+					(async () => {
+						try {
+							const ids = await deleteBySender({ senderId: _id }).unwrap();
+							console.log({ ids });
+							setNotifications((prev) =>
+								prev.filter(({ sender }) => sender._id !== _id),
+							);
+							console.log({ notifications });
+						} catch (error) {
+							console.log(error);
+						}
+					})();
 				}
-			})();
+				setOpen((prev) => !prev);
+			};
+
+			return Object.entries(parsed).map(([key, { total, user, ref }]) => (
+				<Box
+					key={key}
+					width="100%"
+					display="flex"
+					justifyContent="space-between"
+					alignItems="center"
+					onClick={(e) => {
+						handleItemClick(e, { _id: key });
+						dispatch(setNotReload(true));
+						navigate(`/messenger?conv=${ref}`);
+					}}
+					gap={1}
+					sx={{
+						cursor: "pointer",
+						"&:hover": {
+							bgcolor: theme.palette.background.alt,
+						},
+					}}
+					p={2}>
+					<Typography color={theme.palette.secondary[200]} fontWeight={900}>
+						{total}
+					</Typography>
+					<Typography color={theme.palette.secondary[300]} textAlign="end">
+						{`${total > 1 ? "messages" : "message"} from ${user}`}
+					</Typography>
+				</Box>
+			));
 		}
-		setOpen((prev) => !prev);
-	};
-	console.log(notifications);
+	}, [
+		deleteBySender,
+		dispatch,
+		navigate,
+		notifications,
+		setNotifications,
+		theme.palette.background.alt,
+		theme.palette.secondary,
+	]);
+
+	// console.log({ parsed });
 
 	if (!notifications) return <></>;
 
-	const content = notifications?.map(({ createdAt, sender, type, ref }) => (
-		<Typography
-			key={createdAt}
-			sx={{
-				p: 2,
-				cursor: "pointer",
+	// const cont = Object.entries(parsed).map(([key, { total, user }]) => (
+	// 	<Box
+	// 		key={key}
+	// 		width="100%"
+	// 		display="flex"
+	// 		justifyContent="space-between"
+	// 		alignItems="center"
+	// 		onClick={(e) => {
+	// 			handleItemClick(e, { _id: key });
+	// 			dispatch(setNotReload(true));
+	// 			navigate(`/messenger?conv=${ref}`);
+	// 		}}
+	// 		gap={1}
+	// 		sx={{
+	// 			cursor: "pointer",
+	// 			"&:hover": {
+	// 				bgcolor: theme.palette.background.alt,
+	// 			},
+	// 		}}
+	// 		p={2}>
+	// 		<Typography color={theme.palette.secondary[200]} fontWeight={900}>
+	// 			{total}
+	// 		</Typography>
+	// 		<Typography color={theme.palette.secondary[300]} textAlign="end">
+	// 			{`${total > 1 ? "messages" : "message"} from ${user}`}
+	// 		</Typography>
+	// 	</Box>
+	// ));
 
-				"&:hover": {
-					bgcolor: theme.palette.background.alt,
-				},
-			}}
-			textAlign="center"
-			onClick={(e) => {
-				handleItemClick(e, sender);
-				dispatch(setNotReload(true));
-				navigate(`/messenger?conv=${ref}`);
-			}}>
-			{`${sender?.username} ${type}`}
-		</Typography>
-	));
+	// const content = notifications?.map(({ createdAt, sender, type, ref }) => (
+	// 	<Typography
+	// 		key={createdAt}
+	// 		sx={{
+	// 			p: 2,
+	// 			cursor: "pointer",
+	// 			color: theme.palette.secondary[300],
+	// 			"&:hover": {
+	// 				bgcolor: theme.palette.background.alt,
+	// 			},
+	// 		}}
+	// 		textAlign="center"
+	// 		onClick={(e) => {
+	// 			handleItemClick(e, sender);
+	// 			dispatch(setNotReload(true));
+	// 			navigate(`/messenger?conv=${ref}`);
+	// 		}}>
+	// 		{`${sender?.username} ${type}`}
+	// 	</Typography>
+	// ));
 
 	return (
 		<Box sx={{ zIndex: "100" }}>
@@ -98,9 +178,21 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 								// overflowY: "scroll",
 								maxHeight: "80vh",
 							}}>
-							{content}
+							{/* {content} */}
+							{cont}
 							{notifications.length > 0 && (
-								<Button onClick={(e) => handleClick(e)}>Close</Button>
+								<Tooltip title="Notifications will be deleted" arrow>
+									<Button
+										sx={{
+											color: theme.palette.secondary[500],
+											"&:hover": {
+												color: theme.palette.background.alt,
+											},
+										}}
+										onClick={(e) => handleClick(e)}>
+										Clear
+									</Button>
+								</Tooltip>
 							)}
 						</Paper>
 					</Fade>

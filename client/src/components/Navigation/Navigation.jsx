@@ -391,6 +391,7 @@ const Navigation = () => {
 								borderRadius: 5,
 								cursor: "pointer",
 								p: 0.9,
+								textAlign: "center",
 							}}
 							variant="h6">
 							Posts
@@ -414,6 +415,7 @@ const Navigation = () => {
 								borderRadius: 5,
 								cursor: "pointer",
 								p: 0.9,
+								textAlign: "center",
 							}}
 							variant="h6">
 							Trainings
@@ -438,6 +440,7 @@ const Navigation = () => {
 									borderRadius: 5,
 									cursor: "pointer",
 									p: 0.9,
+									textAlign: "center",
 								}}
 								variant="h6">
 								Bought Trainings
@@ -463,6 +466,7 @@ const Navigation = () => {
 									borderRadius: 5,
 									cursor: "pointer",
 									p: 0.9,
+									textAlign: "center",
 								}}
 								variant="h6">
 								Orders
@@ -488,6 +492,7 @@ const Navigation = () => {
 									borderRadius: 5,
 									cursor: "pointer",
 									p: 0.9,
+									textAlign: "center",
 								}}
 								variant="h6">
 								Contact Support
@@ -513,7 +518,9 @@ const Navigation = () => {
 				/>
 			</MenuItem>
 			<MenuItem onClick={handleMenuClose}>
-				<PopupWrapper />
+				<Box>
+					<PopupWrapper />
+				</Box>
 			</MenuItem>
 			<MenuItem onClick={handleMenuClose}>
 				<IconButton onClick={() => navigate("/calculator")}>
@@ -616,6 +623,7 @@ const Navigation = () => {
 									borderRadius: 5,
 									cursor: "pointer",
 									p: 0.9,
+									textAlign: "center",
 								}}
 								variant="h6">
 								Posts
@@ -637,6 +645,7 @@ const Navigation = () => {
 									borderRadius: 5,
 									cursor: "pointer",
 									p: 0.9,
+									textAlign: "center",
 								}}
 								variant="h6">
 								Trainings
@@ -659,6 +668,7 @@ const Navigation = () => {
 										borderRadius: 5,
 										cursor: "pointer",
 										p: 0.9,
+										textAlign: "center",
 									}}
 									variant="h6">
 									Bought Trainings
@@ -682,6 +692,7 @@ const Navigation = () => {
 										borderRadius: 5,
 										cursor: "pointer",
 										p: 0.9,
+										textAlign: "center",
 									}}
 									variant="h6">
 									Orders
@@ -705,6 +716,7 @@ const Navigation = () => {
 										borderRadius: 5,
 										cursor: "pointer",
 										p: 0.9,
+										textAlign: "center",
 									}}
 									variant="h6">
 									Contact Support
@@ -795,6 +807,7 @@ const Navigation = () => {
 											borderRadius: 5,
 											cursor: "pointer",
 											p: 0.9,
+											textAlign: "center",
 										}}
 										variant="h6">
 										Posts
@@ -816,6 +829,7 @@ const Navigation = () => {
 											borderRadius: 5,
 											cursor: "pointer",
 											p: 0.9,
+											textAlign: "center",
 										}}
 										variant="h6">
 										Trainings
