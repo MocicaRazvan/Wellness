@@ -297,7 +297,7 @@ const Home = () => {
 				values={values2}
 				links={["/register", "/trainings", "/trainings"]}
 			/>
-			<Parallax bgImage={success} strength={200}>
+			<Parallax bgImage={success} strength={500}>
 				<div
 					style={{
 						minHeight: "100vh",
