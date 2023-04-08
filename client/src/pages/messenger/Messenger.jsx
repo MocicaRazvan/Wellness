@@ -90,7 +90,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	useEffect(
 		() =>
 			void scrollRef?.current?.scrollIntoView({
-				behavior: "smooth",
+				behavior: "instant",
 				block: "nearest",
 			}),
 		[messages],
