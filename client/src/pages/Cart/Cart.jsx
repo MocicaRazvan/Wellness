@@ -7,9 +7,9 @@ import {
 	useTheme,
 } from "@mui/material";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectCartItems } from "../../redux/cart/cartSlice";
+import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 import CartList from "../../components/cart/CartList";
 import PayButton from "../../components/cart/PayButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,6 +23,7 @@ import {
 const Cart = () => {
 	const cartItems = useSelector(selectCartItems);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const theme = useTheme();
 	const total = cartItems?.reduce((acc, cur) => (acc += cur.price), 0);
 	if (cartItems?.length === 0) {
@@ -81,6 +82,7 @@ const Cart = () => {
 								bgcolor: theme.palette.background.default,
 							},
 						}}
+						onClick={() => dispatch(clearCart())}
 						variant="outlined"
 						startIcon={<DeleteIcon />}>
 						Clear Cart

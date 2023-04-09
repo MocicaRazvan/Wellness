@@ -2,6 +2,7 @@ const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const cloudinary = require("../utils/cloudinary");
+const makeReset = require("../utils/reset");
 
 // post: /auth/register
 exports.register = async (req, res) => {
@@ -74,11 +75,12 @@ exports.forgotPassowrd = async (req, res) => {
 
 	const resetUrl = `http://localhost:3000/resetPassword/${resetToken}`;
 
-	const message = `
-		<h1>You have requested a password reset </h1>
-		<p>Please go to this link to reset your passowrd </p>
-		<a href=${resetUrl} clicktracking=off> ${resetUrl}</a>
-		`;
+	// const message = `
+	// 	<h1>You have requested a password reset </h1>
+	// 	<p>Please go to this link to reset your passowrd </p>
+	// 	<a href=${resetUrl} clicktracking=off> ${resetUrl}</a>
+	// 	`;
+	const message = makeReset(resetUrl);
 
 	try {
 		await sendEmail({

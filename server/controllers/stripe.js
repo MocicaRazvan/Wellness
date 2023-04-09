@@ -4,6 +4,8 @@ const User = require("../models/User");
 const Training = require("../models/Training");
 const { countrys } = require("../utils/shippingCountries");
 const mongoose = require("mongoose");
+const makeReceipt = require("../utils/receipt");
+const sendEmail = require("../utils/sendEmail");
 
 //stripe listen --forward-to localhost:5000/stripe/webhook
 
@@ -25,15 +27,29 @@ const createOrder = async (customer, data, lineItems) => {
 	try {
 		const savedOrder = await newOrder.save();
 		console.log("Proccesed Order:", savedOrder);
-		await User.findByIdAndUpdate(customer.metadata.userId, {
+		const user = await User.findByIdAndUpdate(customer.metadata.userId, {
 			$addToSet: { subscriptions: { $each: trainingIds } },
 		});
 		await Training.updateMany(
 			{ _id: { $in: trainingIds } },
 			{ $inc: { occurrences: 1 } },
 		);
-
-		//send email to the customar that order is created
+		const trainings = await Training.find({ _id: { $in: trainingIds } })
+			.select("title images price")
+			.lean();
+		const text = makeReceipt(
+			trainings?.map(({ title, images, price }) => ({
+				title,
+				price,
+				url: images[0].url,
+			})),
+			data.amount_total / 100,
+		);
+		await sendEmail({
+			to: user.email,
+			subject: "Order Receipt",
+			text,
+		});
 	} catch (err) {
 		console.log(err);
 	}
@@ -50,6 +66,7 @@ exports.stripeCheckout = async (req, res) => {
 		},
 		email: user.email,
 	});
+	console.log(req.body.cartItems);
 
 	const line_items = req.body.cartItems.map((item) => ({
 		price_data: {
@@ -85,7 +102,7 @@ exports.stripeCheckout = async (req, res) => {
 					delivery_estimate: {
 						minimum: {
 							unit: "business_day",
-							value: 5,
+							value: 1,
 						},
 						maximum: {
 							unit: "business_day",
