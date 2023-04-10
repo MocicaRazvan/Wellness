@@ -1,8 +1,9 @@
 const User = require("../models/User");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../utils/email/sendEmail");
 const crypto = require("crypto");
 const cloudinary = require("../utils/cloudinary");
-const makeReset = require("../utils/reset");
+const makeReset = require("../utils/email/reset");
+const makeAuth = require("../utils/email/auth");
 
 // post: /auth/register
 exports.register = async (req, res) => {
@@ -20,6 +21,12 @@ exports.register = async (req, res) => {
 			const token = user.getSignedToken();
 			const verifyUser = await User.findById(user._id);
 
+			await sendEmail({
+				to: verifyUser?.email,
+				subject: "Welcome to Wellness",
+				text: makeAuth(verifyUser?.username),
+			});
+
 			res
 				.status(201)
 				.json({ message: "User created", token, user: verifyUser });
@@ -28,6 +35,11 @@ exports.register = async (req, res) => {
 		const user = await User.create({ ...rest });
 		const token = user.getSignedToken();
 		const verifyUser = await User.findById(user._id);
+		await sendEmail({
+			to: verifyUser?.email,
+			subject: "Welcome to Wellness",
+			text: makeAuth(verifyUser?.username),
+		});
 		res.status(201).json({ message: "User created", token, user: verifyUser });
 	}
 };

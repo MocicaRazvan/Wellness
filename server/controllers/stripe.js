@@ -3,9 +3,8 @@ const Order = require("../models/Order");
 const User = require("../models/User");
 const Training = require("../models/Training");
 const { countrys } = require("../utils/shippingCountries");
-const mongoose = require("mongoose");
-const makeReceipt = require("../utils/receipt");
-const sendEmail = require("../utils/sendEmail");
+const makeReceipt = require("../utils/email/receipt");
+const sendEmail = require("../utils/email/sendEmail");
 
 //stripe listen --forward-to localhost:5000/stripe/webhook
 
@@ -26,7 +25,6 @@ const createOrder = async (customer, data, lineItems) => {
 	});
 	try {
 		const savedOrder = await newOrder.save();
-		console.log("Proccesed Order:", savedOrder);
 		const user = await User.findByIdAndUpdate(customer.metadata.userId, {
 			$addToSet: { subscriptions: { $each: trainingIds } },
 		});
@@ -97,18 +95,18 @@ exports.stripeCheckout = async (req, res) => {
 						amount: 0,
 						currency: "usd",
 					},
-					display_name: "Free shipping",
+					display_name: "Chek the orders page!",
 					// Delivers between 5-7 business days
-					delivery_estimate: {
-						minimum: {
-							unit: "business_day",
-							value: 1,
-						},
-						maximum: {
-							unit: "business_day",
-							value: 7,
-						},
-					},
+					// delivery_estimate: {
+					// 	minimum: {
+					// 		unit: "business_day",
+					// 		value: 1,
+					// 	},
+					// 	maximum: {
+					// 		unit: "business_day",
+					// 		value: 7,
+					// 	},
+					// },
 				},
 			},
 			// {

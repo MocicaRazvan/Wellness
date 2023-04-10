@@ -27,7 +27,7 @@ const makeReceipt = (items, total) => `<!DOCTYPE html
                                 <table class="column"
                                     style="border-spacing:0;width:100%;max-width:300px;display:inline-block;vertical-align:top;text-align:center;font-size:5px;">
                                     <tr>
-                                        <td style="padding: 0 62px 10px;"><a href="https://google.com"><img
+                                        <td style="padding: 0 62px 10px;"><a href="http://localhost:3000/" target="_blank"><img
                                                     src="https://res.cloudinary.com/lamatutorial/image/upload/v1681059958/wellnessLogo/logo_oc1geo_irwan5.png"
                                                     width="120" height="180" title="Wellnes" alt="Wellnes"
                                                     style="border:0;margin-left: 20px;"></a></td>
@@ -49,9 +49,9 @@ const makeReceipt = (items, total) => `<!DOCTYPE html
             <!-- banner -->
             <tr>
                 <td style="padding:0;text-align:center;">
-                    <a href="#"><img
+                   <img
                             src="https://res.cloudinary.com/lamatutorial/image/upload/v1681057895/wellnessLogo/everything-you-need-know-about-fitness-1440x810_zcbwku.jpg"
-                            alt="" width="600" style="border:0;max-width: 100%;"></a>
+                            alt="" width="600" style="border:0;max-width: 100%;">
                 </td>
             </tr>
             <!-- three columns -->
@@ -73,11 +73,11 @@ const makeReceipt = (items, total) => `<!DOCTYPE html
                                                 style="border-spacing:0;font-size:15px;line-height:20px;padding:0 5px;">
                                                 <tr>
                                                     <td style="padding:0;">
-                                                        <a href="#"><img
+                                                       <img
                                                                 src="${url}"
                                                                 alt="email" width="130"
                                                                 height="130"
-                                                                style="border:0;max-width: 130px;"></a>
+                                                                style="border:0;max-width: 130px;">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -105,7 +105,7 @@ const makeReceipt = (items, total) => `<!DOCTYPE html
                         <tr>
                             <td style="text-align: center; padding: 15px;">
                                 <p style="font-size: 20px; font-weight: bold;">Your Total:$${total}</p>
-                                <p style="line-height: 23px; font-size: 15px; padding: 5px 15px;">Your order will be in the orders page. Please confirm the receive so we know everything it is ok!</p>
+                                <p style="line-height: 23px; font-size: 15px; padding: 5px 15px;"><a href="http://localhost:3000/orders" style=" text-decoration:none"  clicktracking=off target="_blank"  >Your order will be in the orders page.</a> Please confirm the receive so we know everything it is ok!</p>
                             </td>
                         </tr>
                     </table>

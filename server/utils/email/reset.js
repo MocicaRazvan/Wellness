@@ -27,7 +27,7 @@ const makeReset = (resetUrl) => `<!DOCTYPE html
                                 <table class="column"
                                     style="border-spacing:0;width:100%;max-width:300px;display:inline-block;vertical-align:top;text-align:center;font-size:5px;">
                                     <tr>
-                                        <td style="padding: 0 62px 10px;"><a href="https://google.com"><img
+                                        <td style="padding: 0 62px 10px;"><a href="http://localhost:3000/"  target="_blank"><img
                                                     src="https://res.cloudinary.com/lamatutorial/image/upload/v1681059958/wellnessLogo/logo_oc1geo_irwan5.png"
                                                     width="120" height="180" title="Wellnes" alt="Wellnes"
                                                     style="border:0;margin-left: 20px;"></a></td>
@@ -50,9 +50,9 @@ const makeReset = (resetUrl) => `<!DOCTYPE html
             <!-- banner -->
             <tr>
                 <td style="padding:0;">
-                    <a href="#"><img
+                   <img
                             src="https://res.cloudinary.com/lamatutorial/image/upload/v1681057895/wellnessLogo/everything-you-need-know-about-fitness-1440x810_zcbwku.jpg"
-                            alt="" width="600" style="border:0;max-width: 100%;"></a>
+                            alt="" width="600" style="border:0;max-width: 100%;">
                 </td>
             </tr>
             <!-- three columns -->
@@ -74,7 +74,7 @@ const makeReset = (resetUrl) => `<!DOCTYPE html
                                                         <h1>You have requested a password reset </h1>
                                                         <p style="margin-top: 20px;">Please go to this link to reset
                                                             your passowrd </p>
-                                                        <a href=${resetUrl} clicktracking=off> ${resetUrl}</a>
+                                                        <a href=${resetUrl} clicktracking=off target="_blank"  > ${resetUrl}</a>
                                                     </td>
                                                 </tr>
 
