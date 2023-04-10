@@ -141,7 +141,7 @@ const Form = ({ post }) => {
 			fileReader.readAsDataURL(img);
 		});
 	};
-	if (post && user?.id !== post?.user) {
+	if (user && post && user?.id !== post?.user?._id) {
 		navigate("/");
 	}
 

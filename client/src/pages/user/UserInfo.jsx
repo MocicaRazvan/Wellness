@@ -13,6 +13,7 @@ import {
 	ManageAccountsOutlined,
 	LocationOnOutlined,
 	WorkOutlineOutlined,
+	SupervisedUserCircleOutlined,
 } from "@mui/icons-material";
 import { useGetCountStatsQuery } from "../../redux/user/userApi";
 import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
@@ -117,13 +118,22 @@ const UserInfo = ({ user, width = "50%" }) => {
 						{user?.location || "No location added"}
 					</Typography>
 				</Box>
-				<Box display="flex" alignItems="center" gap="1rem">
+				<Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
 					<WorkOutlineOutlined
 						fontSize="large"
 						sx={{ color: theme.palette.secondary[400] }}
 					/>
 					<Typography color={theme.palette.secondary[200]}>
 						{user?.occupation || "No occupation added"}
+					</Typography>
+				</Box>
+				<Box display="flex" alignItems="center" gap="1rem">
+					<SupervisedUserCircleOutlined
+						fontSize="large"
+						sx={{ color: theme.palette.secondary[400] }}
+					/>
+					<Typography color={theme.palette.secondary[200]}>
+						{user?.role || "user"}
 					</Typography>
 				</Box>
 			</Box>
