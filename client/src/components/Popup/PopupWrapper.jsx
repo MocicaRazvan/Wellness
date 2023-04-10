@@ -6,8 +6,8 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetNotificationsByUserQuery } from "../../redux/notifications/notificationsApi";
 import {
 	addSenderId,
-	selectNotificationsIds,
 	selectSenderNotification,
+	setNotificationsRedux,
 } from "../../redux/notifications/notificationsSlice";
 
 const PopupWrapper = () => {
@@ -25,7 +25,6 @@ const PopupWrapper = () => {
 		{ skip, refetchOnMountOrArgChange: true, refetchOnReconnect: true },
 	);
 
-	console.log({ senderId });
 	console.log(notifications);
 
 	useEffect(() => {
@@ -41,6 +40,12 @@ const PopupWrapper = () => {
 			disaptch(addSenderId(null));
 		}
 	}, [disaptch, notifications?.length, senderId]);
+
+	useEffect(() => {
+		if (notifications) {
+			disaptch(setNotificationsRedux(notifications));
+		}
+	}, [disaptch, notifications]);
 
 	useEffect(() => {
 		if (socketRedux && user?.id) {

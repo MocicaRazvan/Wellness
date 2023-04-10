@@ -1,12 +1,17 @@
-import { alpha, Box, styled, Typography } from "@mui/material";
+import { alpha, Box, styled, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useRef } from "react";
 import { useGetUserByIdQuery } from "../../redux/user/userApi";
 import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { useSelector } from "react-redux";
+import { selectNotifications } from "../../redux/notifications/notificationsSlice";
 
 const Conversation = ({ conversation, currentUser, setScroll }) => {
+	const { palette } = useTheme();
 	const { data: user } = useGetUserByIdQuery({
 		id: conversation?.members?.find((m) => m !== currentUser.id),
 	});
+	const amountNotif = useSelector(selectNotifications);
+
 	useEffect(() => {
 		const scrollElem = document.getElementById(`${conversation?.id}`);
 		if (scrollElem) {
@@ -21,9 +26,20 @@ const Conversation = ({ conversation, currentUser, setScroll }) => {
 				alt=""
 				className="conversationImg"
 			/>
-			<Typography variant="body1" fontWeight="bold">
+			<Typography
+				variant="body1"
+				fontWeight="bold"
+				color={palette.secondary[300]}>
 				{user?.username}
 			</Typography>
+			{amountNotif[conversation.id] && (
+				<Typography
+					variant="body1"
+					fontWeight="bold"
+					sx={{ textAlign: "end", flex: 1, color: palette.secondary[200] }}>
+					{amountNotif[conversation.id]}
+				</Typography>
+			)}
 		</ConversationWrapper>
 	);
 };
