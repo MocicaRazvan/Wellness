@@ -1,11 +1,17 @@
 import { alpha, Box, styled, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useGetUserByIdQuery } from "../../redux/user/userApi";
 import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 
-const Conversation = ({ conversation, currentUser }) => {
+const Conversation = ({ conversation, currentUser, setScroll }) => {
 	const { data: user } = useGetUserByIdQuery({
 		id: conversation?.members?.find((m) => m !== currentUser.id),
+	});
+	useEffect(() => {
+		const scrollElem = document.getElementById(`${conversation?.id}`);
+		if (scrollElem) {
+			setScroll(scrollElem.offsetTop);
+		}
 	});
 
 	return (

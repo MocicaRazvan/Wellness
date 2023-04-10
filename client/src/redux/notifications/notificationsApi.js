@@ -12,7 +12,7 @@ export const notificationsApiSlice = apiSlice.injectEndpoints({
 				...savedNotification,
 				id: savedNotification._id,
 			}),
-			// invalidatesTags: [{ type: "Notification", id: "LIST" }],
+			invalidatesTags: [{ type: "Notification", id: "LIST" }],
 		}),
 
 		getNotificationsByUser: builder.query({

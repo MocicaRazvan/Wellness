@@ -20,9 +20,13 @@ import {
 	useGetMessagesByConversationQuery,
 } from "../../redux/messages/messagesApi";
 import { useRef } from "react";
-import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
+import {
+	useCreateNotificationMutation,
+	useDeleteNotifcationsBySenderMutation,
+} from "../../redux/notifications/notificationsApi";
 import useQuery from "../../utils/hooks/useQuery";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { addSenderId } from "../../redux/notifications/notificationsSlice";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();
@@ -37,8 +41,9 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const scrollRef = useRef();
 	// const navigate = useNavigate();
 	const theme = useTheme();
-	// const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [scroll, setScroll] = useState(0);
 
 	const quryParams = new URLSearchParams();
 
@@ -46,6 +51,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		{ id: user?.id },
 		{ skip, pollingInterval: 100000 },
 	);
+	const [deleteBySender] = useDeleteNotifcationsBySenderMutation();
 
 	const [createMessage] = useCreateMessageMutation();
 	const [createNotification] = useCreateNotificationMutation();
@@ -68,6 +74,37 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			}
 		}
 	}, [conversations, query]);
+
+	useEffect(() => {
+		if (currentChat && user?.id && user?.role === "admin") {
+			if (currentChat) {
+				socket.current.emit("mountUserConv", {
+					convId: currentChat.id,
+					userId: user?.id,
+					role: user?.role,
+				});
+				const senderId = currentChat?.members.find(
+					(member) => member !== user?.id,
+				);
+				(async () => {
+					console.log("deleting");
+					try {
+						await deleteBySender({ senderId }).unwrap();
+
+						dispatch(addSenderId(senderId));
+					} catch (error) {
+						console.log(error);
+					}
+				})();
+			}
+		}
+		return () => {
+			if (user?.role === "admin")
+				socket.current.emit("deleteUserConv", {
+					userId: user?.id,
+				});
+		};
+	}, [currentChat, deleteBySender, dispatch, query, user?.id, user?.role]);
 
 	useEffect(() => {
 		if (user?.role !== "admin") {
@@ -115,6 +152,15 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 	// if (notReload) return <></>;
 
+	useEffect(() => {
+		if (user?.role === "admin") {
+			const scrollParent = document.getElementById("chatMenu");
+			if (scrollParent) {
+				scrollParent.scrollTop = scroll;
+			}
+		}
+	}, [scroll, user?.role]);
+
 	if (isLoading || isLoadingMessages || !conversations)
 		return (
 			<CircularProgress
@@ -136,6 +182,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		const receiverId = currentChat?.members.find(
 			(member) => member !== user?.id,
 		);
+		console.log({ receiverId });
 
 		socket.current.emit("sendMessage", {
 			senderId: user?.id,
@@ -146,9 +193,13 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		console.log("message sent");
 		//once
 		socket?.current.once("getPartener", (data) => {
-			console.log(data);
-			console.log(!data?.user?.mounted);
-			if (!data?.user?.mounted) {
+			console.log({ data });
+			console.log(data?.curConv);
+			const isAdminConv =
+				data?.curConv?.convId !== currentChat.id &&
+				data?.curConv?.role === "admin";
+			console.log({ not: !data?.user?.mounted || isAdminConv });
+			if (!data?.user?.mounted || isAdminConv) {
 				(async () => {
 					await createNotification({
 						receiver: receiverId,
@@ -179,11 +230,13 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	return (
 		<MessengerContainer>
 			{user?.role === "admin" && (
-				<ChatMenu>
+				<ChatMenu id="chatMenu">
 					<div className="chatMenuWrapper">
 						{/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
 						{conversations.map((c, i) => (
-							<div key={`conv-${i}-${c.id}-${new Date().getTime()}`}>
+							<div
+								key={`conv-${i}-${new Date().getTime()}-${user?.id}`}
+								id={`${c?.id}`}>
 								<Box
 									sx={{
 										borderRadius: 2,
@@ -192,7 +245,6 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 											searchParams.get("conv") === c.id &&
 											`1px solid ${theme.palette.secondary[100]}`,
 									}}
-									key={c.id + i}
 									onClick={() => {
 										// dispatch(setNotReload(true));
 										// void navigate(`/messenger?conv=${c.id}`, { replace: true });
@@ -200,7 +252,11 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 										setSearchParams(quryParams);
 									}}>
-									<Conversation conversation={c} currentUser={user} />
+									<Conversation
+										conversation={c}
+										currentUser={user}
+										setScroll={setScroll}
+									/>
 								</Box>
 								{i !== conversations?.length - 1 && (
 									<Divider sx={{ bgcolor: theme.palette.secondary[300] }} />
