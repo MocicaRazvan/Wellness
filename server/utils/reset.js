@@ -30,7 +30,7 @@ const makeReset = (resetUrl) => `<!DOCTYPE html
                                         <td style="padding: 0 62px 10px;"><a href="https://google.com"><img
                                                     src="https://res.cloudinary.com/lamatutorial/image/upload/v1681059958/wellnessLogo/logo_oc1geo_irwan5.png"
                                                     width="120" height="180" title="Wellnes" alt="Wellnes"
-                                                    style="border:0;"></a></td>
+                                                    style="border:0;margin-left: 20px;"></a></td>
                                     </tr>
                                 </table>
                                 <table class="column"
@@ -38,7 +38,7 @@ const makeReset = (resetUrl) => `<!DOCTYPE html
                                     <tr>
                                         <td style="padding: 0 62px 10px;">
                                           
-                                            <p style="font-size: 20px; font-weight: bold;">ORDER DETAILS</p>
+                                            <p style="font-size: 20px; font-weight: bold;">PASSWORD RESET</p>
                                         </td>
                                     </tr>
                                 </table>

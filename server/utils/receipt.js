@@ -30,7 +30,7 @@ const makeReceipt = (items, total) => `<!DOCTYPE html
                                         <td style="padding: 0 62px 10px;"><a href="https://google.com"><img
                                                     src="https://res.cloudinary.com/lamatutorial/image/upload/v1681059958/wellnessLogo/logo_oc1geo_irwan5.png"
                                                     width="120" height="180" title="Wellnes" alt="Wellnes"
-                                                    style="border:0;"></a></td>
+                                                    style="border:0;margin-left: 20px;"></a></td>
                                     </tr>
                                 </table>
                                 <table class="column"
@@ -105,7 +105,7 @@ const makeReceipt = (items, total) => `<!DOCTYPE html
                         <tr>
                             <td style="text-align: center; padding: 15px;">
                                 <p style="font-size: 20px; font-weight: bold;">Your Total:$${total}</p>
-                                <p style="line-height: 23px; font-size: 15px; padding: 5px 15px;">Your owrder will be in the orders page. Please confirm the receive so we know everything it is ok!</p>
+                                <p style="line-height: 23px; font-size: 15px; padding: 5px 15px;">Your order will be in the orders page. Please confirm the receive so we know everything it is ok!</p>
                             </td>
                         </tr>
                     </table>

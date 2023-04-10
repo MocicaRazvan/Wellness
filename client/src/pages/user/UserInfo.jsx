@@ -87,7 +87,7 @@ const UserInfo = ({ user, width = "50%" }) => {
 							navigate("/forgotPassword", { state: user?.email });
 							handleClose();
 						}}>
-						Forgot password?
+						Reset password
 					</MenuItem>
 					<MenuItem
 						onClick={() => {
