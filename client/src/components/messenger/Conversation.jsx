@@ -5,7 +5,7 @@ import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640
 import { useSelector } from "react-redux";
 import { selectNotifications } from "../../redux/notifications/notificationsSlice";
 
-const Conversation = ({ conversation, currentUser, setScroll }) => {
+const Conversation = ({ conversation, currentUser, currentChat }) => {
 	const { palette } = useTheme();
 	const { data: user } = useGetUserByIdQuery({
 		id: conversation?.members?.find((m) => m !== currentUser.id),
@@ -14,8 +14,12 @@ const Conversation = ({ conversation, currentUser, setScroll }) => {
 
 	useEffect(() => {
 		const scrollElem = document.getElementById(`${conversation?.id}`);
-		if (scrollElem) {
-			setScroll(scrollElem.offsetTop);
+		if (scrollElem?.id === currentChat?.id) {
+			scrollElem.scrollIntoView({
+				behavior: "instant",
+				block: "nearest",
+				inline: "nearest",
+			});
 		}
 	});
 

@@ -43,7 +43,6 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const theme = useTheme();
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
-	const [scroll, setScroll] = useState(0);
 
 	const quryParams = new URLSearchParams();
 
@@ -152,15 +151,6 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 	// if (notReload) return <></>;
 
-	useEffect(() => {
-		if (user?.role === "admin") {
-			const scrollParent = document.getElementById("chatMenu");
-			if (scrollParent) {
-				scrollParent.scrollTop = scroll;
-			}
-		}
-	}, [scroll, user?.role]);
-
 	if (isLoading || isLoadingMessages || !conversations)
 		return (
 			<CircularProgress
@@ -255,7 +245,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 									<Conversation
 										conversation={c}
 										currentUser={user}
-										setScroll={setScroll}
+										currentChat={currentChat}
 									/>
 								</Box>
 								{i !== conversations?.length - 1 && (
