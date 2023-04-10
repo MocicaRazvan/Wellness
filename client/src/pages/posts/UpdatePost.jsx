@@ -5,12 +5,16 @@ import {
 	Typography,
 	CircularProgress,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 import Form from "./Form";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const UpdatePost = () => {
 	const theme = useTheme();
+	const user = useSelector(selectCurrentUser);
+	const navigate = useNavigate();
 
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 	const { postId } = useParams();
@@ -28,7 +32,11 @@ const UpdatePost = () => {
 				thickness={7}
 			/>
 		);
-	return (
+	if (user.id !== data?.post?.user?._id) {
+		navigate("/");
+	}
+
+	return user ? (
 		<Box>
 			<Box
 				width={isNonMobileScreens ? "50%" : "93%"}
@@ -48,6 +56,8 @@ const UpdatePost = () => {
 				<Form post={data?.post} />
 			</Box>
 		</Box>
+	) : (
+		<></>
 	);
 };
 
