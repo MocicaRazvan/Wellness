@@ -36,13 +36,25 @@ exports.createConversationSupport = async (req, res) => {
 
 //get : /conversations/:userId
 exports.getConversationsByUser = async (req, res) => {
+	const { search = "" } = req.query;
 	const userConversations = await Conversation.find({
 		members: { $in: [req.params.userId] },
+	}).populate("members");
+	const parsedConversations = userConversations.reduce((acc, cur) => {
+		cur?.members
+			.find(({ _id }) => _id !== req.params.userId)
+			.username.trim()
+			.toLowerCase()
+			.includes(search.trim().toLowerCase())
+			? acc.unshift(cur)
+			: acc.push(cur);
+		return acc;
+	}, []);
+	console.log({ parsedConversations });
+	res.status(200).json({
+		userConversations: parsedConversations,
+		message: "User conversation retrived",
 	});
-	console.log(userConversations);
-	res
-		.status(200)
-		.json({ userConversations, message: "User conversation retrived" });
 };
 
 //get: /conversations/find/:conversationId

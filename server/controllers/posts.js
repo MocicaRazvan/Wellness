@@ -145,7 +145,9 @@ exports.deletePost = async (req, res) => {
 
 		if (destroyResponse) {
 			const deletedPost = await Posts.findByIdAndDelete(postId).lean();
-			const deleteComRes = await Comments.deleteMany({ post: postId });
+			const deleteComRes = await Comments.deleteMany({
+				post: mongoose.Types.ObjectId(postId),
+			});
 			return res.status(200).json({
 				message: `Post with ${postId} deleted successfully`,
 				deletedPost,
@@ -153,7 +155,9 @@ exports.deletePost = async (req, res) => {
 		}
 	} else {
 		const deletedPost = await Posts.findByIdAndDelete(postId).lean();
-		const deleteComRes = await Comments.deleteMany({ post: postId });
+		const deleteComRes = await Comments.deleteMany({
+			post: mongoose.Types.ObjectId(postId),
+		});
 		return res.status(200).json({
 			message: `Post with ${postId} deleted successfully`,
 			deletedPost,

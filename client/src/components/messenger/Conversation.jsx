@@ -7,9 +7,10 @@ import { selectNotifications } from "../../redux/notifications/notificationsSlic
 
 const Conversation = ({ conversation, currentUser, currentChat }) => {
 	const { palette } = useTheme();
-	const { data: user } = useGetUserByIdQuery({
-		id: conversation?.members?.find((m) => m !== currentUser.id),
-	});
+	// const { data: user } = useGetUserByIdQuery({
+	// 	id: conversation?.members?.find((m) => m !== currentUser.id),
+	// });
+	const user = conversation?.members?.find(({ _id }) => _id !== currentUser.id);
 	const amountNotif = useSelector(selectNotifications);
 
 	useEffect(() => {

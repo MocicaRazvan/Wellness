@@ -3,7 +3,10 @@ import { apiSlice } from "../api/apiSlice";
 export const conversationApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getConversationsByUser: builder.query({
-			query: ({ id }) => ({ url: `/conversations/${id}` }),
+			query: ({ id, search }) => ({
+				url: `/conversations/${id}`,
+				params: { search },
+			}),
 			transformResponse: ({ userConversations }) =>
 				userConversations.map((conversation) => ({
 					...conversation,

@@ -27,6 +27,7 @@ import {
 import useQuery from "../../utils/hooks/useQuery";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { addSenderId } from "../../redux/notifications/notificationsSlice";
+import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();
@@ -43,11 +44,12 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const theme = useTheme();
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
+	const search = useSelector(selectCurrentSearch);
 
 	const quryParams = new URLSearchParams();
 
 	const { data: conversations, isLoading } = useGetConversationsByUserQuery(
-		{ id: user?.id },
+		{ id: user?.id, search },
 		{ skip, pollingInterval: 100000 },
 	);
 	const [deleteBySender] = useDeleteNotifcationsBySenderMutation();
@@ -83,12 +85,13 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 					role: user?.role,
 				});
 				const senderId = currentChat?.members.find(
-					(member) => member !== user?.id,
-				);
+					({ _id }) => _id !== user?.id,
+				)?._id;
+
 				(async () => {
 					console.log("deleting");
 					try {
-						await deleteBySender({ senderId }).unwrap();
+						senderId && (await deleteBySender({ senderId }).unwrap());
 
 						dispatch(addSenderId(senderId));
 					} catch (error) {
@@ -144,9 +147,15 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	}, [mounted, ws]);
 
 	useEffect(() => {
-		arrivalMessage &&
-			currentChat?.members.includes(arrivalMessage.sender) &&
-			setMessages((prev) => [...prev, arrivalMessage]);
+		if (arrivalMessage) {
+			const ids = currentChat?.members?.map(({ _id }) => _id);
+			console.log({ ids });
+			ids?.includes(arrivalMessage.sender) &&
+				setMessages((prev) => [...prev, arrivalMessage]);
+		}
+		// arrivalMessage &&
+		// 	currentChat?.members.includes(arrivalMessage.sender) &&
+		// 	setMessages((prev) => [...prev, arrivalMessage]);
 	}, [arrivalMessage, currentChat]);
 
 	// if (notReload) return <></>;
@@ -170,8 +179,8 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		console.log("submit");
 
 		const receiverId = currentChat?.members.find(
-			(member) => member !== user?.id,
-		);
+			({ _id }) => _id !== user?.id,
+		)?._id;
 		console.log({ receiverId });
 
 		socket.current.emit("sendMessage", {

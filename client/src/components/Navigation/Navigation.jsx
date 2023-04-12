@@ -56,7 +56,9 @@ const Navigation = () => {
 	const { pathname } = useLocation();
 	const isNotUser = user?.role === "trainer" || user?.role === "admin";
 	const isAdmin = user?.role === "admin";
-	const isSearchBarOpen = pathnames.includes(pathname);
+	let isSearchBarOpen =
+		pathnames.includes(pathname) ||
+		(user?.role === "admin" && pathname === "/messenger");
 	const isNonMobile = useMediaQuery("(min-width:900px)");
 	const isNotLogged = user === null;
 
