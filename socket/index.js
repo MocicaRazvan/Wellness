@@ -7,9 +7,9 @@ const io = require("socket.io")(8900, {
 let users = [];
 const mountConv = {};
 
-const addUser = (userId, socketId, mounted) =>
+const addUser = (userId, socketId, mounted, role) =>
 	!users.some((user) => user?.userId === userId) &&
-	users.push({ userId, socketId, mounted });
+	users.push({ userId, socketId, mounted, role });
 
 const removeUser = (socketId) => {
 	users = users.filter((user) => user?.socketId !== socketId);
@@ -21,8 +21,8 @@ const removeUser = (socketId) => {
 const getUser = (userId) => users?.find((user) => user?.userId === userId);
 
 io.on("connection", (socket) => {
-	socket.on("addUser", ({ id: userId, mounted }) => {
-		addUser(userId, socket.id, mounted);
+	socket.on("addUser", ({ id: userId, mounted, role }) => {
+		addUser(userId, socket.id, mounted, role);
 		io.emit("getUsers", users);
 	});
 
@@ -48,7 +48,6 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("notifiUnmounted", ({ receiverId, type, sender, ref }) => {
-		console.log("kdsjflsdjlfjsdlkfjklsdjflsd");
 		const user = getUser(receiverId);
 		console.log({ user });
 		if (!user?.mounted) {
@@ -61,6 +60,12 @@ io.on("connection", (socket) => {
 		} else {
 			if (mountConv[receiverId] && mountConv[receiverId] !== ref) {
 				console.log("mountNotif");
+				io.to(user?.socketId).emit("getNotification", {
+					type,
+					sender,
+					ref,
+				});
+			} else if (user?.role === "admin") {
 				io.to(user?.socketId).emit("getNotification", {
 					type,
 					sender,

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import { useGetAllOrdersQuery } from "../../redux/orders/orderApi";
+import { format } from "date-fns";
 
 const AllOrders = () => {
 	const [page, setPage] = useState(0);
@@ -39,7 +40,9 @@ const AllOrders = () => {
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 1,
+			flex: 0.7,
+			renderCell: ({ row: { createdAt } }) =>
+				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "deliveryStatus",

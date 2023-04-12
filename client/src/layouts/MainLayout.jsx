@@ -29,14 +29,18 @@ const MainLayout = () => {
 			console.log("io initialize");
 			dispatch(initializeSocket({ socket }));
 			if (user?.id) {
-				socket.emit("addUser", { id: user?.id, mounted: false });
+				socket.emit("addUser", {
+					id: user?.id,
+					mounted: false,
+					role: user?.role,
+				});
 			}
 		}
 
 		return () => {
 			socket.disconnect();
 		};
-	}, [dispatch, socket, token, user?.id]);
+	}, [dispatch, socket, token, user?.id, user?.role]);
 
 	useEffect(() => {
 		window.document.title = "Wellness";

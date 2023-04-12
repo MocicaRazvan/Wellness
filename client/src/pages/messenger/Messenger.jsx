@@ -80,7 +80,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		if (currentChat && user?.id && user?.role === "admin") {
 			if (currentChat) {
 				socket.current.emit("mountUserConv", {
-					convId: currentChat.id,
+					convId: currentChat?.id,
 					userId: user?.id,
 					role: user?.role,
 				});
@@ -89,7 +89,6 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 				)?._id;
 
 				(async () => {
-					console.log("deleting");
 					try {
 						senderId && (await deleteBySender({ senderId }).unwrap());
 
@@ -114,7 +113,9 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		}
 	}, [conversations, user?.role]);
 
-	useEffect(() => void setMessages(dataMessages), [dataMessages]);
+	useEffect(() => {
+		if (dataMessages) setMessages(dataMessages);
+	}, [dataMessages]);
 
 	useEffect(() => void setSkip(false), []);
 
@@ -151,7 +152,13 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			const ids = currentChat?.members?.map(({ _id }) => _id);
 			console.log({ ids });
 			ids?.includes(arrivalMessage.sender) &&
-				setMessages((prev) => [...prev, arrivalMessage]);
+				setMessages((prev) => {
+					if (prev) {
+						return [...prev, arrivalMessage];
+					} else {
+						return [arrivalMessage];
+					}
+				});
 		}
 		// arrivalMessage &&
 		// 	currentChat?.members.includes(arrivalMessage.sender) &&
@@ -193,12 +200,15 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		//once
 		socket?.current.once("getPartener", (data) => {
 			console.log({ data });
-			console.log(data?.curConv);
+			console.log({ c: data?.curConv });
 			const isAdminConv =
 				data?.curConv?.convId !== currentChat.id &&
 				data?.curConv?.role === "admin";
-			console.log({ not: !data?.user?.mounted || isAdminConv });
-			if (!data?.user?.mounted || isAdminConv) {
+			console.log({
+				not: !data?.user?.mounted || isAdminConv || !data?.curConv,
+			});
+			if (!data?.user?.mounted || isAdminConv || !data?.curConv) {
+				console.log("in if");
 				(async () => {
 					await createNotification({
 						receiver: receiverId,

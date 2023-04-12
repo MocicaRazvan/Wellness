@@ -10,6 +10,7 @@ import {
 	useChangeOrderStatusMutation,
 	useGetAllOrdersQuery,
 } from "../../redux/orders/orderApi";
+import { format } from "date-fns";
 
 const Orders = () => {
 	const [page, setPage] = useState(0);
@@ -59,7 +60,9 @@ const Orders = () => {
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 1,
+			flex: 0.7,
+			renderCell: ({ row: { createdAt } }) =>
+				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "paymentStatus",
@@ -75,6 +78,7 @@ const Orders = () => {
 			field: "subTotal",
 			headerName: "Sub Total",
 			flex: 1,
+			renderCell: ({ row: { subTotal } }) => `$${subTotal / 100}`,
 		},
 		{
 			field: "deliveryStatus",
@@ -99,12 +103,7 @@ const Orders = () => {
 			headerName: "Actions",
 			flex: 1,
 			renderCell: ({ row: { id, deliveryStatus: dS } }) => (
-				<Box
-					display="flex"
-					alignItems="center"
-					gap={1}
-					
-				>
+				<Box display="flex" alignItems="center" gap={1}>
 					<Button
 						variant="outlined"
 						size="small"
