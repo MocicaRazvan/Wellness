@@ -114,8 +114,19 @@ const Form = ({ exercise }) => {
 							muscleGroups: values.muscleGroups,
 						});
 						setLoading((prev) => ({ ...prev, show: false }));
-						if (res.error) {
+						if (res?.error) {
+							setCredentials((prev) => ({
+								...prev,
+								show: true,
+								msg: res.error.data.message,
+							}));
 							setMessage(res.error.data.message);
+							onSubmitProps.setFieldError("title", res.error.data.message);
+							setTimeout(
+								() =>
+									setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+								2000,
+							);
 						} else {
 							setMessage("");
 							setBody("");
@@ -138,8 +149,19 @@ const Form = ({ exercise }) => {
 						muscleGroups: values.muscleGroups,
 					});
 					setLoading((prev) => ({ ...prev, show: false }));
-					if (res.error) {
+					if (res?.error) {
+						setCredentials((prev) => ({
+							...prev,
+							show: true,
+							msg: res.error.data.message,
+						}));
 						setMessage(res.error.data.message);
+						onSubmitProps.setFieldError("title", res.error.data.message);
+						setTimeout(
+							() =>
+								setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+							2000,
+						);
 					} else {
 						setMessage("");
 						setBody("");

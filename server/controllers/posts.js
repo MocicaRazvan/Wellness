@@ -1,9 +1,16 @@
+const Comments = require("../models/Comment");
 const Posts = require("../models/Post");
 const cloudinary = require("../utils/cloudinary");
+const mongoose = require("mongoose");
 
 //post: /posts/create
 exports.createPost = async (req, res) => {
 	const { body, tags, title, images } = req.body;
+	const count = await Posts.countDocuments({ title });
+	if (count > 0)
+		return res
+			.status(400)
+			.json({ message: "Please enter a title that havent been used!" });
 	// image upload to cloudinary
 	try {
 		if (images && images.length > 0) {
@@ -35,6 +42,10 @@ exports.createPost = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(error);
+		if (error.code === "11000")
+			return res
+				.status(400)
+				.json({ message: "Please enter a title that havent been used!" });
 		throw error;
 	}
 };
@@ -134,6 +145,7 @@ exports.deletePost = async (req, res) => {
 
 		if (destroyResponse) {
 			const deletedPost = await Posts.findByIdAndDelete(postId).lean();
+			const deleteComRes = await Comments.deleteMany({ post: postId });
 			return res.status(200).json({
 				message: `Post with ${postId} deleted successfully`,
 				deletedPost,
@@ -141,6 +153,7 @@ exports.deletePost = async (req, res) => {
 		}
 	} else {
 		const deletedPost = await Posts.findByIdAndDelete(postId).lean();
+		const deleteComRes = await Comments.deleteMany({ post: postId });
 		return res.status(200).json({
 			message: `Post with ${postId} deleted successfully`,
 			deletedPost,
@@ -148,12 +161,19 @@ exports.deletePost = async (req, res) => {
 	}
 };
 
-//put" /posts/:postId
+//put /posts/:postId
 exports.updatePost = async (req, res) => {
 	const { postId } = req.params;
 	const { title, tags, body, images } = req.body;
 
-	console.log(postId);
+	const count = await Posts.countDocuments({
+		title,
+		_id: { $ne: mongoose.Types.ObjectId(postId) },
+	});
+	if (count > 0)
+		return res
+			.status(400)
+			.json({ message: "Please enter a title that havent been used!" });
 
 	if (images && images.length > 0) {
 		const post = await Posts.findById(postId).lean();

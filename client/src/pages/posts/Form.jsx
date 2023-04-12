@@ -64,6 +64,7 @@ const Form = ({ post }) => {
 				show: true,
 				msg: "Plese provide a body to the post",
 			}));
+
 			setTimeout(
 				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
 				2000,
@@ -77,6 +78,10 @@ const Form = ({ post }) => {
 						show: true,
 						msg: "Please enter at least one picture!",
 					}));
+					onSubmitProps.setFieldError(
+						"pictures",
+						"Please enter at least one picture!",
+					);
 					setTimeout(
 						() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
 						2000,
@@ -92,7 +97,18 @@ const Form = ({ post }) => {
 						});
 						setLoading((prev) => ({ ...prev, show: false }));
 						if (res?.error) {
+							setCredentials((prev) => ({
+								...prev,
+								show: true,
+								msg: res.error.data.message,
+							}));
 							setMessage(res.error.data.message);
+							onSubmitProps.setFieldError("title", res.error.data.message);
+							setTimeout(
+								() =>
+									setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+								2000,
+							);
 						} else {
 							setMessage("");
 							setBody("");
@@ -117,7 +133,18 @@ const Form = ({ post }) => {
 					});
 					setLoading((prev) => ({ ...prev, show: false }));
 					if (res?.error) {
+						setCredentials((prev) => ({
+							...prev,
+							show: true,
+							msg: res.error.data.message,
+						}));
 						setMessage(res.error.data.message);
+						onSubmitProps.setFieldError("title", res.error.data.message);
+						setTimeout(
+							() =>
+								setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+							2000,
+						);
 					} else {
 						setMessage("");
 						setBody("");

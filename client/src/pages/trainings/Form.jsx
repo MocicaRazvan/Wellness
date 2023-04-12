@@ -126,7 +126,17 @@ const Form = ({ training }) => {
 						});
 						setLoading((prev) => ({ ...prev, show: false }));
 						if (res?.error) {
+							setAlert((prev) => ({
+								...prev,
+								show: true,
+								msg: res.error.data.message,
+							}));
 							setMessage(res.error.data.message);
+							onSubmitProps.setFieldError("title", res.error.data.message);
+							setTimeout(
+								() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
+								2000,
+							);
 						} else {
 							setMessage("");
 							onSubmitProps.resetForm();

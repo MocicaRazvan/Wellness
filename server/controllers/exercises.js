@@ -5,6 +5,14 @@ const mongoose = require("mongoose");
 //post: /exercises/create
 exports.createExercise = async (req, res) => {
 	const { body, muscleGroups, title, videos } = req.body;
+	const count = await Exercises.countDocuments({
+		title,
+		user: { $eq: mongoose.Types.ObjectId(req.user._id) },
+	});
+	if (count > 0)
+		return res
+			.status(400)
+			.json({ message: "Please enter a title that you havent used!" });
 	// video upload to cloudinary
 	try {
 		if (videos && videos.length > 0) {
@@ -197,6 +205,17 @@ exports.getAllExercises = async (req, res) => {
 exports.updateExercise = async (req, res) => {
 	const { exerciseId } = req.params;
 	const { title, muscleGroups, body, videos } = req.body;
+
+	const count = await Exercises.countDocuments({
+		title,
+		user: { $eq: mongoose.Types.ObjectId(req.user._id) },
+		_id: { $ne: mongoose.Types.ObjectId(exerciseId) },
+	});
+	console.log({ count, _id: req.user._id, exerciseId });
+	if (count > 0)
+		return res
+			.status(400)
+			.json({ message: "Please enter a title that you havent used!" });
 
 	if (videos && videos.length > 0) {
 		const exercise = await Exercises.findById(exerciseId).lean();

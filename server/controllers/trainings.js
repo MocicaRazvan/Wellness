@@ -7,6 +7,11 @@ const cloudinary = require("../utils/cloudinary");
 exports.createTraining = async (req, res) => {
 	const { title, tags, exercises, price, images, description } = req.body;
 	// image upload to cloudinary
+	const count = await Trainings.countDocuments({ title });
+	if (count > 0)
+		return res
+			.status(400)
+			.json({ message: "Please enter a title that havent been used!" });
 	try {
 		if (images && images.length > 0) {
 			const uplodRes = await Promise.all(
@@ -128,7 +133,7 @@ exports.getAllTrainings = async (req, res) => {
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
-	
+
 			const sortFormatted = Object.entries(sortParsed).map(([k, v]) => [
 				k,
 				v === "asc" ? 1 : -1,
@@ -260,6 +265,15 @@ exports.deleteTraining = async (req, res) => {
 exports.updateTraining = async (req, res) => {
 	const { trainingId } = req.params;
 	const { title, tags, exercises, price, images, description } = req.body;
+
+	const count = await Trainings.countDocuments({
+		title,
+		_id: { $ne: mongoose.Types.ObjectId(trainingId) },
+	});
+	if (count > 0)
+		return res
+			.status(400)
+			.json({ message: "Please enter a title that havent been used!" });
 
 	if (images && images.length > 0) {
 		const training = await Trainings.findById(trainingId).lean();
