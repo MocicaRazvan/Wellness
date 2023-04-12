@@ -15,8 +15,8 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 			],
 		}),
 		getTrainings: builder.query({
-			query: ({ search, tags, sorting, page, limit }) => {
-				const params = {};
+			query: ({ search, tags, sorting, page, limit, admin }) => {
+				const params = { admin };
 				if (search) {
 					params.search = search;
 				}
@@ -127,6 +127,17 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				{ type: "Exercise", id: "LIST" },
 			],
 		}),
+		approveTraining: builder.mutation({
+			query: ({ id }) => ({
+				url: `/trainings/admin/approve`,
+				method: "PUT",
+				body: { trainingId: id },
+			}),
+			invalidatesTags: (result, err, arg) => [
+				{ type: "Training", id: arg.id },
+				{ type: "Training", id: "LIST" },
+			],
+		}),
 		trainingActions: builder.mutation({
 			query: ({ id, action }) => ({
 				url: `/trainings/action/${action}/${id}`,
@@ -171,4 +182,5 @@ export const {
 	useGetTrainingsQuery,
 	useGetBoughtUserTrainingsQuery,
 	useGetTrainingsByOrderQuery,
+	useApproveTrainingMutation,
 } = trainingApiSlice;

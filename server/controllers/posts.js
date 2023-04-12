@@ -65,7 +65,7 @@ exports.getAllPosts = async (req, res) => {
 		return res.status(400).json({ message: "No page found" });
 	}
 
-	query = Posts.find().lean();
+	query = Posts.find({ approved: true }).lean();
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
@@ -344,4 +344,28 @@ exports.getAllPostsAdmin = async (req, res) => {
 	total = await total;
 	console.log(total);
 	return res.status(200).json({ message: "Posts retrived", posts, total });
+};
+//put /posts/admin/approve
+exports.approvePosts = async (req, res) => {
+	if (req.user.role !== "admin") {
+		res.status(401).json({ message: "You are not authorized" });
+	}
+	const { postId } = req.body;
+	const count = await Posts.countDocuments({
+		_id: mongoose.Types.ObjectId(postId),
+	});
+	if (count == 0) {
+		res.status(400).json({ message: `No post with id ${postId} exsists` });
+	}
+	const savedPost = await Posts.findByIdAndUpdate(
+		postId,
+		{
+			approved: true,
+		},
+		{ new: true },
+	);
+	res.status(201).json({
+		post: savedPost,
+		message: `Post with id ${postId} approved`,
+	});
 };

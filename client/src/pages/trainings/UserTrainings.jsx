@@ -1,4 +1,4 @@
-import { Button, Tooltip } from "@mui/material";
+import { Button, Tooltip, styled } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -65,6 +65,20 @@ const Trainings = () => {
 			field: "tags",
 			headerName: "Tags",
 			flex: 2,
+		},
+		{
+			field: "approved",
+			headerName: "approved",
+			flex: 1,
+			renderCell: ({ row: { approved } }) => (
+				<Box display="flex" alignItems="center">
+					{approved ? (
+						<Approved>Approved</Approved>
+					) : (
+						<NotApproved>Not Approved</NotApproved>
+					)}
+				</Box>
+			),
 		},
 		{
 			field: "action",
@@ -134,4 +148,19 @@ const Trainings = () => {
 	);
 };
 
+const NotApproved = styled("div")(({ theme }) => ({
+	color: theme.palette.error[theme.palette.mode === "dark" ? "light" : "dark"],
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
+const Approved = styled("div")(({ theme }) => ({
+	color:
+		theme.palette.success[theme.palette.mode === "dark" ? "light" : "dark"],
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
 export default Trainings;

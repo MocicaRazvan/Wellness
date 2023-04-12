@@ -6,10 +6,12 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { usePostActionsMutation } from "../../redux/posts/postsApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const SinglePostCard = ({ post }) => {
 	const theme = useTheme();
 	const [actionPost] = usePostActionsMutation();
+	const navigate = useNavigate();
 	const handleAction = async (id, action) => {
 		try {
 			await actionPost({ id, action }).unwrap();
@@ -18,6 +20,13 @@ const SinglePostCard = ({ post }) => {
 		}
 	};
 	const user = useSelector(selectCurrentUser);
+	if (
+		!post?.approved &&
+		user?.id !== post?.user?._id &&
+		user?.role !== "admin"
+	) {
+		navigate("/");
+	}
 
 	return (
 		<Container sx={{ mt: 2 }}>
@@ -82,12 +91,13 @@ const SinglePostCard = ({ post }) => {
 						elevation={10}
 						style={{ height: 400 }}
 						className="HeightItem">
-						<Box sx={{ width: "100%", height: "100%" }}>
+						<Box sx={{ width: "100%", height: "100%", position: "relative" }}>
 							<img
 								src={item.url}
 								style={{ width: "100%", height: "100%", objectFit: "cover" }}
 								alt=""
 							/>
+							
 						</Box>
 					</Paper>
 				))}

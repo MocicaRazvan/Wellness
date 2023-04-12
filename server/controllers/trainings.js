@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Exercises = require("../models/Exercise");
 const Order = require("../models/Order");
 const Trainings = require("../models/Training");
@@ -128,8 +129,11 @@ exports.getAllTrainings = async (req, res) => {
 	if (page > pages) {
 		return res.status(400).json({ message: "No page found" });
 	}
-
-	query = Trainings.find().lean();
+	if (req.query?.admin) {
+		query = Trainings.find().lean();
+	} else {
+		query = Trainings.find({ approved: true }).lean();
+	}
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
@@ -440,5 +444,32 @@ exports.getTrainingsByOrder = async (req, res) => {
 		total,
 		user,
 		message: `Trainings for order ${orderId} were delivered`,
+	});
+};
+
+//put /trainings/admin/approve
+exports.approveTrianing = async (req, res) => {
+	if (req.user.role !== "admin") {
+		res.status(401).json({ message: "You are not authorized" });
+	}
+	const { trainingId } = req.body;
+	const count = await Trainings.countDocuments({
+		_id: mongoose.Types.ObjectId(trainingId),
+	});
+	if (count == 0) {
+		res
+			.status(400)
+			.json({ message: `No training with id ${trainingId} exsists` });
+	}
+	const savedTraining = await Trainings.findByIdAndUpdate(
+		trainingId,
+		{
+			approved: true,
+		},
+		{ new: true },
+	);
+	res.status(201).json({
+		training: savedTraining,
+		message: `Training with id ${trainingId} approved`,
 	});
 };

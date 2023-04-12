@@ -27,8 +27,15 @@ const SingleTraining = () => {
 	const id = user?.id;
 	const navigate = useNavigate();
 	const isAllowed =
-		subscriptions?.includes(trainingId) || training?.user === id    ;
+		subscriptions?.includes(trainingId) || training?.user === id;
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
+	if (
+		!training?.approved &&
+		user?.id !== training?.user?._id &&
+		user?.role !== "admin"
+	) {
+		navigate("/");
+	}
 
 	if (isLoading || !training)
 		return (

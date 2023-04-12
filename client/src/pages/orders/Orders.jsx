@@ -103,12 +103,7 @@ const Orders = () => {
 					display="flex"
 					alignItems="center"
 					gap={1}
-					// sx={{
-					// 	"& .btn": {
-					// 		color: theme.palette.secondary[200],
-					// 		bgcolor: theme.palette.background.alt,
-					// 	},
-					// }}
+					
 				>
 					<Button
 						variant="outlined"

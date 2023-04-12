@@ -6,6 +6,9 @@ const router = express.Router();
 router.route("/").get(trainingsController.getAllTrainings);
 router.route("/create").post(verifyJwt, trainingsController.createTraining);
 router
+	.route("/admin/approve")
+	.put(verifyJwt, trainingsController.approveTrianing);
+router
 	.route("/user/bought")
 	.get(verifyJwt, trainingsController.getBoughtUserTrainings);
 router.route("/user").get(verifyJwt, trainingsController.getAllUserTrainings);

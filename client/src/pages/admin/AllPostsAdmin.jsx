@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/reusable/Header";
 import {
+	useApprovePostMutation,
 	useDeletePostMutation,
 	useGetPostsAdminQuery,
 } from "../../redux/posts/postsApiSlice";
@@ -23,7 +24,7 @@ import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import { format } from "date-fns";
 import UserAgreement from "../../components/reusable/UserAgreement";
 
-const Post = ({ post, setDeleteId, setOpen }) => {
+const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 	const theme = useTheme();
 	const [isExpanded, setIsExpanded] = useState(false);
 	// const [deletePost] = useDeletePostMutation();
@@ -125,24 +126,31 @@ const Post = ({ post, setDeleteId, setOpen }) => {
 							{format(new Date(post?.updatedAt), "dd/MM/yyyy")}
 						</Typography>
 					</Box>
-					<Button
-						color="error"
-						onClick={
-							() => {
+					<Box
+						display="flex"
+						width="100%"
+						p={2}
+						justifyContent="space-between"
+						alignItems="center">
+						<Button
+							color="error"
+							onClick={() => {
 								setDeleteId(post?.id);
 								setOpen((prev) => !prev);
-							}
-
-							// 	async () => {
-							// 	try {
-							// 		await deletePost({ id: post?.id }).unwrap();
-							// 	} catch (error) {
-							// 		console.log(error);
-							// 	}
-							// }
-						}>
-						DELETE
-					</Button>
+							}}>
+							DELETE
+						</Button>
+						{!post?.approved && (
+							<Button
+								color="success"
+								onClick={() => {
+									setApproveId(post?.id);
+									setApproveOpen((prev) => !prev);
+								}}>
+								Approve
+							</Button>
+						)}
+					</Box>
 				</CardContent>
 			</Collapse>
 		</Card>
@@ -155,13 +163,25 @@ const AllPostsAdmin = () => {
 	const [limit, setLimit] = useState(24);
 	const { palette } = useTheme();
 	const [deletePost] = useDeletePostMutation();
+	const [approvePost] = useApprovePostMutation();
 	const [open, setOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
+	const [approveOpen, setApproveOpen] = useState(false);
+	const [approveId, setApproveId] = useState(null);
 
 	const handleDelete = async (id) => {
 		if (deleteId) {
 			try {
 				await deletePost({ id }).unwrap();
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
+	const handleApprove = async (id) => {
+		if (approveId) {
+			try {
+				await approvePost({ id }).unwrap();
 			} catch (error) {
 				console.log(error);
 			}
@@ -190,6 +210,15 @@ const AllPostsAdmin = () => {
 				}
 				handleAgree={async () => await handleDelete(deleteId)}
 			/>
+			<UserAgreement
+				open={approveOpen}
+				setOpen={setApproveOpen}
+				title={"Confirm approve"}
+				text={
+					"Are you sure you want to approve this post? Make sure you have read it!"
+				}
+				handleAgree={async () => await handleApprove(approveId)}
+			/>
 			<Header title="Posts" subtitle="See the list of posts." />
 			<Box
 				mt="20px"
@@ -209,6 +238,8 @@ const AllPostsAdmin = () => {
 						post={post}
 						setDeleteId={setDeleteId}
 						setOpen={setOpen}
+						setApproveId={setApproveId}
+						setApproveOpen={setApproveOpen}
 					/>
 				))}
 			</Box>

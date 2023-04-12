@@ -54,7 +54,25 @@ const PostCard = ({ item, user }) => {
 				<CardActionArea
 					disableRipple
 					onClick={() => void navigate(`/posts/find/${item.id}`)}>
-					<CardMedia sx={{ height: 240 }} image={item.images[0].url} />
+					<Box position="relative">
+						<CardMedia sx={{ height: 240 }} image={item.images[0].url} />
+						{!item?.approved && (
+							<Typography
+								color="error"
+								sx={{
+									position: "absolute",
+									top: "50%",
+									left: "50%",
+									transform: "translate(-50%, -50%)",
+									zIndex: 100,
+									fontWeight: 900,
+									fontSize: 25,
+									textAlign: "center",
+								}}>
+								NOT APPROVED
+							</Typography>
+						)}
+					</Box>
 					<CardContent>
 						<Typography
 							gutterBottom

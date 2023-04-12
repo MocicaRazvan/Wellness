@@ -76,6 +76,17 @@ export const postApiSlice = apiSlice.injectEndpoints({
 				{ type: "Post", id: "LIST" },
 			],
 		}),
+		approvePost: builder.mutation({
+			query: ({ id }) => ({
+				url: `/posts/admin/approve`,
+				method: "PUT",
+				body: { postId: id },
+			}),
+			invalidatesTags: (result, err, arg) => [
+				{ type: "Post", id: arg.id },
+				{ type: "Post", id: "LIST" },
+			],
+		}),
 		getPostsByUser: builder.query({
 			///query: () => ({ url: "/posts/user" }),
 			query: ({ search, tags, sorting, page, limit, id }) => {
@@ -183,6 +194,7 @@ export const {
 	useGetPostByIdQuery,
 	usePostActionsMutation,
 	useGetPostsAdminQuery,
+	useApprovePostMutation,
 } = postApiSlice;
 
 export const postsSelector = postAdapter.getSelectors((state) => state.posts);

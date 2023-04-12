@@ -1,4 +1,4 @@
-import { Box, Button, Tooltip } from "@mui/material";
+import { Box, Button, Tooltip, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
+	useApproveTrainingMutation,
 	useDeleteTrainingMutation,
 	useGetTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
@@ -19,7 +20,10 @@ const AdminTrainings = () => {
 	const [searchInput, setSearchInput] = useState("");
 	const [open, setOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
+	const [approveOpen, setApproveOpen] = useState(false);
+	const [approvedId, setApprovedId] = useState(null);
 	const user = useSelector(selectCurrentUser);
+	const { palette } = useTheme();
 
 	const { data, isLoading } = useGetTrainingsQuery(
 		{
@@ -28,17 +32,29 @@ const AdminTrainings = () => {
 			pageSize,
 			sort: JSON.stringify(sort),
 			search,
+			admin: true,
 		},
 		{ skip: !user?.id },
 	);
 
 	const [deleteTraining] = useDeleteTrainingMutation();
+	const [approveTraining] = useApproveTrainingMutation();
+
 	const handleDeleteTraining = async (id) => {
-		try {
-			await deleteTraining({ id }).unwrap();
-		} catch (error) {
-			console.log(error);
-		}
+		if (deleteId)
+			try {
+				await deleteTraining({ id }).unwrap();
+			} catch (error) {
+				console.log(error);
+			}
+	};
+	const handleApproveTraining = async (id) => {
+		if (approvedId)
+			try {
+				await approveTraining({ id }).unwrap();
+			} catch (error) {
+				console.log(error);
+			}
 	};
 	const columns = [
 		{
@@ -77,11 +93,27 @@ const AdminTrainings = () => {
 			flex: 2,
 			renderCell: (params) => {
 				return (
-					<Box sx={{ width: "100%", display: "flex", gap: 1 }}>
+					<Box
+						sx={{
+							width: "100%",
+							display: "flex",
+							gap: 1,
+							alignItems: "center",
+						}}>
 						<Link
 							to={`/trainings/find/${params.row.id}`}
 							style={{ textDecoration: "none" }}>
-							<Button variant="contained" size="small" className="cellBtn">
+							<Button
+								variant="contained"
+								size="small"
+								sx={{
+									color: palette.secondary[300],
+									bgcolor: palette.background.default,
+									"&:hover": {
+										bgcolor: palette.secondary[300],
+										color: palette.background.default,
+									},
+								}}>
 								View
 							</Button>
 						</Link>
@@ -91,10 +123,17 @@ const AdminTrainings = () => {
 							arrow>
 							<Box>
 								<Button
-									className="cellBtn"
 									variant="contained"
 									size="small"
 									disabled={params.row?.occurrences > 0}
+									sx={{
+										color: palette.secondary[300],
+										bgcolor: palette.error.dark,
+										"&:hover": {
+											bgcolor: palette.secondary[300],
+											color: palette.error.dark,
+										},
+									}}
 									onClick={() => {
 										setDeleteId(params.row.id);
 										setOpen(true);
@@ -103,6 +142,27 @@ const AdminTrainings = () => {
 								</Button>
 							</Box>
 						</Tooltip>
+						{!params.row?.approved && (
+							<Box>
+								<Button
+									variant="contained"
+									size="small"
+									sx={{
+										color: palette.secondary[300],
+										bgcolor: palette.success.dark,
+										"&:hover": {
+											bgcolor: palette.secondary[300],
+											color: palette.success.dark,
+										},
+									}}
+									onClick={() => {
+										setApprovedId(params.row.id);
+										setApproveOpen(true);
+									}}>
+									Apporve
+								</Button>
+							</Box>
+						)}
 					</Box>
 				);
 			},
@@ -122,6 +182,15 @@ const AdminTrainings = () => {
 					"Are you sure you want to delete this training? You can't undo after you press Agree, be careful what you want."
 				}
 				handleAgree={async () => await handleDeleteTraining(deleteId)}
+			/>
+			<UserAgreement
+				open={approveOpen}
+				setOpen={setApproveOpen}
+				title={"Confirm approve"}
+				text={
+					"Are you sure you want to approve this training? Be sure you checked it!"
+				}
+				handleAgree={async () => await handleApproveTraining(approvedId)}
 			/>
 			<CustomDataGrid
 				isLoading={isLoading || !data}
