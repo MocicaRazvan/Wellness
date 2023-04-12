@@ -130,7 +130,11 @@ const Form = ({ post }) => {
 				}
 			} else {
 				try {
-					setLoading((prev) => ({ ...prev, show: true }));
+					setLoading((prev) => ({
+						...prev,
+						show: true,
+						msg: "Updating the post...",
+					}));
 					const res = await updatePost({
 						id: post.id,
 						body,
@@ -141,7 +145,6 @@ const Form = ({ post }) => {
 					setLoading((prev) => ({
 						...prev,
 						show: false,
-						msg: "Updating the post...",
 					}));
 					if (res?.error) {
 						setCredentials((prev) => ({

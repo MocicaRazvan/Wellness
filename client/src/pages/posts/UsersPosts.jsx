@@ -28,6 +28,7 @@ const UsersPosts = () => {
 	const user = useSelector(selectCurrentUser);
 	const { data, isLoading } = useGetPostsByUserQuery(
 		{ search, tags, sorting, page, limit: rowsPerPage, id: user?.id } || "",
+		{ refetchOnMountOrArgChange: true, refetchOnFocus: true },
 	);
 	useEffect(() => {
 		if (data) {

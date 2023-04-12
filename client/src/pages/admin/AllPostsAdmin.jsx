@@ -188,7 +188,10 @@ const AllPostsAdmin = () => {
 		}
 	};
 
-	const { data, isLoading } = useGetPostsAdminQuery({ search, limit });
+	const { data, isLoading } = useGetPostsAdminQuery(
+		{ search, limit },
+		{ refetchOnFocus: true },
+	);
 	console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
 
 	if (isLoading || !data)

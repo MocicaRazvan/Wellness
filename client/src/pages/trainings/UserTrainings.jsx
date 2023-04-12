@@ -30,7 +30,7 @@ const Trainings = () => {
 			sort: JSON.stringify(sort),
 			search,
 		},
-		{ skip: !user?.id },
+		{ skip: !user?.id, refetchOnFocus: true },
 	);
 	const [deleteTraining] = useDeleteTrainingMutation();
 	const handleDeleteTraining = async (id) => {
