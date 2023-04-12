@@ -342,13 +342,13 @@ const Form = ({ training }) => {
 					</form>
 				)}
 			</Formik>
-			{message && (
+			{/* {message && (
 				<Typography
 					variant="h5"
 					sx={{ mt: 5, color: theme.palette.secondary[200] }}>
 					{message}
 				</Typography>
-			)}
+			)} */}
 		</Box>
 	);
 };

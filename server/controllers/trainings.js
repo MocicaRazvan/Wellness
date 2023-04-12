@@ -7,6 +7,8 @@ const cloudinary = require("../utils/cloudinary");
 //post: /trainings/create
 exports.createTraining = async (req, res) => {
 	const { title, tags, exercises, price, images, description } = req.body;
+	const approved = req.user.role === "admin";
+
 	// image upload to cloudinary
 	const count = await Trainings.countDocuments({ title });
 	if (count > 0)
@@ -32,6 +34,7 @@ exports.createTraining = async (req, res) => {
 					description,
 					images: uplodRes,
 					user: req.user._id,
+					approved,
 				});
 
 				const savedTraining = await training.save();

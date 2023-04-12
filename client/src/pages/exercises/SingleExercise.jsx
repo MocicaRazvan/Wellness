@@ -10,7 +10,7 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
 	useDeleteExerciseMutation,
@@ -19,6 +19,7 @@ import {
 import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import UserAgreement from "../../components/reusable/UserAgreement";
 
 const SingleExercise = ({ id = null }) => {
 	const { exerciseId } = useParams();
@@ -29,6 +30,8 @@ const SingleExercise = ({ id = null }) => {
 	const navigate = useNavigate();
 	const theme = useTheme();
 	const user = useSelector(selectCurrentUser);
+	const [open, setOpen] = useState(false);
+	const [deleteId, setDeleteId] = useState(null);
 	const isAuthor = user?.id === exercise?.user;
 
 	const handleDeleteExercise = async (id) => {
@@ -53,6 +56,15 @@ const SingleExercise = ({ id = null }) => {
 
 	return (
 		<Box m="1.5rem 1rem">
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to delete this exercise? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleDeleteExercise(deleteId)}
+			/>
 			<Typography
 				variant="h2"
 				color={theme.palette.secondary[200]}
@@ -89,7 +101,11 @@ const SingleExercise = ({ id = null }) => {
 					<Button
 						variant="contained"
 						className="btnDel"
-						onClick={() => handleDeleteExercise(exercise?.id)}>
+						disabled={exercise?.occurrences > 0}
+						onClick={() => {
+							setDeleteId(exercise?.id);
+							setOpen(true);
+						}}>
 						Delete Exercise
 					</Button>
 					<Button
@@ -105,7 +121,5 @@ const SingleExercise = ({ id = null }) => {
 		</Box>
 	);
 };
-
-
 
 export default SingleExercise;

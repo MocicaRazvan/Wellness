@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-
+import { format } from "date-fns";
 import {
 	useDeleteExerciseMutation,
 	useGetUsersExercisesQuery,
@@ -65,7 +65,9 @@ const UserExercises = () => {
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 1,
+			flex: 0.7,
+			renderCell: ({ row: { createdAt } }) =>
+				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "muscleGroups",

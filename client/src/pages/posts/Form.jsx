@@ -26,7 +26,10 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const postSchema = yup.object().shape({
-	tags: yup.array().required("Please enter the tags"),
+	tags: yup
+		.array()
+		.required("Please enter the tags")
+		.min(1, "Please enter the muscle groups targeted"),
 	title: yup.string().required("Please enter the title"),
 	pictures: yup.array(),
 });
@@ -88,7 +91,11 @@ const Form = ({ post }) => {
 					);
 				} else {
 					try {
-						setLoading((prev) => ({ ...prev, show: true }));
+						setLoading((prev) => ({
+							...prev,
+							show: true,
+							msg: "Creating the post...",
+						}));
 						const res = await createPost({
 							body,
 							title,
@@ -131,7 +138,11 @@ const Form = ({ post }) => {
 						tags,
 						images: pictures,
 					});
-					setLoading((prev) => ({ ...prev, show: false }));
+					setLoading((prev) => ({
+						...prev,
+						show: false,
+						msg: "Updating the post...",
+					}));
 					if (res?.error) {
 						setCredentials((prev) => ({
 							...prev,
@@ -335,13 +346,13 @@ const Form = ({ post }) => {
 					</form>
 				)}
 			</Formik>
-			{message && (
+			{/* {message && (
 				<Typography
 					variant="h5"
 					sx={{ mt: 5, color: theme.palette.secondary[200] }}>
 					{message}
 				</Typography>
-			)}
+			)} */}
 		</Box>
 	);
 };

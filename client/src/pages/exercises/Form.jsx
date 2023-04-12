@@ -29,7 +29,10 @@ const exerciseSchema = yup.object().shape({
 	clips: yup.array(),
 	title: yup.string().required("Please enter the title"),
 	// body: yup.string().required("required"),
-	muscleGroups: yup.array().required("Please enter the muscle groups targeted"),
+	muscleGroups: yup
+		.array()
+		.required("Please enter the muscle groups targeted")
+		.min(1, "Please enter the muscle groups targeted"),
 });
 
 const Form = ({ exercise }) => {
@@ -106,7 +109,11 @@ const Form = ({ exercise }) => {
 					);
 				} else {
 					try {
-						setLoading((prev) => ({ ...prev, show: true }));
+						setLoading((prev) => ({
+							...prev,
+							show: true,
+							msg: "Creating the exercise...",
+						}));
 						const res = await createExercise({
 							body,
 							videos: values.clips,
@@ -140,7 +147,11 @@ const Form = ({ exercise }) => {
 				}
 			} else {
 				try {
-					setLoading((prev) => ({ ...prev, show: true }));
+					setLoading((prev) => ({
+						...prev,
+						show: true,
+						msg: "Updating the exercise...",
+					}));
 					const res = await updateExercise({
 						id: exercise?.id,
 						body,
@@ -329,13 +340,13 @@ const Form = ({ exercise }) => {
 					</form>
 				)}
 			</Formik>
-			{message && (
+			{/* {message && (
 				<Typography
 					variant="h5"
 					sx={{ mt: 5, color: theme.palette.secondary[200] }}>
 					{message}
 				</Typography>
-			)}
+			)} */}
 		</Box>
 	);
 };

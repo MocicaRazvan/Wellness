@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 //post: /posts/create
 exports.createPost = async (req, res) => {
 	const { body, tags, title, images } = req.body;
+	const approved = req.user.role === "admin";
 	const count = await Posts.countDocuments({ title });
 	if (count > 0)
 		return res
@@ -29,6 +30,7 @@ exports.createPost = async (req, res) => {
 					title,
 					images: uplodRes,
 					user: req.user._id,
+					approved,
 				});
 
 				const savedPost = await post.save();
@@ -169,6 +171,7 @@ exports.deletePost = async (req, res) => {
 exports.updatePost = async (req, res) => {
 	const { postId } = req.params;
 	const { title, tags, body, images } = req.body;
+	const approved = req.user.role === "admin";
 
 	const count = await Posts.countDocuments({
 		title,
@@ -202,7 +205,7 @@ exports.updatePost = async (req, res) => {
 				const updatedPost = await Posts.findByIdAndUpdate(
 					postId,
 					{
-						$set: { title, tags, body, images: uplodRes },
+						$set: { title, tags, body, images: uplodRes, approved },
 					},
 					{ new: true },
 				);
@@ -216,7 +219,7 @@ exports.updatePost = async (req, res) => {
 		const updatedPost = await Posts.findByIdAndUpdate(
 			postId,
 			{
-				$set: { title, tags, body },
+				$set: { title, tags, body, approved },
 			},
 			{ new: true },
 		);
