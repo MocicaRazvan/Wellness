@@ -27,6 +27,7 @@ const Test = () => {
 	const [sendEmail] = useSendEmailAdminMutation();
 
 	const isNonMobile = useMediaQuery("(min-width:600px)");
+	const isNonDesktop = useMediaQuery("(min-width:1500px)");
 	const initialValues = {
 		email: "",
 		subject: "",
@@ -99,7 +100,7 @@ const Test = () => {
 				<Loading loading={alert} type="alert" />
 				<Loading loading={loading} type="alert" />
 			</Box>
-			<Box mt={4}>
+			<Box mt={6}>
 				<Formik
 					onSubmit={handleFormSubmit}
 					initialValues={initialValues}
@@ -118,6 +119,7 @@ const Test = () => {
 							<Box
 								display="grid"
 								gap="30px"
+								px={isNonDesktop ? 30 : 0}
 								gridTemplateColumns="repeat(4,minmax(0,1fr))"
 								sx={{
 									"& > div": { gridColumn: isNonMobile ? undefined : "span 4" },

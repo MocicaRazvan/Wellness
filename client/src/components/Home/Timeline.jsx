@@ -3,6 +3,7 @@ import {
 	VerticalTimeline,
 	VerticalTimelineElement,
 } from "react-vertical-timeline-component";
+import "react-vertical-timeline-component/style.min.css";
 
 const Timeline = ({ items }) => {
 	const { palette } = useTheme();
@@ -10,6 +11,7 @@ const Timeline = ({ items }) => {
 		<VerticalTimeline lineColor={palette.secondary[300]}>
 			{items.map(({ date, title, text, icon }) => (
 				<VerticalTimelineElement
+					key={title}
 					className="vertical-timeline-element--work"
 					contentStyle={{
 						backgroundColor: palette.primary.main,
