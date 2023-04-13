@@ -22,5 +22,6 @@ router.route("/:userId").get(verifyJwt, userController.getUserById);
 router
 	.route("/admin/trainer/:userId")
 	.put(verifyJwt, userController.makeUserTrainer);
+router.route("/admin/email").put(verifyJwt, userController.sendEmailAdmin);
 
 module.exports = router;

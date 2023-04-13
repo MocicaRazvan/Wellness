@@ -46,6 +46,7 @@ import BoughtTrainings from "./pages/trainings/BoughtTrainings";
 import SingleOrder from "./pages/orders/SingleOrder";
 import Calculator from "./pages/calculator/Calculator";
 import AdminTrainings from "./pages/admin/AdminTrainings";
+import Email from "./pages/admin/Email";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -119,6 +120,7 @@ function App() {
 								<Route path="daily" element={<Daily />} />
 								<Route path="breakdown" element={<Breakdown />} />
 								<Route path="trainings" element={<AdminTrainings />} />
+								<Route path="email" element={<Email />} />
 							</Route>
 							<Route path="/about-us">
 								<Route

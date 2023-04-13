@@ -4,7 +4,9 @@ const Training = require("../models/Training");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
 const cloudinary = require("../utils/cloudinary");
-const { findByIdAndUpdate } = require("../models/Post");
+const sendEmail = require("../utils/email/sendEmail");
+const makeAdmin = require("../utils/email/adminTemplate");
+
 //get /user/countStats
 exports.getCountStats = async (req, res) => {
 	const userId = req.user._id;
@@ -308,4 +310,21 @@ exports.makeUserTrainer = async (req, res) => {
 	return res
 		.status(200)
 		.json({ message: `User with id ${req.params.userId} was made trainer` });
+};
+//put: /users/admin/email
+exports.sendEmailAdmin = async (req, res) => {
+	if (req.user.role !== "admin") {
+		return req.status(401).json({ message: "You are not authorized" });
+	}
+	try {
+		await sendEmail({
+			to: req.body.email,
+			subject: req.body.subject,
+			text: makeAdmin(req.body.body),
+		});
+		res.status(201).json({ message: "Email sent" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: "Email could not be sent!" });
+	}
 };

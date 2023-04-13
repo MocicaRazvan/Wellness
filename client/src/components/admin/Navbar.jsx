@@ -25,8 +25,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "../Navigation/SearchBar";
 import PopupWrapper from "../Popup/PopupWrapper";
 import { setNotReload } from "../../redux/messages/messagesSlice";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import CloseIcon from "@mui/icons-material/Close";
 
-const Navbar = ({ user, setIsSideBarOpen }) => {
+const Navbar = ({ user, setIsSideBarOpen, isSideBarOpen }) => {
 	const dispatch = useDispatch();
 	const theme = useTheme();
 	const { pathname } = useLocation();
@@ -49,7 +51,7 @@ const Navbar = ({ user, setIsSideBarOpen }) => {
 				{/* left side */}
 				<FlexBetween>
 					<IconButton onClick={() => void setIsSideBarOpen((prev) => !prev)}>
-						<MenuIcon />
+						{isSideBarOpen ? <CloseIcon /> : <MenuOpenIcon />}
 					</IconButton>
 					{isSearchOpen && <SearchBar />}
 				</FlexBetween>

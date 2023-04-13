@@ -27,6 +27,7 @@ import {
 	Book,
 	ArrowDropDownCircleOutlined,
 	MonitorHeartOutlined,
+	EmailOutlined,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -61,6 +62,10 @@ const navItems = [
 		icon: <PublicOutlined />,
 	},
 	{ text: "Trainings", icon: <MonitorHeartOutlined /> },
+	{
+		text: "Email",
+		icon: <EmailOutlined />,
+	},
 	{
 		text: "Sales",
 		icon: null,

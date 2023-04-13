@@ -123,6 +123,13 @@ export const userApi = apiSlice.injectEndpoints({
 				{ type: "User", id: "LIST" },
 			],
 		}),
+		sendEmailAdmin: builder.mutation({
+			query: (credentials) => ({
+				url: "/user/admin/email",
+				method: "PUT",
+				body: credentials,
+			}),
+		}),
 	}),
 });
 
@@ -137,4 +144,5 @@ export const {
 	useGetAllCountAdminQuery,
 	useGetSingleUserQuery,
 	useMakeUserTrainerMutationMutation,
+	useSendEmailAdminMutation,
 } = userApi;
