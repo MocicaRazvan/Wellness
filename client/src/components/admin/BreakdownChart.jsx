@@ -4,7 +4,9 @@ import { useGetAllMonthlyStatsQuery } from "../../redux/user/userApi";
 import { ResponsivePie } from "@nivo/pie";
 
 const BreakdownChart = ({ isDashboard = false }) => {
-	const { data, isLoading } = useGetAllMonthlyStatsQuery();
+	const { data, isLoading } = useGetAllMonthlyStatsQuery(null, {
+		refetchOnFocus: true,
+	});
 	const theme = useTheme();
 	if (isLoading || !data)
 		return (

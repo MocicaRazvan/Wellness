@@ -72,6 +72,16 @@ const AllTrainings = () => {
 				setTags={setTags}
 				type="training"
 			/>
+			{data?.trainings?.length === 0 && (
+				<Typography
+					fontSize={40}
+					mt={6}
+					fontWeight="bold"
+					textAlign="center"
+					color={theme.palette.secondary[300]}>
+					No trainings meet the criterias
+				</Typography>
+			)}
 			<GridList items={data?.trainings}>
 				<TrainingCard />
 			</GridList>

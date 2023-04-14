@@ -102,6 +102,7 @@ const SingleExercise = ({ id = null }) => {
 						variant="contained"
 						className="btnDel"
 						disabled={exercise?.occurrences > 0}
+						sx={{ color: theme.palette.secondary[200] }}
 						onClick={() => {
 							setDeleteId(exercise?.id);
 							setOpen(true);
@@ -111,6 +112,7 @@ const SingleExercise = ({ id = null }) => {
 					<Button
 						variant="contained"
 						className="btnUpdate"
+						sx={{ color: theme.palette.secondary[200] }}
 						onClick={() =>
 							navigate(`/exercises/update/${exercise?.id}`, { state: exercise })
 						}>

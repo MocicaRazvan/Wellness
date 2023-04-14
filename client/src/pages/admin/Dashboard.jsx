@@ -28,9 +28,11 @@ const Dashboard = () => {
 	const theme = useTheme();
 	const isNonMediumScreens = useMediaQuery("(min-width: 1250px)");
 	const { data: relativeStats, isLoading: isStatsLoading } =
-		useGetAdminRelativeStatsQuery();
-	const { data: counts, isLoading: isCountsLoading } =
-		useGetAllCountAdminQuery();
+		useGetAdminRelativeStatsQuery(null, { refetchOnFocus: true });
+	const { data: counts, isLoading: isCountsLoading } = useGetAllCountAdminQuery(
+		null,
+		{ refetchOnFocus: true },
+	);
 	if ([!relativeStats, !counts, isStatsLoading, isCountsLoading].every(Boolean))
 		return (
 			<CircularProgress

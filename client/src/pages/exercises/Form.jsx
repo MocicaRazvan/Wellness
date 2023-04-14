@@ -226,6 +226,7 @@ const Form = ({ exercise }) => {
 							<FormControl sx={{ gridColumn: "span 2" }}>
 								<InputLabel htmlFor="select">MuscleGroups</InputLabel>
 								<Select
+									label="MuscleGroups"
 									multiple={true}
 									id="select"
 									onBlur={handleBlur}

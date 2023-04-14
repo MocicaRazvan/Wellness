@@ -78,6 +78,16 @@ const AllPosts = () => {
 				setSorting={setSorting}
 				setTags={setTags}
 			/>
+			{data?.posts?.length === 0 && (
+				<Typography
+					fontSize={40}
+					mt={6}
+					fontWeight="bold"
+					textAlign="center"
+					color={theme.palette.secondary[300]}>
+					No posts meet the criterias
+				</Typography>
+			)}
 			<GridList items={data?.posts}>
 				<PostCard />
 			</GridList>

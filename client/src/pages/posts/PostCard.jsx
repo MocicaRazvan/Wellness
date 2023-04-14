@@ -133,6 +133,7 @@ const PostCard = ({ item, user }) => {
 					{user !== "true" && (
 						<Button
 							size="medium"
+							color="success"
 							onClick={() => void navigate(`/posts/find/${item.id}`)}>
 							Find More
 						</Button>

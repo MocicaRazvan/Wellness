@@ -97,7 +97,6 @@ const SinglePostCard = ({ post }) => {
 								style={{ width: "100%", height: "100%", objectFit: "cover" }}
 								alt=""
 							/>
-							
 						</Box>
 					</Paper>
 				))}
@@ -107,7 +106,8 @@ const SinglePostCard = ({ post }) => {
 					varint="body1"
 					gutterBottom
 					component="div"
-					color={theme.palette.secondary[200]}>
+					fontSize={17}
+					color={theme.palette.secondary[100]}>
 					<div dangerouslySetInnerHTML={{ __html: post?.body }} />
 				</Typography>
 			</Container>

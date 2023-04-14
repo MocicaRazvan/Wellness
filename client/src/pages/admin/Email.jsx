@@ -161,7 +161,12 @@ const Test = () => {
 												width: { xs: 250, sm: 500, md: 600 },
 												height: { xs: 350, sm: 400 },
 											}}>
-											<div style={{ width: "100%", height: "100%" }}>
+											<div
+												style={{
+													width: "100%",
+													height: "100%",
+													color: theme.palette.secondary[300],
+												}}>
 												<div ref={quillRef} />
 											</div>
 										</Box>

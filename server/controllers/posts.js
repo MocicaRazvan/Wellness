@@ -60,7 +60,7 @@ exports.getAllPosts = async (req, res) => {
 	const page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
-	const total = await Posts.countDocuments();
+	const total = await Posts.countDocuments({ approved: true });
 	const pages = Math.ceil(total / pageSize);
 
 	if (page > pages) {
@@ -329,23 +329,48 @@ exports.dislikePost = async (req, res) => {
 
 //get: /posts/admin
 exports.getAllPostsAdmin = async (req, res) => {
-	const { limit = 24 } = req.query;
+	const { limit = 20, notApproved } = req.query;
 	const user = req.user;
 	if (user.role !== "admin")
 		return res.status(401).json({ message: "You are not authorized" });
-	let query = Posts.find().populate("user");
-	let total = Posts.countDocuments();
-	if (req.query.search) {
-		query = query.find({
-			title: { $regex: req.query.search, $options: "i" },
-		});
-		total = Posts.countDocuments({
-			title: { $regex: req.query.search, $options: "i" },
-		});
+	let query;
+	let total;
+	if (notApproved === "false") {
+		query = Posts.find().populate("user");
+		total = Posts.countDocuments();
+		if (req.query.search) {
+			query = query.find({
+				title: { $regex: req.query.search, $options: "i" },
+			});
+			total = Posts.countDocuments({
+				title: { $regex: req.query.search, $options: "i" },
+			});
+		}
+	} else {
+		query = Posts.find({ approved: false }).populate("user");
+		total = Posts.countDocuments({ approved: false });
+		if (req.query.search) {
+			query = query.find({
+				title: { $regex: req.query.search, $options: "i" },
+				approved: false,
+			});
+			total = Posts.countDocuments({
+				title: { $regex: req.query.search, $options: "i" },
+				approved: false,
+			});
+		}
 	}
+	// if (req.query.search) {
+	// 	query = query.find({
+	// 		title: { $regex: req.query.search, $options: "i" },
+	// 	});
+	// 	total = Posts.countDocuments({
+	// 		title: { $regex: req.query.search, $options: "i" },
+	// 	});
+	// }
 	const posts = await query.limit(limit);
 	total = await total;
-	console.log(total);
+	console.log({ total });
 	return res.status(200).json({ message: "Posts retrived", posts, total });
 };
 //put /posts/admin/approve

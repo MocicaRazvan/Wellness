@@ -126,17 +126,21 @@ exports.getAllTrainings = async (req, res) => {
 	const page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
-	const total = await Trainings.countDocuments();
+	// const total = await Trainings.countDocuments();
+	let total;
+	if (req.query?.admin) {
+		query = Trainings.find().lean();
+		total = await Trainings.countDocuments();
+	} else {
+		query = Trainings.find({ approved: true }).lean();
+		total = await Trainings.countDocuments({ approved: true });
+	}
 	const pages = Math.ceil(total / pageSize);
 
 	if (page > pages) {
 		return res.status(400).json({ message: "No page found" });
 	}
-	if (req.query?.admin) {
-		query = Trainings.find().lean();
-	} else {
-		query = Trainings.find({ approved: true }).lean();
-	}
+
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);

@@ -2,12 +2,14 @@ import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import { useEffect } from "react";
 import { Box } from "@mui/system";
+import { useTheme } from "@mui/material";
 
 const TextEditor = ({ setValue, value = "" }) => {
 	const modules = {
 		toolbar: [["bold", "italic", "underline", "strike"]],
 	};
 	const { quill, quillRef } = useQuill({ modules });
+	const theme = useTheme();
 
 	useEffect(() => {
 		if (quill) {
@@ -24,7 +26,12 @@ const TextEditor = ({ setValue, value = "" }) => {
 				width: { xs: 250, sm: 500, md: 600 },
 				height: { xs: 350, sm: 400 },
 			}}>
-			<div style={{ width: "100%", height: "100%" }}>
+			<div
+				style={{
+					width: "100%",
+					height: "100%",
+					color: theme.palette.secondary[300],
+				}}>
 				<div ref={quillRef} />
 			</div>
 		</Box>

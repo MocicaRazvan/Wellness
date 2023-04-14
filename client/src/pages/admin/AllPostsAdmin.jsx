@@ -15,6 +15,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/reusable/Header";
+import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import {
 	useApprovePostMutation,
 	useDeletePostMutation,
@@ -160,7 +162,7 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 const AllPostsAdmin = () => {
 	const search = useSelector(selectCurrentSearch);
 	const isNonMobile = useMediaQuery("(min-width: 1000px)");
-	const [limit, setLimit] = useState(24);
+	const [limit, setLimit] = useState(20);
 	const { palette } = useTheme();
 	const [deletePost] = useDeletePostMutation();
 	const [approvePost] = useApprovePostMutation();
@@ -168,6 +170,7 @@ const AllPostsAdmin = () => {
 	const [deleteId, setDeleteId] = useState(null);
 	const [approveOpen, setApproveOpen] = useState(false);
 	const [approveId, setApproveId] = useState(null);
+	const [notApproved, setNotApproved] = useState(false);
 
 	const handleDelete = async (id) => {
 		if (deleteId) {
@@ -189,10 +192,12 @@ const AllPostsAdmin = () => {
 	};
 
 	const { data, isLoading } = useGetPostsAdminQuery(
-		{ search, limit },
-		{ refetchOnFocus: true },
+		{ search, limit, notApproved },
+		{
+			refetchOnFocus: true,
+		},
 	);
-	console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
+	// console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
 
 	if (isLoading || !data)
 		return (
@@ -222,7 +227,47 @@ const AllPostsAdmin = () => {
 				}
 				handleAgree={async () => await handleApprove(approveId)}
 			/>
-			<Header title="Posts" subtitle="See the list of posts." />
+			<Box
+				gap={2}
+				display="flex"
+				justifyContent={{ xs: "center", md: "space-between" }}
+				width="100%"
+				alignItems={{ xs: "space-between", md: "center" }}
+				flexDirection={{ xs: "column", md: "row" }}>
+				<Box flex={1}>
+					<Header title="Posts" subtitle="See the list of posts." />
+				</Box>
+				<Button
+					sx={{
+						bgcolor: palette.secondary[300],
+						color: palette.background.default,
+						"&:hover": {
+							color: palette.secondary[300],
+							bgcolor: palette.background.default,
+						},
+					}}
+					onClick={() => setNotApproved((prev) => !prev)}
+					variant="outlined"
+					startIcon={
+						notApproved ? (
+							<CheckCircleOutlineRoundedIcon />
+						) : (
+							<DoNotDisturbOnOutlinedIcon />
+						)
+					}>
+					{notApproved ? "All Posts" : "Not Approved "}
+				</Button>
+			</Box>
+			{data?.total === 0 && (
+				<Typography
+					fontSize={40}
+					mt={6}
+					fontWeight="bold"
+					textAlign="center"
+					color={palette.secondary[300]}>
+					No posts meet the criterias
+				</Typography>
+			)}
 			<Box
 				mt="20px"
 				display="grid"
@@ -249,7 +294,7 @@ const AllPostsAdmin = () => {
 			{data?.total > limit && (
 				<Box display="flex" justifyContent="center" m={4} p={2}>
 					<Button
-						onClick={() => setLimit((prev) => prev + 24)}
+						onClick={() => setLimit((prev) => prev + 20)}
 						sx={{
 							color: palette.background.default,
 							bgcolor: palette.secondary[300],

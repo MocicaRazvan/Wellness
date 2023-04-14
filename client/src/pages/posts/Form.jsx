@@ -225,6 +225,7 @@ const Form = ({ post }) => {
 							<FormControl sx={{ gridColumn: "span 2" }}>
 								<InputLabel htmlFor="select">Tags</InputLabel>
 								<Select
+									label="Tags"
 									multiple={true}
 									id="select"
 									onBlur={handleBlur}
