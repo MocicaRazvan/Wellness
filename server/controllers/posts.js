@@ -241,7 +241,7 @@ exports.getPostsByUser = async (req, res) => {
 	const page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
-	const total = await Posts.countDocuments();
+	const total = await Posts.countDocuments({ user: userId });
 	const pages = Math.ceil(total / pageSize);
 
 	query = Posts.find({ user: userId });

@@ -56,11 +56,13 @@ const Orders = () => {
 			field: "id",
 			headerName: "ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
 			flex: 0.7,
+			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
@@ -84,6 +86,7 @@ const Orders = () => {
 			field: "deliveryStatus",
 			headerName: "Delivery Status",
 			flex: 0.5,
+			sortable: false,
 			renderCell: ({ row: { deliveryStatus: dS } }) => (
 				<div>
 					{dS === "pending" ? (
@@ -102,6 +105,8 @@ const Orders = () => {
 			field: "actions",
 			headerName: "Actions",
 			flex: 1,
+			sortable: false,
+			filterable: false,
 			renderCell: ({ row: { id, deliveryStatus: dS } }) => (
 				<Box display="flex" alignItems="center" gap={1}>
 					<Button

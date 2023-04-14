@@ -1,4 +1,4 @@
-import { Box, Button, Tooltip, useTheme } from "@mui/material";
+import { Box, Button, Tooltip, styled, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import {
 	useDeleteTrainingMutation,
 	useGetTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
+import { format } from "date-fns";
 
 const AdminTrainings = () => {
 	const [page, setPage] = useState(0);
@@ -61,16 +62,19 @@ const AdminTrainings = () => {
 			field: "id",
 			headerName: "ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "title",
 			headerName: "Title",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "user",
-			headerName: "user ID",
+			headerName: "Username",
 			flex: 1,
+			sortable: false,
 			renderCell: ({
 				row: {
 					user: { username },
@@ -80,17 +84,38 @@ const AdminTrainings = () => {
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 1,
+			flex: 0.7,
+			sortable: false,
+			renderCell: ({ row: { createdAt } }) =>
+				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "tags",
 			headerName: "Tags",
 			flex: 2,
+			sortable: false,
+		},
+		{
+			field: "app",
+			headerName: "Approved",
+			flex: 1,
+			sortable: false,
+			renderCell: ({ row: { approved } }) => (
+				<Box display="flex" alignItems="center">
+					{approved ? (
+						<Approved>Approved</Approved>
+					) : (
+						<NotApproved>Not Approved</NotApproved>
+					)}
+				</Box>
+			),
 		},
 		{
 			field: "action",
 			headerName: "Actions",
 			flex: 2,
+			sortable: false,
+			filterable: false,
 			renderCell: (params) => {
 				return (
 					<Box
@@ -207,5 +232,20 @@ const AdminTrainings = () => {
 		</Box>
 	);
 };
+const NotApproved = styled("div")(({ theme }) => ({
+	color: theme.palette.error[theme.palette.mode === "dark" ? "light" : "dark"],
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
+const Approved = styled("div")(({ theme }) => ({
+	color:
+		theme.palette.success[theme.palette.mode === "dark" ? "light" : "dark"],
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
 
 export default AdminTrainings;

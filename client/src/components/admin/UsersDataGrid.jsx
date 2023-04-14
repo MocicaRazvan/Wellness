@@ -46,6 +46,7 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 			field: "id",
 			headerName: "ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "username",
@@ -100,6 +101,8 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 			field: "contact",
 			headerName: "Contact",
 			flex: 0.6,
+			sortable: false,
+			filterable: false,
 			renderCell: ({ row: { role, id } }) =>
 				role !== "admin" && (
 					<Button

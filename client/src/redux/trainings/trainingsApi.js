@@ -41,6 +41,7 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				const loadedTrainings = trainings.map((training) => ({
 					...training,
 					id: training._id,
+					app: training.approved ? "approved" : "not approved",
 				}));
 
 				return { trainings: loadedTrainings, page, pages, count };

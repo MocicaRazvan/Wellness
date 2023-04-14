@@ -11,6 +11,7 @@ import {
 	useDeleteTrainingMutation,
 	useGetUserTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
+import { format } from "date-fns";
 
 const Trainings = () => {
 	const [page, setPage] = useState(0);
@@ -45,31 +46,39 @@ const Trainings = () => {
 			field: "id",
 			headerName: "ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "title",
 			headerName: "Title",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "user",
 			headerName: "user ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 1,
+			flex: 0.7,
+			sortable: false,
+			renderCell: ({ row: { createdAt } }) =>
+				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "tags",
 			headerName: "Tags",
 			flex: 2,
+			sortable: false,
 		},
 		{
 			field: "approved",
 			headerName: "approved",
 			flex: 1,
+			sortable: false,
 			renderCell: ({ row: { approved } }) => (
 				<Box display="flex" alignItems="center">
 					{approved ? (
@@ -84,6 +93,8 @@ const Trainings = () => {
 			field: "action",
 			headerName: "Actions",
 			flex: 2,
+			sortable: false,
+			filterable: false,
 			renderCell: (params) => {
 				return (
 					<Box sx={{ width: "100%", display: "flex", gap: 1 }}>
@@ -117,8 +128,6 @@ const Trainings = () => {
 			},
 		},
 	];
-
-	console.log({ data });
 
 	return (
 		<Box m="1.5rem 2.5rem">

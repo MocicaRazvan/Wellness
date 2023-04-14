@@ -51,6 +51,7 @@ const UserExercises = () => {
 			field: "id",
 			headerName: "ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "title",
@@ -61,11 +62,13 @@ const UserExercises = () => {
 			field: "user",
 			headerName: "user ID",
 			flex: 1,
+			sortable: false,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
 			flex: 0.7,
+			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
@@ -78,6 +81,8 @@ const UserExercises = () => {
 			field: "action",
 			headerName: "Actions",
 			flex: 2,
+			sortable: false,
+			filterable: false,
 			renderCell: (params) => {
 				return (
 					<Box sx={{ width: "100%", display: "flex", gap: 1 }}>
