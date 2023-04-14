@@ -47,6 +47,8 @@ import SingleOrder from "./pages/orders/SingleOrder";
 import Calculator from "./pages/calculator/Calculator";
 import AdminTrainings from "./pages/admin/AdminTrainings";
 import Email from "./pages/admin/Email";
+import OurStory from "./pages/aboutUs/OurStory";
+import OrderTroubleshoot from "./pages/customerCare/OrderTroubleshoot";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -127,9 +129,14 @@ function App() {
 									path="terms-conditions"
 									element={<TermsAndConditions />}
 								/>
+								<Route path="our-story" element={<OurStory />} />
 							</Route>
 							<Route path="/customer-care">
 								<Route path="faq" element={<Faq />} />
+								<Route
+									path="order-troubleshoot"
+									element={<OrderTroubleshoot />}
+								/>
 							</Route>
 							<Route path="*" element={<NotFound />} />
 							<Route path="test" element={<Test />} />

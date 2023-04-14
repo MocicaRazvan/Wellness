@@ -27,7 +27,6 @@ const Test = () => {
 	const [sendEmail] = useSendEmailAdminMutation();
 
 	const isNonMobile = useMediaQuery("(min-width:600px)");
-	const isNonDesktop = useMediaQuery("(min-width:1500px)");
 	const initialValues = {
 		email: "",
 		subject: "",
@@ -100,84 +99,92 @@ const Test = () => {
 				<Loading loading={alert} type="alert" />
 				<Loading loading={loading} type="alert" />
 			</Box>
-			<Box mt={6}>
-				<Formik
-					onSubmit={handleFormSubmit}
-					initialValues={initialValues}
-					validationSchema={trainingSchema}>
-					{({
-						values,
-						errors,
-						touched,
-						handleBlur,
-						handleChange,
-						handleSubmit,
-						setFieldValue,
-						resetForm,
-					}) => (
-						<form onSubmit={handleSubmit}>
-							<Box
-								display="grid"
-								gap="30px"
-								px={isNonDesktop ? 30 : 0}
-								gridTemplateColumns="repeat(4,minmax(0,1fr))"
-								sx={{
-									"& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-								}}>
-								<TextField
-									label="Email"
-									onBlur={handleBlur}
-									onChange={handleChange}
-									value={values.email}
-									name="email"
-									error={Boolean(touched.email) && Boolean(errors.email)}
-									helperText={touched.email && errors.email}
-									sx={{ gridColumn: "span 2" }}
-								/>
-								<TextField
-									label="Subject"
-									onBlur={handleBlur}
-									onChange={handleChange}
-									value={values.subject}
-									name="subject"
-									error={Boolean(touched.subject) && Boolean(errors.subject)}
-									helperText={touched.subject && errors.subject}
-									sx={{ gridColumn: "span 2" }}
-								/>
-
+			<Box
+				mt={10}
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+				width="100%">
+				<Box mt={6}>
+					<Formik
+						onSubmit={handleFormSubmit}
+						initialValues={initialValues}
+						validationSchema={trainingSchema}>
+						{({
+							values,
+							errors,
+							touched,
+							handleBlur,
+							handleChange,
+							handleSubmit,
+							setFieldValue,
+							resetForm,
+						}) => (
+							<form onSubmit={handleSubmit}>
 								<Box
-									gridColumn="span 4"
-									mb={4}
-									display="flex"
-									justifyContent="center">
-									<Box
-										sx={{
-											width: { xs: 250, sm: 500, md: 600 },
-											height: { xs: 350, sm: 400 },
-										}}>
-										<div style={{ width: "100%", height: "100%" }}>
-											<div ref={quillRef} />
-										</div>
-									</Box>
-								</Box>
-							</Box>
-							<Box textAlign="center" mt={6}>
-								<Button
-									type="submit"
+									display="grid"
+									gap="30px"
+									gridTemplateColumns="repeat(4,minmax(0,1fr))"
 									sx={{
-										color: theme.palette.background.default,
-										bgcolor: theme.palette.secondary[300],
-										"&:hover": {
-											bgcolor: theme.palette.primary.main,
-											color: theme.palette.secondary[300],
+										"& > div": {
+											gridColumn: isNonMobile ? undefined : "span 4",
 										},
 									}}>
-									Send the email
-								</Button>
-							</Box>
-						</form>
-					)}
-				</Formik>
+									<TextField
+										label="Email"
+										onBlur={handleBlur}
+										onChange={handleChange}
+										value={values.email}
+										name="email"
+										error={Boolean(touched.email) && Boolean(errors.email)}
+										helperText={touched.email && errors.email}
+										sx={{ gridColumn: "span 2" }}
+									/>
+									<TextField
+										label="Subject"
+										onBlur={handleBlur}
+										onChange={handleChange}
+										value={values.subject}
+										name="subject"
+										error={Boolean(touched.subject) && Boolean(errors.subject)}
+										helperText={touched.subject && errors.subject}
+										sx={{ gridColumn: "span 2" }}
+									/>
+
+									<Box
+										gridColumn="span 4"
+										mb={4}
+										display="flex"
+										justifyContent="center">
+										<Box
+											sx={{
+												width: { xs: 250, sm: 500, md: 600 },
+												height: { xs: 350, sm: 400 },
+											}}>
+											<div style={{ width: "100%", height: "100%" }}>
+												<div ref={quillRef} />
+											</div>
+										</Box>
+									</Box>
+								</Box>
+								<Box textAlign="center" mt={6}>
+									<Button
+										type="submit"
+										sx={{
+											color: theme.palette.background.default,
+											bgcolor: theme.palette.secondary[300],
+											"&:hover": {
+												bgcolor: theme.palette.primary.main,
+												color: theme.palette.secondary[300],
+											},
+										}}>
+										Send the email
+									</Button>
+								</Box>
+							</form>
+						)}
+					</Formik>
+				</Box>
 			</Box>
 		</Box>
 	);

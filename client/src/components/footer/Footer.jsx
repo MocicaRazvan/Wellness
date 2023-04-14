@@ -1,10 +1,13 @@
 import { Box, styled, Typography, useTheme } from "@mui/material";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const Footer = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const user = useSelector(selectCurrentUser);
 
 	return (
 		<Box
@@ -89,21 +92,22 @@ const Footer = () => {
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
-						Our Achivments
-					</CustomTypography>
-					<CustomTypography
-						mb="30px"
-						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: theme.palette.background.paper },
+						}}
 						onClick={() => navigate("/about-us/terms-conditions")}>
 						Terms & Conditions
 					</CustomTypography>
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
-						Privacy Policy
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: theme.palette.background.paper },
+						}}
+						onClick={() => navigate("/about-us/our-story")}>
+						Our Story
 					</CustomTypography>
 				</Box>
 
@@ -118,27 +122,32 @@ const Footer = () => {
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: theme.palette.background.paper },
+						}}
 						onClick={() => navigate("/customer-care/faq")}>
 						Frequently Asked Questions
 					</CustomTypography>
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
-						Track Your Order
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: theme.palette.background.paper },
+						}}
+						onClick={() => navigate("/customer-care/order-troubleshoot")}>
+						Order Troubleshoot
 					</CustomTypography>
 					<CustomTypography
 						mb="30px"
 						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
-						Corporate & Bulk Purchasing
-					</CustomTypography>
-					<CustomTypography
-						mb="30px"
-						color={theme.palette.secondary[200]}
-						sx={{ cursor: "pointer" }}>
-						Returns & Refunds
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: theme.palette.background.paper },
+						}}
+						onClick={() => navigate("/forgotPassword", { state: user?.email })}>
+						Forgot Password
 					</CustomTypography>
 				</Box>
 

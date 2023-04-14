@@ -4,7 +4,7 @@ import React from "react";
 const textArray = [
 	{
 		title: "Terms & Conditions",
-		body: `These Terms & Conditions associated with the processing of personal data (hereinafter referred to as the Conditions) describe the way in which Welness Ltd., with its registered office at Roamnia, ID number 46 440 224, (hereinafter referred to as the “Company” or “we”) processes your personal data for the purpose of providing our services, consisting in the sale and distribution of nutritional supplements, sportswear and exercise accessories through an online store (hereinafter referred to as the “Services”) on the website www.gymbeam.com (hereinafter referred to as the “Website”), as well as through other means of remote communication.
+		body: `These Terms & Conditions associated with the processing of personal data (hereinafter referred to as the Conditions) describe the way in which Welness Ltd., with its registered office at Roamnia, ID number 46 440 224, (hereinafter referred to as the “Company” or “we”) processes your personal data for the purpose of providing our services, consisting in the sale and distribution of nutritional supplements, sportswear and exercise accessories through an online store (hereinafter referred to as the “Services”).
 
         The company is responsible for the processing of personal data under Regulation (EU) 2016/679 of the European Parliament and of the Council (EU) of 27 April 2016 on the protection of individuals with regard to the processing of personal data and on the free movement of such data, repealing Directive 95/46 / EC ["GDPR". “] and Act no. 18/2018 Coll. on the Protection of Personal Data and on Amendments to Certain Acts, as currently in force [hereinafter referred to as “Act no. 18/2018 Coll. ”].
 

@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 
-const Test = () => {
+const OrderTroubleshoot = () => {
 	const isNonMobile = useMediaQuery("(min-width:1000px)");
 	const { palette } = useTheme();
 	return (
@@ -64,4 +64,4 @@ const Test = () => {
 	);
 };
 
-export default Test;
+export default OrderTroubleshoot;
