@@ -67,7 +67,9 @@ const UsersPosts = () => {
 				fontWeight="bold"
 				textAlign="center"
 				fontSize={!isNonMobile && "25px"}>
-				Look at all your posts
+				{!notApproved
+					? "Look at all your posts"
+					: "Look at your unapproved posts"}
 			</Typography>
 			<Box
 				display="flex"
