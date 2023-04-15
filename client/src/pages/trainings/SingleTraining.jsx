@@ -29,13 +29,6 @@ const SingleTraining = () => {
 	const isAllowed =
 		subscriptions?.includes(trainingId) || training?.user === id;
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
-	if (
-		!training?.approved &&
-		user?.id !== training?.user?._id &&
-		user?.role !== "admin"
-	) {
-		navigate("/");
-	}
 
 	if (isLoading || !training)
 		return (
@@ -45,6 +38,13 @@ const SingleTraining = () => {
 				thickness={7}
 			/>
 		);
+	if (
+		!training?.approved &&
+		user?.id !== training?.user &&
+		user?.role !== "admin"
+	) {
+		navigate("/", { replace: true });
+	}
 
 	const handleAddTocard = () => {
 		if (!user) {

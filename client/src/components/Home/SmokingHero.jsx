@@ -25,7 +25,7 @@ const SmokingHero = () => {
 				if (e.isIntersecting) {
 					e.target.classList.add("show");
 				} else {
-					e.target.classList.remove("show");
+					// e.target.classList.remove("show");
 				}
 			});
 		});

@@ -1,13 +1,22 @@
-import { Button, Divider, Popover, Typography, useTheme } from "@mui/material";
+import {
+	Button,
+	Divider,
+	IconButton,
+	Popover,
+	Typography,
+	useTheme,
+} from "@mui/material";
 import { Box } from "@mui/system";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectCartItems } from "../../redux/cart/cartSlice";
+import { removeFormCart, selectCartItems } from "../../redux/cart/cartSlice";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const CartPopper = ({ setAnchorEl, anchorEl }) => {
 	const cartItems = useSelector(selectCartItems);
 	const total = cartItems?.reduce((acc, cur) => (acc += cur.price), 0);
 	const { palette } = useTheme();
+	const dispatch = useDispatch();
 
 	const navigate = useNavigate();
 
@@ -40,6 +49,7 @@ const CartPopper = ({ setAnchorEl, anchorEl }) => {
 								<Box
 									p={1}
 									width={200}
+									gap={1}
 									display="flex"
 									justifyContent="space-between"
 									alignItems="center">
@@ -54,9 +64,20 @@ const CartPopper = ({ setAnchorEl, anchorEl }) => {
 										}}>
 										{title}
 									</Typography>
-									<Typography color={palette.secondary[300]}>
-										${price}
-									</Typography>
+									<Box
+										display="flex"
+										justifyContent="end"
+										alignItems="center"
+										gap={1}>
+										<Typography color={palette.secondary[300]}>
+											${price}
+										</Typography>
+										<Box onClick={() => void dispatch(removeFormCart({ id }))}>
+											<IconButton>
+												<RemoveIcon sx={{ color: palette.secondary[300] }} />
+											</IconButton>
+										</Box>
+									</Box>
 								</Box>
 								<Divider />
 							</Box>
