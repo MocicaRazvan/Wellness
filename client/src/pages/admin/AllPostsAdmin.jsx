@@ -237,9 +237,9 @@ const AllPostsAdmin = () => {
 				<Box flex={1}>
 					<Header
 						title="Posts"
-						subtitle={`See the list ${
+						subtitle={`See the list of ${
 							notApproved ? "unapproved" : ""
-						} of posts.`}
+						} posts.`}
 					/>
 				</Box>
 				<Button
