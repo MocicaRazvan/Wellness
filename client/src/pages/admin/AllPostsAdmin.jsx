@@ -235,7 +235,12 @@ const AllPostsAdmin = () => {
 				alignItems={{ xs: "space-between", md: "center" }}
 				flexDirection={{ xs: "column", md: "row" }}>
 				<Box flex={1}>
-					<Header title="Posts" subtitle="See the list of posts." />
+					<Header
+						title="Posts"
+						subtitle={`See the list ${
+							notApproved ? "unapproved" : ""
+						} of posts.`}
+					/>
 				</Box>
 				<Button
 					sx={{
