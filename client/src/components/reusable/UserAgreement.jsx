@@ -37,9 +37,14 @@ export default function UserAgreement({
 				aria-labelledby="responsive-dialog-title">
 				<Box bgcolor={theme.palette.background.default}>
 					<Loading loading={loading} />
-					<DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
+					<DialogTitle
+						sx={{ color: theme.palette.secondary[200], fontWeight: 900 }}>
+						{title}
+					</DialogTitle>
 					<DialogContent>
-						<DialogContentText>{text}</DialogContentText>
+						<DialogContentText sx={{ color: theme.palette.secondary[200] }}>
+							{text}
+						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button

@@ -9,7 +9,7 @@ const Timeline = ({ items }) => {
 	const { palette } = useTheme();
 	return (
 		<VerticalTimeline lineColor={palette.secondary[300]}>
-			{items.map(({ date, title, text, icon }) => (
+			{items.map(({ date, title, text, icon }, i) => (
 				<VerticalTimelineElement
 					key={title}
 					className="vertical-timeline-element--work"
@@ -24,7 +24,7 @@ const Timeline = ({ items }) => {
 						<Typography
 							align="center"
 							variant="h2"
-							textAlign="start"
+							textAlign={i % 2 ? "end" : "start"}
 							fontWeight={700}
 							sx={{
 								fontSize: 45,

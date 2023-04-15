@@ -199,16 +199,16 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		console.log("message sent");
 		//once
 		socket?.current.once("getPartener", (data) => {
-			console.log({ data });
-			console.log({ c: data?.curConv });
+			// console.log({ data });
+			// console.log({ c: data?.curConv });
 			const isAdminConv =
 				data?.curConv?.convId !== currentChat.id &&
 				data?.curConv?.role === "admin";
-			console.log({
-				not: !data?.user?.mounted || isAdminConv || !data?.curConv,
-			});
-			if (!data?.user?.mounted || isAdminConv || !data?.curConv) {
-				console.log("in if");
+			const isAdminNotMounted = !data?.curConv && data?.user?.role === "admin";
+			// console.log({
+			// 	user: data?.user,
+			// });
+			if (!data?.user?.mounted || isAdminConv || isAdminNotMounted) {
 				(async () => {
 					await createNotification({
 						receiver: receiverId,
