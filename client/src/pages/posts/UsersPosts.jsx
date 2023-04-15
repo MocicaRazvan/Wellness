@@ -84,27 +84,29 @@ const UsersPosts = () => {
 						setTags={setTags}
 					/>
 				</Box>
-				<Button
-					sx={{
-						bgcolor: theme.palette.secondary[300],
-						color: theme.palette.background.default,
-						width: 150,
-						"&:hover": {
-							color: theme.palette.secondary[300],
-							bgcolor: theme.palette.background.default,
-						},
-					}}
-					onClick={() => setNotApproved((prev) => !prev)}
-					variant="outlined"
-					startIcon={
-						notApproved ? (
-							<CheckCircleOutlineRoundedIcon />
-						) : (
-							<DoNotDisturbOnOutlinedIcon />
-						)
-					}>
-					{notApproved ? "All Posts" : "Not Approved "}
-				</Button>
+				<Box flex={0.25}>
+					<Button
+						sx={{
+							bgcolor: theme.palette.secondary[300],
+							color: theme.palette.background.default,
+							width: 150,
+							"&:hover": {
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.background.default,
+							},
+						}}
+						onClick={() => setNotApproved((prev) => !prev)}
+						variant="outlined"
+						startIcon={
+							notApproved ? (
+								<CheckCircleOutlineRoundedIcon />
+							) : (
+								<DoNotDisturbOnOutlinedIcon />
+							)
+						}>
+						{notApproved ? "All Posts" : "Not Approved "}
+					</Button>
+				</Box>
 			</Box>
 			{data?.posts?.length === 0 && (
 				<Typography
