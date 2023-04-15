@@ -1,5 +1,6 @@
 import {
 	Box,
+	Button,
 	CircularProgress,
 	Typography,
 	useMediaQuery,
@@ -14,6 +15,8 @@ import PostCard from "./PostCard";
 import GridList from "../../components/reusable/GridList";
 import CustomPagination from "../../components/reusable/CustomPagination";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 
 const UsersPosts = () => {
 	const [sorting, setSorting] = useState({});
@@ -22,12 +25,21 @@ const UsersPosts = () => {
 	const [page, setPage] = useState(1);
 	const [pages, setPages] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(12);
+	const [notApproved, setNotApproved] = useState(false);
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 
 	const user = useSelector(selectCurrentUser);
 	const { data, isLoading } = useGetPostsByUserQuery(
-		{ search, tags, sorting, page, limit: rowsPerPage, id: user?.id } || "",
+		{
+			search,
+			tags,
+			sorting,
+			page,
+			limit: rowsPerPage,
+			id: user?.id,
+			notApproved,
+		} || "",
 		{ refetchOnMountOrArgChange: true, refetchOnFocus: true },
 	);
 	useEffect(() => {
@@ -57,14 +69,43 @@ const UsersPosts = () => {
 				fontSize={!isNonMobile && "25px"}>
 				Look at all your posts
 			</Typography>
-			<Filter
-				sorting={sorting}
-				isLoading={false}
-				isError={false}
-				tags={tags}
-				setSorting={setSorting}
-				setTags={setTags}
-			/>
+			<Box
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+				flexDirection={isNonMobile ? "row" : "column"}>
+				<Box flex={1}>
+					<Filter
+						sorting={sorting}
+						isLoading={false}
+						isError={false}
+						tags={tags}
+						setSorting={setSorting}
+						setTags={setTags}
+					/>
+				</Box>
+				<Button
+					sx={{
+						bgcolor: theme.palette.secondary[300],
+						color: theme.palette.background.default,
+						width: 150,
+						"&:hover": {
+							color: theme.palette.secondary[300],
+							bgcolor: theme.palette.background.default,
+						},
+					}}
+					onClick={() => setNotApproved((prev) => !prev)}
+					variant="outlined"
+					startIcon={
+						notApproved ? (
+							<CheckCircleOutlineRoundedIcon />
+						) : (
+							<DoNotDisturbOnOutlinedIcon />
+						)
+					}>
+					{notApproved ? "All Posts" : "Not Approved "}
+				</Button>
+			</Box>
 			{data?.posts?.length === 0 && (
 				<Typography
 					fontSize={40}

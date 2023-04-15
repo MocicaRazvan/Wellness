@@ -89,9 +89,8 @@ export const postApiSlice = apiSlice.injectEndpoints({
 		}),
 		getPostsByUser: builder.query({
 			///query: () => ({ url: "/posts/user" }),
-			query: ({ search, tags, sorting, page, limit, id }) => {
-				console.log(search, tags, sorting);
-				const params = {};
+			query: ({ search, tags, sorting, page, limit, id, notApproved }) => {
+				const params = { notApproved };
 				if (search) {
 					params.search = search;
 				}

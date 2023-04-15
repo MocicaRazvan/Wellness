@@ -241,6 +241,7 @@ const AllPostsAdmin = () => {
 					sx={{
 						bgcolor: palette.secondary[300],
 						color: palette.background.default,
+						width: 150,
 						"&:hover": {
 							color: palette.secondary[300],
 							bgcolor: palette.background.default,

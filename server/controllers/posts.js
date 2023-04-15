@@ -241,10 +241,17 @@ exports.getPostsByUser = async (req, res) => {
 	const page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
-	const total = await Posts.countDocuments({ user: userId });
+	let total;
 	const pages = Math.ceil(total / pageSize);
+	console.log(q);
 
-	query = Posts.find({ user: userId });
+	if (q.notApproved === "false") {
+		query = Posts.find({ user: userId });
+		total = await Posts.countDocuments({ user: userId });
+	} else {
+		query = Posts.find({ user: userId, approved: false });
+		total = await Posts.countDocuments({ user: userId, approved: false });
+	}
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
