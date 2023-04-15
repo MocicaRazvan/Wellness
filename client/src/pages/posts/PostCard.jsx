@@ -68,6 +68,9 @@ const PostCard = ({ item, user }) => {
 									fontWeight: 900,
 									fontSize: 25,
 									textAlign: "center",
+									p: 1.2,
+									borderRadius: 3,
+									bgcolor: "rgba(0,0,0,0.66)",
 								}}>
 								NOT APPROVED
 							</Typography>

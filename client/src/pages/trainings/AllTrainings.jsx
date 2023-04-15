@@ -79,7 +79,7 @@ const AllTrainings = () => {
 					fontWeight="bold"
 					textAlign="center"
 					color={theme.palette.secondary[300]}>
-					No trainings meet the criterias
+					No trainings meet the criteria
 				</Typography>
 			)}
 			<GridList items={data?.trainings}>

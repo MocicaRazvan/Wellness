@@ -85,7 +85,7 @@ const AllPosts = () => {
 					fontWeight="bold"
 					textAlign="center"
 					color={theme.palette.secondary[300]}>
-					No posts meet the criterias
+					No posts meet the criteria
 				</Typography>
 			)}
 			<GridList items={data?.posts}>

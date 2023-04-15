@@ -266,7 +266,7 @@ const AllPostsAdmin = () => {
 					fontWeight="bold"
 					textAlign="center"
 					color={palette.secondary[300]}>
-					No posts meet the criterias
+					No posts meet the criteria
 				</Typography>
 			)}
 			<Box
