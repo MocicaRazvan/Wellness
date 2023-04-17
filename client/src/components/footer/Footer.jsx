@@ -60,7 +60,7 @@ const Footer = () => {
 								fontSize: "30px",
 								color: theme.palette.secondary[300],
 								cursor: "pointer",
-								"& :hover": { color: theme.palette.background.alt },
+								"& :hover": { color: theme.palette.background.paper },
 							}}
 							onClick={() => {
 								window.open("https://www.facebook.com/", "_blank");
@@ -71,7 +71,7 @@ const Footer = () => {
 								fontSize: "30px",
 								color: theme.palette.secondary[300],
 								cursor: "pointer",
-								"& :hover": { color: theme.palette.background.alt },
+								"& :hover": { color: theme.palette.background.paper },
 							}}
 							onClick={() => {
 								window.open("https://www.instagram.com/", "_blank");
@@ -82,7 +82,7 @@ const Footer = () => {
 								fontSize: "30px",
 								color: theme.palette.secondary[300],
 								cursor: "pointer",
-								"& :hover": { color: theme.palette.background.alt },
+								"& :hover": { color: theme.palette.background.paper },
 							}}
 							onClick={() => {
 								window.open("https://www.twitter.com/", "_blank");
