@@ -67,7 +67,7 @@ exports.updateUser = async (req, res) => {
 				user?.image?.public_id,
 			);
 		}
-		console.log(destroyRespone);
+		// console.log(destroyRespone);
 
 		if (destroyRespone) {
 			const uplodRes = await cloudinary.uploader.upload(image, {
@@ -200,7 +200,7 @@ exports.getAdminRelativeStats = async (req, res) => {
 		},
 		{ $match: { month: prevMonth } },
 	]);
-	console.log({ users1, users2 });
+	// console.log({ users1, users2 });
 	const relativeUsers =
 		users1.length > 0
 			? (users2.length - users1.length) / users1.length
@@ -293,7 +293,7 @@ exports.getAllCountsAdmin = async (req, res) => {
 
 exports.getSingleUser = async (req, res) => {
 	const user = await User.findById(req.user._id).lean();
-	console.log(user);
+	// console.log(user);
 	return res.status(200).json({ user, message: "User retrived" });
 };
 

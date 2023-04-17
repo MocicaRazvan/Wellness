@@ -40,7 +40,7 @@ const UsersPosts = () => {
 			id: user?.id,
 			notApproved,
 		} || "",
-		{ refetchOnMountOrArgChange: true, refetchOnFocus: true },
+		{ refetchOnMountOrArgChange: 60, refetchOnFocus: true },
 	);
 	useEffect(() => {
 		if (data) {
@@ -100,9 +100,7 @@ const UsersPosts = () => {
 						onClick={() => setNotApproved((prev) => !prev)}
 						variant="outlined"
 						startIcon={
-							notApproved ? (
-								<CheckCircleOutlineRoundedIcon />
-							) : (
+							notApproved ? null : ( // <CheckCircleOutlineRoundedIcon />
 								<DoNotDisturbOnOutlinedIcon />
 							)
 						}>

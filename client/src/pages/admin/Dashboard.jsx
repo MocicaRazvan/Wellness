@@ -23,16 +23,19 @@ import StatBox from "../../components/admin/StatBox";
 import OverviewChart from "../../components/admin/OverviewChart";
 import UsersDataGrid from "../../components/admin/UsersDataGrid";
 import BreakdownChart from "../../components/admin/BreakdownChart";
+import { useOutletContext } from "react-router-dom";
 
 const Dashboard = () => {
 	const theme = useTheme();
 	const isNonMediumScreens = useMediaQuery("(min-width: 1250px)");
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
 	const { data: relativeStats, isLoading: isStatsLoading } =
 		useGetAdminRelativeStatsQuery(null, { refetchOnFocus: true });
 	const { data: counts, isLoading: isCountsLoading } = useGetAllCountAdminQuery(
 		null,
 		{ refetchOnFocus: true },
 	);
+	const isSideBarOpen = useOutletContext();
 	if ([!relativeStats, !counts, isStatsLoading, isCountsLoading].every(Boolean))
 		return (
 			<CircularProgress
@@ -42,8 +45,10 @@ const Dashboard = () => {
 			/>
 		);
 
+	console.log({ isSideBarOpen });
+
 	return (
-		<Box m="1.5rem 2.5rem">
+		<Box m="1.5rem 2.5rem" pb={2}>
 			<FlexBetween>
 				<Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 				{/* <Box>
@@ -62,7 +67,8 @@ const Dashboard = () => {
 			</FlexBetween>
 			<Box
 				mt="20px"
-				display="grid"
+				// display="grid"
+				display={!isNonSmallScreens && isSideBarOpen ? "none" : "grid"}
 				gridTemplateColumns="repeat(12, 1fr)"
 				gridAutoRows="160px"
 				gap="20px"
@@ -122,7 +128,11 @@ const Dashboard = () => {
 					}
 				/>
 				{/* row 2 */}
-				<Box gridColumn="span 8" gridRow="span 3">
+				<Box
+					gridColumn="span 8"
+					gridRow="span 3"
+					// overflow="hidden"
+					display={!isNonSmallScreens && isSideBarOpen ? "none" : "block"}>
 					<UsersDataGrid height="100%" />
 				</Box>
 				<Box
@@ -130,11 +140,15 @@ const Dashboard = () => {
 					gridRow="span 3"
 					bgcolor={theme.palette.background.alt}
 					p="1.5rem"
+					display={!isNonSmallScreens && isSideBarOpen ? "none" : "block"}
+					overflowY="hidden"
 					borderRadius="0.55rem">
 					<Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
 						Numbers of elements
 					</Typography>
-					<BreakdownChart isDashboard={true} />
+					<Box overflow="hidden">
+						<BreakdownChart isDashboard={true} />
+					</Box>
 					<Typography
 						p="0 0.6rem"
 						fontSize="0.8rem"

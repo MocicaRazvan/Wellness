@@ -25,12 +25,14 @@ const AllOrders = () => {
 		{
 			field: "id",
 			headerName: "ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 		},
 		{
 			field: "_id",
 			headerName: "User id",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 			renderCell: ({
 				row: {
 					user: { _id },
@@ -40,14 +42,16 @@ const AllOrders = () => {
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 0.7,
+			// flex: 0.7,
+			width: 150,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "deliveryStatus",
 			headerName: "DeliveryStatus",
-			flex: 0.5,
+			// flex: 0.5,
+			width: 110,
 			renderCell: ({ row: { deliveryStatus: dS } }) => (
 				<div>
 					{dS === "pending" ? (
@@ -65,18 +69,21 @@ const AllOrders = () => {
 		{
 			field: "paymentStatus",
 			headerName: "PaymentStatus",
-			flex: 0.4,
+			// flex: 0.4,
+			width: 110,
 		},
 		{
 			field: "total",
 			headerName: "Total",
-			flex: 0.5,
-			renderCell: ({ row: { total } }) => `$${total}`,
+			// flex: 0.5,
+			width: 110,
+			renderCell: ({ row: { total } }) => `$${total / 100}`,
 		},
 		{
 			field: "phone",
 			headerName: "Phone",
-			flex: 0.5,
+			// flex: 0.5,
+			width: 110,
 			renderCell: ({
 				row: {
 					shipping: { phone },
@@ -86,8 +93,9 @@ const AllOrders = () => {
 		{
 			field: "actions",
 			headerName: "Actions",
-			flex: 1,
-			renderCell: ({ row: { id, deliveryStatus: dS } }) => (
+			// flex: 1,
+			width: 110,
+			renderCell: ({ row: { id } }) => (
 				<Box display="flex" alignItems="center" gap={1}>
 					<Button
 						variant="outlined"
@@ -107,7 +115,7 @@ const AllOrders = () => {
 	];
 
 	return (
-		<Box m="1.5rem 2.5rem">
+		<Box m="1.5rem 2.5rem" pb={2}>
 			<Header title="Orders" subtitle="Manage orders" />
 			<CustomDataGrid
 				isLoading={isLoading || !data}

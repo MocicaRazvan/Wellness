@@ -12,6 +12,7 @@ import {
 } from "../../redux/trainings/trainingsApi";
 import Header from "../../components/reusable/Header";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
+import { format } from "date-fns";
 
 const BoughtTrainings = () => {
 	const [page, setPage] = useState(0);
@@ -54,32 +55,43 @@ const BoughtTrainings = () => {
 		{
 			field: "id",
 			headerName: "ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 		},
 		{
 			field: "title",
 			headerName: "Title",
-			flex: 1,
+			// flex: 1,
+			width: 150,
 		},
 		{
 			field: "user",
 			headerName: "user ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 1,
+			// flex: 1,
+			width: 120,
+			sortable: false,
+			renderCell: ({ row: { createdAt } }) =>
+				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "tags",
 			headerName: "Tags",
-			flex: 2,
+			// flex: 2,
+			width: 270,
 		},
 		{
 			field: "action",
 			headerName: "Actions",
-			flex: 2,
+			// flex: 2,
+			width: 280,
+			sortable: false,
+			filterable: false,
 			renderCell: (params) => {
 				return (
 					<Box

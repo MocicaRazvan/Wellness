@@ -50,24 +50,28 @@ const UserExercises = () => {
 		{
 			field: "id",
 			headerName: "ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 			sortable: false,
 		},
 		{
 			field: "title",
 			headerName: "Title",
-			flex: 1,
+			// flex: 1,
+			width: 170,
 		},
 		{
 			field: "user",
 			headerName: "user ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 			sortable: false,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 0.7,
+			// flex: 0.7,
+			width: 120,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
@@ -75,12 +79,14 @@ const UserExercises = () => {
 		{
 			field: "muscleGroups",
 			headerName: "MuscleGroups",
-			flex: 2,
+			// flex: 2,
+			width: 330,
 		},
 		{
 			field: "action",
 			headerName: "Actions",
-			flex: 2,
+			// flex: 2,
+			width: 350,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {

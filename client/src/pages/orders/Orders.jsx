@@ -55,13 +55,15 @@ const Orders = () => {
 		{
 			field: "id",
 			headerName: "ID",
-			flex: 1,
+			// flex: 1,
+			width: 240,
 			sortable: false,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 0.7,
+			// flex: 0.7,
+			width: 170,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
@@ -69,7 +71,8 @@ const Orders = () => {
 		{
 			field: "paymentStatus",
 			headerName: "Payment Status",
-			flex: 1,
+			// flex: 1,
+			width: 170,
 			renderCell: ({ row: { paymentStatus } }) => (
 				<Typography variant="h6" color={theme.palette.secondary[300]}>
 					{paymentStatus}
@@ -79,13 +82,15 @@ const Orders = () => {
 		{
 			field: "subTotal",
 			headerName: "Sub Total",
-			flex: 1,
+			// flex: 1,
+			width: 170,
 			renderCell: ({ row: { subTotal } }) => `$${subTotal / 100}`,
 		},
 		{
 			field: "deliveryStatus",
 			headerName: "Delivery Status",
-			flex: 0.5,
+			// flex: 0.5,
+			width: 250,
 			sortable: false,
 			renderCell: ({ row: { deliveryStatus: dS } }) => (
 				<div>
@@ -104,7 +109,8 @@ const Orders = () => {
 		{
 			field: "actions",
 			headerName: "Actions",
-			flex: 1,
+			// flex: 1,
+			width: 200,
 			sortable: false,
 			filterable: false,
 			renderCell: ({ row: { id, deliveryStatus: dS } }) => (

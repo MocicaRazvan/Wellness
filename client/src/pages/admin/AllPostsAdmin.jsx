@@ -255,9 +255,8 @@ const AllPostsAdmin = () => {
 					onClick={() => setNotApproved((prev) => !prev)}
 					variant="outlined"
 					startIcon={
-						notApproved ? (
-							<CheckCircleOutlineRoundedIcon />
-						) : (
+						notApproved ? // <CheckCircleOutlineRoundedIcon />
+						null : (
 							<DoNotDisturbOnOutlinedIcon />
 						)
 					}>

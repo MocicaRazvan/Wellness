@@ -548,7 +548,7 @@ const Navigation = () => {
 				position: "fixed",
 				width: "100%",
 				top: 0,
-				zIndex: 10,
+				zIndex: 20,
 				bgcolor: theme.palette.background.default,
 			}}>
 			<StyledAppBar

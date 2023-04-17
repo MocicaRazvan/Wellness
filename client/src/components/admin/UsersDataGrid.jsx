@@ -45,38 +45,45 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 		{
 			field: "id",
 			headerName: "ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 			sortable: false,
 		},
 		{
 			field: "username",
 			headerName: "Username",
-			flex: 0.5,
+			// flex: 0.5,
+			width: 110,
 		},
 		{
 			field: "email",
 			headerName: "Email",
-			flex: 0.9,
+			// flex: 0.9,
+			width: 220,
 		},
 		{
 			field: "phoneNumber",
 			headerName: "Phone Number",
-			flex: 0.5,
+			// flex: 0.5,
+			width: 110,
 		},
 		{
 			field: "location",
 			headerName: "Location",
-			flex: 0.4,
+			// flex: 0.4,
+			width: 110,
 		},
 		{
 			field: "occupation",
 			headerName: "Occupation",
-			flex: 0.5,
+			// flex: 0.5,
+			width: 110,
 		},
 		{
 			field: "role",
 			headerName: "Role",
-			flex: 0.6,
+			// flex: 0.6,
+			width: 130,
 			renderCell: ({ row: { role, id } }) => (
 				<Box>
 					{role === "user" ? (
@@ -100,7 +107,8 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 		{
 			field: "contact",
 			headerName: "Contact",
-			flex: 0.6,
+			// flex: 0.6,
+			width: 140,
 			sortable: false,
 			filterable: false,
 			renderCell: ({ row: { role, id } }) =>

@@ -61,19 +61,22 @@ const AdminTrainings = () => {
 		{
 			field: "id",
 			headerName: "ID",
-			flex: 1,
+			// flex: 1,
+			width: 220,
 			sortable: false,
 		},
 		{
 			field: "title",
 			headerName: "Title",
-			flex: 1,
+			// flex: 1,
+			width: 130,
 			sortable: false,
 		},
 		{
 			field: "user",
 			headerName: "Username",
-			flex: 1,
+			// flex: 1,
+			width: 130,
 			sortable: false,
 			renderCell: ({
 				row: {
@@ -84,7 +87,8 @@ const AdminTrainings = () => {
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
-			flex: 0.7,
+			// flex: 0.7,
+			width: 110,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
@@ -92,13 +96,22 @@ const AdminTrainings = () => {
 		{
 			field: "tags",
 			headerName: "Tags",
-			flex: 2,
+			// flex: 1.4,
+			width: 150,
 			sortable: false,
+		},
+		{
+			field: "price",
+			headerName: "Price",
+			// flex: 0.5,
+			width: 110,
+			renderCell: ({ row: { price } }) => `$${price}`,
 		},
 		{
 			field: "app",
 			headerName: "Approved",
-			flex: 1,
+			// flex: 1,
+			width: 150,
 			sortable: false,
 			renderCell: ({ row: { approved } }) => (
 				<Box display="flex" alignItems="center">
@@ -113,7 +126,8 @@ const AdminTrainings = () => {
 		{
 			field: "action",
 			headerName: "Actions",
-			flex: 2,
+			// flex: 2,
+			width: 250,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -197,7 +211,7 @@ const AdminTrainings = () => {
 	console.log({ data });
 
 	return (
-		<Box m="1.5rem 2.5rem">
+		<Box m="1.5rem 2.5rem" pb={2}>
 			<Header title="Trainings" subtitle="See the list of trainings." />
 			<UserAgreement
 				open={open}
