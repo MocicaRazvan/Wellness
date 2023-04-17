@@ -100,12 +100,21 @@ const Test = () => {
 				<Loading loading={loading} type="alert" />
 			</Box>
 			<Box
-				mt={10}
+				mt={5}
 				display="flex"
 				justifyContent="center"
 				alignItems="center"
 				width="100%">
-				<Box mt={6}>
+				<Box
+					mt={6}
+					sx={{
+						bgcolor: {
+							sm: theme.palette.background.default,
+							md: theme.palette.background.alt,
+						},
+						p: { sm: 0, md: 5 },
+						borderRadius: { sm: 0, md: 10 },
+					}}>
 					<Formik
 						onSubmit={handleFormSubmit}
 						initialValues={initialValues}

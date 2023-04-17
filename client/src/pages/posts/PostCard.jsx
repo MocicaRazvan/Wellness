@@ -53,7 +53,15 @@ const PostCard = ({ item, user }) => {
 				}}>
 				<CardActionArea
 					disableRipple
-					onClick={() => void navigate(`/posts/find/${item.id}`)}>
+					onClick={() => void navigate(`/posts/find/${item.id}`)}
+					sx={{
+						bgcolor: !item?.approved
+							? theme.palette.error[
+									theme.palette.mode
+									// === "dark" ? "light" : "dark"
+							  ]
+							: "initial",
+					}}>
 					<Box position="relative">
 						<CardMedia sx={{ height: 240 }} image={item.images[0].url} />
 						{!item?.approved && (
@@ -81,13 +89,13 @@ const PostCard = ({ item, user }) => {
 							gutterBottom
 							variant="h5"
 							component="h2"
-							color={theme.palette.secondary[200]}
+							color={theme.palette.secondary[300]}
 							fontWeight="600">
 							{item?.title}
 						</Typography>
 						<Typography
 							variant="body2"
-							color={theme.palette.secondary[200]}
+							color={theme.palette.secondary[300]}
 							component="p">
 							{item.body.replace(/<\/?[^>]+>/gi, " ").slice(0, 100) + "..."}
 						</Typography>
