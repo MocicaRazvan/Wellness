@@ -1,4 +1,10 @@
-import { Button, CircularProgress, Typography, useTheme } from "@mui/material";
+import {
+	Button,
+	CircularProgress,
+	Typography,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import { Box, styled } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,6 +27,7 @@ const Orders = () => {
 	const user = useSelector(selectCurrentUser);
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
 	const { data, isLoading } = useGetAllOrdersQuery(
 		{
 			userId: user?.id,
@@ -73,11 +80,8 @@ const Orders = () => {
 			headerName: "Payment Status",
 			// flex: 1,
 			width: 170,
-			renderCell: ({ row: { paymentStatus } }) => (
-				<Typography variant="h6" color={theme.palette.secondary[300]}>
-					{paymentStatus}
-				</Typography>
-			),
+			sortable: false,
+			renderCell: ({ row: { paymentStatus } }) => <Paid>{paymentStatus}</Paid>,
 		},
 		{
 			field: "subTotal",
@@ -90,7 +94,7 @@ const Orders = () => {
 			field: "deliveryStatus",
 			headerName: "Delivery Status",
 			// flex: 0.5,
-			width: 250,
+			width: 200,
 			sortable: false,
 			renderCell: ({ row: { deliveryStatus: dS } }) => (
 				<div>
@@ -110,7 +114,7 @@ const Orders = () => {
 			field: "actions",
 			headerName: "Actions",
 			// flex: 1,
-			width: 200,
+			width: 220,
 			sortable: false,
 			filterable: false,
 			renderCell: ({ row: { id, deliveryStatus: dS } }) => (
@@ -152,18 +156,27 @@ const Orders = () => {
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title="Your Orders" subtitle="Manage your orders" />
-			<CustomDataGrid
-				isLoading={isLoading || !data}
-				rows={data?.orders || []}
-				columns={columns}
-				rowCount={data?.total || 0}
-				page={page}
-				setPage={setPage}
-				setPageSize={setPageSize}
-				setSort={setSort}
-				pageSize={pageSize}
-				toolbar={{ searchInput, setSearchInput, setSearch }}
-			/>
+			<Box
+				maxWidth={1700}
+				display="flex"
+				justifyContent="center"
+				overflow="hidden"
+				m="0 auto">
+				<Box flex={isNonMobileScreens ? 0.83 : 1} maxWidth={1200}>
+					<CustomDataGrid
+						isLoading={isLoading || !data}
+						rows={data?.orders || []}
+						columns={columns}
+						rowCount={data?.total || 0}
+						page={page}
+						setPage={setPage}
+						setPageSize={setPageSize}
+						setSort={setSort}
+						pageSize={pageSize}
+						toolbar={{ searchInput, setSearchInput, setSearch }}
+					/>
+				</Box>
+			</Box>
 		</Box>
 	);
 };
@@ -183,7 +196,16 @@ const Dispatched = styled("div")(({ theme }) => ({
 }));
 
 const Delivered = styled("div")(({ theme }) => ({
-	color: theme.palette.success.dark,
+	color:
+		theme.palette.success[theme.palette.mode === "dark" ? "light" : "dark"],
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	opacity: "0.9",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
+const Paid = styled("div")(({ theme }) => ({
+	color: theme.palette.info[theme.palette.mode === "dark" ? "light" : "dark"],
 	backgroundColor: " rgba(253, 181, 40, 0.12)",
 	opacity: "0.9",
 	padding: " 3px 5px",

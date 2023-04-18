@@ -1,13 +1,16 @@
-import { Box, CircularProgress, useTheme } from "@mui/material";
+import { Box, CircularProgress, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import { useGetOrdersLocationQuery } from "../../redux/orders/orderApi";
 import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoData } from "../../utils/geoData/geoData";
 import Header from "../../components/reusable/Header";
+import { useOutletContext } from "react-router-dom";
 
 const Geography = () => {
 	const { data, isLoading } = useGetOrdersLocationQuery();
 	const theme = useTheme();
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
+	const isSideBarOpen = useOutletContext();
 
 	if (isLoading || !data)
 		return (
@@ -19,12 +22,15 @@ const Geography = () => {
 		);
 
 	return (
-		<Box m="1.5rem 2.5rem">
+		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
 			<Header
+				small={!isNonSmallScreens && isSideBarOpen ? "true" : "false"}
 				title="GEOGRAPHY"
 				subtitle="Find where orders shipping addresses are"
 			/>
 			<Box
+				sx={{ overflowY: "hidden" }}
+				flex={1}
 				mt="40px"
 				height="75vh"
 				bgcolor={

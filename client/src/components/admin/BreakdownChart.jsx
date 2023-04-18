@@ -18,8 +18,8 @@ const BreakdownChart = ({ isDashboard = false }) => {
 		);
 
 	const colors = [
-		theme.palette.secondary[500],
-		theme.palette.secondary[300],
+		theme.palette.secondary[200],
+		theme.palette.secondary[400],
 		theme.palette.secondary[300],
 		theme.palette.secondary[500],
 	];

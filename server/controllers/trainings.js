@@ -87,8 +87,8 @@ exports.getAllUserTrainings = async (req, res) => {
 		})
 			.sort(sortFormatted)
 			.skip(page * pageSize)
-			.limit(pageSize);
-		console.log(trainings.length);
+			.limit(pageSize)
+			.lean();
 		const total = await Trainings.countDocuments({
 			user: userId,
 			title: { $regex: search, $options: "i" },
@@ -108,7 +108,8 @@ exports.getAllUserTrainings = async (req, res) => {
 		})
 			.sort(sortFormatted)
 			.skip(page * pageSize)
-			.limit(pageSize);
+			.limit(pageSize)
+			.lean();
 		const total = await Trainings.countDocuments({
 			title: { $regex: search, $options: "i" },
 		});
@@ -119,26 +120,22 @@ exports.getAllUserTrainings = async (req, res) => {
 		});
 	}
 };
+//get: /trainings
 exports.getAllTrainings = async (req, res) => {
 	const q = req.query;
 	let query;
 
-	const page = parseInt(q.page) || 1;
+	let page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
-	// const total = await Trainings.countDocuments();
+	// let total =  Trainings.countDocuments();
 	let total;
 	if (req.query?.admin) {
 		query = Trainings.find().lean();
-		total = await Trainings.countDocuments();
+		total = Trainings.countDocuments();
 	} else {
-		query = Trainings.find({ approved: true }).lean();
-		total = await Trainings.countDocuments({ approved: true });
-	}
-	const pages = Math.ceil(total / pageSize);
-
-	if (page > pages) {
-		return res.status(400).json({ message: "No page found" });
+		query = Trainings.find({ approved: true, display: true }).lean();
+		total = Trainings.countDocuments({ approved: true, display: true });
 	}
 
 	if (q.sort) {
@@ -163,16 +160,27 @@ exports.getAllTrainings = async (req, res) => {
 		query = query.find({
 			title: { $regex: q.search, $options: "i" },
 		});
+		total = total.countDocuments({
+			title: { $regex: q.search, $options: "i" },
+		});
 	}
 	if (q?.tags && q?.tags?.length > 0) {
 		const tags = q.tags.split(",");
 		query = query.find({ tags: { $in: tags } });
+		total = total.countDocuments({ tags: { $in: tags } });
 	}
 
 	const trainings = await query
-		.populate("user", "username")
+		.populate("user", "username image")
 		.skip(skip)
-		.limit(pageSize);
+		.limit(pageSize)
+		.lean();
+	total = await total;
+	const pages = Math.ceil(total / pageSize);
+
+	if (page > pages) {
+		page = pages;
+	}
 
 	return res.status(200).json({
 		message: "Training delivered successfully",
@@ -479,19 +487,45 @@ exports.approveTrianing = async (req, res) => {
 		_id: mongoose.Types.ObjectId(trainingId),
 	});
 	if (count == 0) {
+		return res
+			.status(400)
+			.json({ message: `No training with id ${trainingId} exsists` });
+	}
+	const training = await Trainings.findById(trainingId).select(
+		"approved display",
+	);
+	training.approved = !training.approved;
+	if (training.approved === false) {
+		training.display = false;
+	}
+	await training.save();
+	res.status(201).json({
+		message: `Training with id ${trainingId} approved`,
+	});
+};
+//put /trainings/display
+exports.displayTraining = async (req, res) => {
+	const { trainingId } = req.body;
+	const count = await Trainings.countDocuments({
+		_id: mongoose.Types.ObjectId(trainingId),
+	});
+	if (count == 0) {
 		res
 			.status(400)
 			.json({ message: `No training with id ${trainingId} exsists` });
 	}
-	const savedTraining = await Trainings.findByIdAndUpdate(
-		trainingId,
-		{
-			approved: true,
-		},
-		{ new: true },
-	);
+	const training = await Trainings.findById(trainingId).select("display user");
+	if (
+		req.user.role !== "admin" &&
+		req.user._id.toString() !== training.user.toString()
+	) {
+		return res.status(401).json({ message: "You are not authorized" });
+	}
+
+	training.display = !training.display;
+
+	await training.save();
 	res.status(201).json({
-		training: savedTraining,
-		message: `Training with id ${trainingId} approved`,
+		message: `Training with id ${trainingId} display is ${training.display}`,
 	});
 };

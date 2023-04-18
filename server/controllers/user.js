@@ -320,7 +320,7 @@ exports.sendEmailAdmin = async (req, res) => {
 		await sendEmail({
 			to: req.body.email,
 			subject: req.body.subject,
-			text: makeAdmin(req.body.body),
+			text: makeAdmin(req.body.body, req.body.subject),
 		});
 		res.status(201).json({ message: "Email sent" });
 	} catch (error) {

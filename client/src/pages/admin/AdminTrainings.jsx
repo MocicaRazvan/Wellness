@@ -22,7 +22,7 @@ const AdminTrainings = () => {
 	const [open, setOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
 	const [approveOpen, setApproveOpen] = useState(false);
-	const [approvedId, setApprovedId] = useState(null);
+	const [approvedId, setApprovedId] = useState({ id: null, state: false });
 	const user = useSelector(selectCurrentUser);
 	const { palette } = useTheme();
 
@@ -78,6 +78,7 @@ const AdminTrainings = () => {
 			// flex: 1,
 			width: 130,
 			sortable: false,
+			filterable: false,
 			renderCell: ({
 				row: {
 					user: { username },
@@ -88,7 +89,7 @@ const AdminTrainings = () => {
 			field: "createdAt",
 			headerName: "CreatedAt",
 			// flex: 0.7,
-			width: 110,
+			width: 100,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
@@ -97,28 +98,47 @@ const AdminTrainings = () => {
 			field: "tags",
 			headerName: "Tags",
 			// flex: 1.4,
-			width: 150,
+			width: 250,
 			sortable: false,
+			renderCell: ({ row: { tags } }) =>
+				tags.reduce((acc, cur) => (acc += `${cur} `), ``),
 		},
 		{
 			field: "price",
 			headerName: "Price",
 			// flex: 0.5,
-			width: 60,
+			width: 70,
+			sortable: false,
 			renderCell: ({ row: { price } }) => `$${price}`,
+		},
+		{
+			field: "disp",
+			headerName: "Displayed",
+			// flex: 1,
+			width: 140,
+			sortable: false,
+			renderCell: ({ row: { display } }) => (
+				<Box display="flex" alignItems="center">
+					{display ? (
+						<Approved color={"info"}>Displayed</Approved>
+					) : (
+						<NotApproved color={"warning"}>Not Displayed</NotApproved>
+					)}
+				</Box>
+			),
 		},
 		{
 			field: "app",
 			headerName: "Approved",
 			// flex: 1,
-			width: 150,
+			width: 120,
 			sortable: false,
 			renderCell: ({ row: { approved } }) => (
 				<Box display="flex" alignItems="center">
 					{approved ? (
-						<Approved>Approved</Approved>
+						<Approved color={"success"}>Approved</Approved>
 					) : (
-						<NotApproved>Not Approved</NotApproved>
+						<NotApproved color={"error"}>Not Approved</NotApproved>
 					)}
 				</Box>
 			),
@@ -127,7 +147,7 @@ const AdminTrainings = () => {
 			field: "action",
 			headerName: "Actions",
 			// flex: 2,
-			width: 250,
+			width: 255,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -158,7 +178,7 @@ const AdminTrainings = () => {
 						</Link>
 						<Tooltip
 							title={params.row?.occurrences > 0 ? "Bought" : ""}
-							placement="right"
+							placement="top"
 							arrow>
 							<Box>
 								<Button
@@ -181,37 +201,41 @@ const AdminTrainings = () => {
 								</Button>
 							</Box>
 						</Tooltip>
-						{!params.row?.approved && (
-							<Box>
-								<Button
-									variant="contained"
-									size="small"
-									sx={{
-										color: palette.secondary[300],
-										bgcolor: palette.success.dark,
-										"&:hover": {
-											bgcolor: palette.secondary[300],
-											color: palette.success.dark,
-										},
-									}}
-									onClick={() => {
-										setApprovedId(params.row.id);
-										setApproveOpen(true);
-									}}>
-									Apporve
-								</Button>
-							</Box>
-						)}
+						<Box>
+							<Button
+								variant="contained"
+								size="small"
+								sx={{
+									width: 82,
+									color: palette.secondary[400],
+									bgcolor: !params.row.approved
+										? palette.success.dark
+										: palette.warning.dark,
+									"&:hover": {
+										bgcolor: palette.secondary[400],
+										color: !params.row.approved
+											? palette.success.dark
+											: palette.warning.dark,
+									},
+								}}
+								onClick={() => {
+									setApprovedId({
+										id: params.row.id,
+										state: !params.row.approved,
+									});
+									setApproveOpen(true);
+								}}>
+								{!params.row.approved ? "Approve" : "Disaprove"}
+							</Button>
+						</Box>
 					</Box>
 				);
 			},
 		},
 	];
 
-	console.log({ data });
-
 	return (
-		<Box m="1.5rem 2.5rem" pb={2}>
+		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
 			<Header title="Trainings" subtitle="See the list of trainings." />
 			<UserAgreement
 				open={open}
@@ -225,37 +249,49 @@ const AdminTrainings = () => {
 			<UserAgreement
 				open={approveOpen}
 				setOpen={setApproveOpen}
-				title={"Confirm approve"}
-				text={
-					"Are you sure you want to approve this training? Be sure you checked it!"
-				}
-				handleAgree={async () => await handleApproveTraining(approvedId)}
+				title={`Confirm ${approvedId.state ? "approve" : "disapprove"}`}
+				text={`Are you sure you want to ${
+					approvedId.state ? "approve" : "disapprove"
+				} this training? Be sure you checked it!`}
+				handleAgree={async () => await handleApproveTraining(approvedId.id)}
 			/>
-			<CustomDataGrid
-				isLoading={isLoading || !data}
-				rows={data?.trainings || []}
-				columns={columns}
-				rowCount={data?.count || 0}
-				page={page}
-				setPage={setPage}
-				setPageSize={setPageSize}
-				setSort={setSort}
-				pageSize={pageSize}
-				toolbar={{ searchInput, setSearchInput, setSearch }}
-			/>
+			<Box
+				maxWidth={1700}
+				display="flex"
+				justifyContent="center"
+				overflow="hidden"
+				m="0 auto">
+				<Box flex={1} maxWidth={1450}>
+					<CustomDataGrid
+						isLoading={isLoading || !data}
+						rows={data?.trainings || []}
+						columns={columns}
+						rowCount={data?.count || 0}
+						page={page}
+						setPage={setPage}
+						setPageSize={setPageSize}
+						setSort={setSort}
+						pageSize={pageSize}
+						toolbar={{ searchInput, setSearchInput, setSearch }}
+					/>
+				</Box>
+			</Box>
 		</Box>
 	);
 };
-const NotApproved = styled("div")(({ theme }) => ({
-	color: theme.palette.error[theme.palette.mode === "dark" ? "light" : "dark"],
+const NotApproved = styled("div", {
+	shouldForwardProp: (prop) => prop !== "color",
+})(({ theme, color }) => ({
+	color: theme.palette[color][theme.palette.mode === "dark" ? "light" : "dark"],
 	backgroundColor: " rgba(253, 181, 40, 0.12)",
 	padding: " 3px 5px",
 	borderRadius: "3px",
 	fontSize: 14,
 }));
-const Approved = styled("div")(({ theme }) => ({
-	color:
-		theme.palette.success[theme.palette.mode === "dark" ? "light" : "dark"],
+const Approved = styled("div", {
+	shouldForwardProp: (prop) => prop !== "color",
+})(({ theme, color }) => ({
+	color: theme.palette[color][theme.palette.mode === "dark" ? "light" : "dark"],
 	backgroundColor: " rgba(253, 181, 40, 0.12)",
 	padding: " 3px 5px",
 	borderRadius: "3px",

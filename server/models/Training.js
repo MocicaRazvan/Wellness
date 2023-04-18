@@ -43,6 +43,10 @@ const trainingSchema = new mongoose.Schema(
 			type: Number,
 			default: 0,
 		},
+		display: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true },
 );

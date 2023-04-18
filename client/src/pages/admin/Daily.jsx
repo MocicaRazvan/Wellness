@@ -50,7 +50,7 @@ const Daily = () => {
 			data: [],
 		};
 		const totalUnitsLine = {
-			id: "totalUnits",
+			id: "10*totalUnits",
 			color: theme.palette.secondary[600],
 			data: [],
 		};
@@ -66,7 +66,7 @@ const Daily = () => {
 				];
 				totalUnitsLine.data = [
 					...totalUnitsLine.data,
-					{ x: splitDate, y: totalUnits },
+					{ x: splitDate, y: totalUnits * 10 },
 				];
 			}
 		});
@@ -194,7 +194,7 @@ const Daily = () => {
 							translateY: 0,
 							itemsSpacing: 0,
 							itemDirection: "left-to-right",
-							itemWidth: 80,
+							itemWidth: 90,
 							itemHeight: 20,
 							itemOpacity: 0.75,
 							symbolSize: 12,

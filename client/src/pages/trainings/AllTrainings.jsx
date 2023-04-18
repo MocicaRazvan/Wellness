@@ -41,6 +41,7 @@ const AllTrainings = () => {
 		if (data) {
 			setPage(data?.page);
 			setPages(data?.pages);
+			console.log({ data });
 		}
 	}, [data]);
 

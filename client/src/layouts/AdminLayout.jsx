@@ -43,7 +43,7 @@ const AdminLayout = () => {
 						setIsSideBarOpen={setIsSideBarOpen}
 					/>
 				</Box>
-				<Box sx={{ transition: "width 1.5s" }}>
+				<Box sx={{ transition: "width 1.5s ease" }}>
 					<Outlet context={isSideBarOpen} />
 				</Box>
 			</Box>

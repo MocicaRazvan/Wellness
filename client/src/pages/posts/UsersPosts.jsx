@@ -16,7 +16,7 @@ import GridList from "../../components/reusable/GridList";
 import CustomPagination from "../../components/reusable/CustomPagination";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
-import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
 
 const UsersPosts = () => {
 	const [sorting, setSorting] = useState({});
@@ -26,8 +26,9 @@ const UsersPosts = () => {
 	const [pages, setPages] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(12);
 	const [notApproved, setNotApproved] = useState(false);
+	const [notDisplayed, setNotDisplayed] = useState(false);
 	const theme = useTheme();
-	const isNonMobile = useMediaQuery("(min-width:600px)");
+	const isNonMobile = useMediaQuery("(min-width:750px)");
 
 	const user = useSelector(selectCurrentUser);
 	const { data, isLoading } = useGetPostsByUserQuery(
@@ -39,6 +40,7 @@ const UsersPosts = () => {
 			limit: rowsPerPage,
 			id: user?.id,
 			notApproved,
+			notDisplayed,
 		} || "",
 		{ refetchOnMountOrArgChange: 60, refetchOnFocus: true },
 	);
@@ -67,8 +69,10 @@ const UsersPosts = () => {
 				fontWeight="bold"
 				textAlign="center"
 				fontSize={!isNonMobile && "25px"}>
-				{!notApproved
-					? "Look at all your posts"
+				{notApproved
+					? "Look at your unapproved posts"
+					: notDisplayed
+					? "Look at your undisplayed posts"
 					: "Look at your unapproved posts"}
 			</Typography>
 			<Box
@@ -86,25 +90,56 @@ const UsersPosts = () => {
 						setTags={setTags}
 					/>
 				</Box>
-				<Box flex={0.25}>
+				<Box
+					flex={0.5}
+					display="flex"
+					alignItems="center"
+					gap={2}
+					justifyContent="center">
+					{user?.role !== "admin" && (
+						<Button
+							sx={{
+								bgcolor: theme.palette.secondary[300],
+								color: theme.palette.background.default,
+								width: 180,
+								"&:hover": {
+									color: theme.palette.secondary[300],
+									bgcolor: theme.palette.background.default,
+								},
+							}}
+							onClick={() => setNotApproved((prev) => !prev)}
+							variant="outlined"
+							startIcon={
+								notApproved ? null : ( // <CheckCircleOutlineRoundedIcon />
+									<DoNotDisturbOnOutlinedIcon />
+								)
+							}>
+							{notApproved ? "All By Approved" : "Not Approved "}
+						</Button>
+					)}
 					<Button
 						sx={{
 							bgcolor: theme.palette.secondary[300],
 							color: theme.palette.background.default,
-							width: 150,
+							width: 180,
 							"&:hover": {
 								color: theme.palette.secondary[300],
 								bgcolor: theme.palette.background.default,
 							},
+							"&:disabled": {
+								bgcolor: theme.palette.grey[500],
+								color: theme.palette.secondary[300],
+							},
 						}}
-						onClick={() => setNotApproved((prev) => !prev)}
+						onClick={() => setNotDisplayed((prev) => !prev)}
 						variant="outlined"
+						disabled={notApproved}
 						startIcon={
-							notApproved ? null : ( // <CheckCircleOutlineRoundedIcon />
-								<DoNotDisturbOnOutlinedIcon />
+							notDisplayed ? null : ( // <CheckCircleOutlineRoundedIcon />
+								<BrowserNotSupportedIcon />
 							)
 						}>
-						{notApproved ? "All Posts" : "Not Approved "}
+						{notDisplayed ? "All By Displayed" : "Not Displayed "}
 					</Button>
 				</Box>
 			</Box>

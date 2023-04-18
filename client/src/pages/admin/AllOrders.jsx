@@ -5,6 +5,8 @@ import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import { useGetAllOrdersQuery } from "../../redux/orders/orderApi";
 import { format } from "date-fns";
+import { useMediaQuery } from "@mui/material";
+import { useOutletContext } from "react-router-dom";
 
 const AllOrders = () => {
 	const [page, setPage] = useState(0);
@@ -20,6 +22,9 @@ const AllOrders = () => {
 		sort: JSON.stringify(sort),
 		search,
 	});
+	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
+	const isSideBarOpen = useOutletContext();
+	const isSmall = isNonMobileScreens && !isSideBarOpen;
 
 	const columns = [
 		{
@@ -30,7 +35,7 @@ const AllOrders = () => {
 		},
 		{
 			field: "_id",
-			headerName: "User id",
+			headerName: "UserID",
 			// flex: 1,
 			width: 220,
 			renderCell: ({
@@ -71,6 +76,8 @@ const AllOrders = () => {
 			headerName: "PaymentStatus",
 			// flex: 0.4,
 			width: 110,
+			sortable: false,
+			renderCell: ({ row: { paymentStatus } }) => <Paid>{paymentStatus}</Paid>,
 		},
 		{
 			field: "total",
@@ -83,7 +90,7 @@ const AllOrders = () => {
 			field: "phone",
 			headerName: "Phone",
 			// flex: 0.5,
-			width: 110,
+			width: 130,
 			renderCell: ({
 				row: {
 					shipping: { phone },
@@ -95,6 +102,8 @@ const AllOrders = () => {
 			headerName: "Actions",
 			// flex: 1,
 			width: 110,
+			sortable: false,
+			filterable: false,
 			renderCell: ({ row: { id } }) => (
 				<Box display="flex" alignItems="center" gap={1}>
 					<Button
@@ -115,20 +124,29 @@ const AllOrders = () => {
 	];
 
 	return (
-		<Box m="1.5rem 2.5rem" pb={2}>
+		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
 			<Header title="Orders" subtitle="Manage orders" />
-			<CustomDataGrid
-				isLoading={isLoading || !data}
-				rows={data?.orders || []}
-				columns={columns}
-				rowCount={data?.total || 0}
-				page={page}
-				setPage={setPage}
-				setPageSize={setPageSize}
-				setSort={setSort}
-				pageSize={pageSize}
-				toolbar={{ searchInput, setSearchInput, setSearch }}
-			/>
+			<Box
+				maxWidth={1700}
+				display="flex"
+				justifyContent="center"
+				overflow="hidden"
+				m="0 auto">
+				<Box flex={isSmall ? 0.85 : 1} maxWidth={1200}>
+					<CustomDataGrid
+						isLoading={isLoading || !data}
+						rows={data?.orders || []}
+						columns={columns}
+						rowCount={data?.total || 0}
+						page={page}
+						setPage={setPage}
+						setPageSize={setPageSize}
+						setSort={setSort}
+						pageSize={pageSize}
+						toolbar={{ searchInput, setSearchInput, setSearch }}
+					/>
+				</Box>
+			</Box>
 		</Box>
 	);
 };
@@ -149,7 +167,16 @@ const Dispatched = styled("div")(({ theme }) => ({
 }));
 
 const Delivered = styled("div")(({ theme }) => ({
-	color: theme.palette.success.dark,
+	color:
+		theme.palette.success[theme.palette.mode === "dark" ? "light" : "dark"],
+	backgroundColor: " rgba(253, 181, 40, 0.12)",
+	opacity: "0.9",
+	padding: " 3px 5px",
+	borderRadius: "3px",
+	fontSize: 14,
+}));
+const Paid = styled("div")(({ theme }) => ({
+	color: theme.palette.info[theme.palette.mode === "dark" ? "light" : "dark"],
 	backgroundColor: " rgba(253, 181, 40, 0.12)",
 	opacity: "0.9",
 	padding: " 3px 5px",

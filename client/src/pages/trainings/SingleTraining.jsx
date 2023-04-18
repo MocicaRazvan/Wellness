@@ -31,6 +31,7 @@ const SingleTraining = () => {
 		training?.user === id ||
 		user?.role === "admin";
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
+	const notShow = !training?.approved || !training?.display;
 
 	if (isLoading || !training)
 		return (
@@ -40,11 +41,7 @@ const SingleTraining = () => {
 				thickness={7}
 			/>
 		);
-	if (
-		!training?.approved &&
-		user?.id !== training?.user &&
-		user?.role !== "admin"
-	) {
+	if (notShow && user?.id !== training?.user && user?.role !== "admin") {
 		navigate("/", { replace: true });
 	}
 

@@ -89,7 +89,7 @@ const Test = () => {
 		}
 	};
 	return (
-		<Box m="1.5rem 2.5rem">
+		<Box m="1.5rem 2.5rem" pb={2}>
 			<Header title="Email" subtitle="Write on behalf of the company." />
 			<Box
 				sx={{
@@ -100,7 +100,7 @@ const Test = () => {
 				<Loading loading={loading} type="alert" />
 			</Box>
 			<Box
-				mt={5}
+				mt={1}
 				display="flex"
 				justifyContent="center"
 				alignItems="center"

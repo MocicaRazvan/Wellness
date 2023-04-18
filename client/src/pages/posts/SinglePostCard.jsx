@@ -12,6 +12,7 @@ const SinglePostCard = ({ post }) => {
 	const theme = useTheme();
 	const [actionPost] = usePostActionsMutation();
 	const navigate = useNavigate();
+	const notShow = !post?.approved || !post?.display;
 	const handleAction = async (id, action) => {
 		try {
 			await actionPost({ id, action }).unwrap();
@@ -20,11 +21,7 @@ const SinglePostCard = ({ post }) => {
 		}
 	};
 	const user = useSelector(selectCurrentUser);
-	if (
-		!post?.approved &&
-		user?.id !== post?.user?._id &&
-		user?.role !== "admin"
-	) {
+	if (notShow && user?.id !== post?.user?._id && user?.role !== "admin") {
 		navigate("/");
 	}
 

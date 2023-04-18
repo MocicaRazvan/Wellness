@@ -25,7 +25,7 @@ const PopupWrapper = () => {
 		{ skip, refetchOnMountOrArgChange: true, refetchOnReconnect: true },
 	);
 
-	console.log(notifications);
+	// console.log(notifications);
 
 	useEffect(() => {
 		if (user?.id) void setSkip(false);

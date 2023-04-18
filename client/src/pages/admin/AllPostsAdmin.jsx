@@ -8,6 +8,7 @@ import {
 	Collapse,
 	Tooltip,
 	Typography,
+	alpha,
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
@@ -16,7 +17,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/reusable/Header";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
-import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
 import {
 	useApprovePostMutation,
 	useDeletePostMutation,
@@ -25,6 +26,7 @@ import {
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import { format } from "date-fns";
 import UserAgreement from "../../components/reusable/UserAgreement";
+import { useOutletContext } from "react-router-dom";
 
 const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 	const theme = useTheme();
@@ -129,9 +131,26 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 						</Typography>
 					</Box>
 					<Box
+						m={1}
+						display={"flex"}
+						justifyContent="space-start"
+						gap={2}
+						alignItems={"center"}
+						width="100%">
+						<Typography>Displayed:</Typography>
+						<Typography
+							sx={{
+								color: post?.display
+									? alpha(theme.palette.info.dark, 1)
+									: theme.palette.warning.dark,
+							}}>
+							{post?.display ? "Displaying" : "Not displaying"}
+						</Typography>
+					</Box>
+					<Box
 						display="flex"
 						width="100%"
-						p={2}
+						mt={2}
 						justifyContent="space-between"
 						alignItems="center">
 						<Button
@@ -142,14 +161,18 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 							}}>
 							DELETE
 						</Button>
-						{!post?.approved && (
+						{post?.user?.role !== "admin" && (
 							<Button
-								color="success"
+								sx={{
+									color: post?.approved
+										? theme.palette.warning.main
+										: theme.palette.success.main,
+								}}
 								onClick={() => {
-									setApproveId(post?.id);
+									setApproveId({ id: post?.id, state: !post?.approved });
 									setApproveOpen((prev) => !prev);
 								}}>
-								Approve
+								{post?.approved ? "Disapprove" : "Approve"}
 							</Button>
 						)}
 					</Box>
@@ -169,8 +192,11 @@ const AllPostsAdmin = () => {
 	const [open, setOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
 	const [approveOpen, setApproveOpen] = useState(false);
-	const [approveId, setApproveId] = useState(null);
+	const [approveId, setApproveId] = useState({ id: null, state: false });
 	const [notApproved, setNotApproved] = useState(false);
+	const [notDisplayed, setNotDisplayed] = useState(false);
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
+	const isSideBarOpen = useOutletContext();
 
 	const handleDelete = async (id) => {
 		if (deleteId) {
@@ -192,7 +218,7 @@ const AllPostsAdmin = () => {
 	};
 
 	const { data, isLoading } = useGetPostsAdminQuery(
-		{ search, limit, notApproved },
+		{ search, limit, notApproved, notDisplayed },
 		{
 			refetchOnFocus: true,
 		},
@@ -208,7 +234,7 @@ const AllPostsAdmin = () => {
 			/>
 		);
 	return (
-		<Box m="1.5rem 2.5rem">
+		<Box m="1.5rem 2.5rem" pb={2}>
 			<UserAgreement
 				open={open}
 				setOpen={setOpen}
@@ -221,97 +247,138 @@ const AllPostsAdmin = () => {
 			<UserAgreement
 				open={approveOpen}
 				setOpen={setApproveOpen}
-				title={"Confirm approve"}
-				text={
-					"Are you sure you want to approve this post? Make sure you have read it!"
-				}
-				handleAgree={async () => await handleApprove(approveId)}
+				title={`Confirm ${approveId.state ? "approve" : "disapprove"}`}
+				text={`Are you sure you want to ${
+					approveId.state ? "approve" : "disapprove"
+				} this post? Make sure you have read it!`}
+				handleAgree={async () => await handleApprove(approveId.id)}
 			/>
-			<Box
-				gap={2}
-				display="flex"
-				justifyContent={{ xs: "center", md: "space-between" }}
-				width="100%"
-				alignItems={{ xs: "space-between", md: "center" }}
-				flexDirection={{ xs: "column", md: "row" }}>
-				<Box flex={1}>
-					<Header
-						title="Posts"
-						subtitle={`See the list of ${
-							notApproved ? "unapproved" : ""
-						} posts.`}
-					/>
+			<Box display={!isNonSmallScreens && isSideBarOpen ? "block" : "none"}>
+				<Header
+					title="Posts"
+					subtitle={`See the list of ${
+						notApproved ? "unapproved" : notDisplayed ? "undisplayed" : ""
+					} posts.`}
+				/>
+			</Box>
+			<Box display={!isNonSmallScreens && isSideBarOpen ? "none" : "block"}>
+				<Box
+					gap={2}
+					display="flex"
+					justifyContent={{ xs: "center", md: "space-between" }}
+					width="100%"
+					alignItems={{ xs: "space-between", md: "center" }}
+					flexDirection={{ xs: "column", md: "row" }}>
+					<Box flex={1}>
+						<Header
+							title="Posts"
+							subtitle={`See the list of ${
+								notApproved ? "unapproved" : notDisplayed ? "undisplayed" : ""
+							} posts.`}
+						/>
+					</Box>
+					<Box
+						flex={0.5}
+						display="flex"
+						alignItems="center"
+						gap={2}
+						justifyContent="center">
+						<Button
+							sx={{
+								bgcolor: palette.secondary[300],
+								color: palette.background.default,
+								width: 180,
+								"&:hover": {
+									color: palette.secondary[300],
+									bgcolor: palette.background.default,
+								},
+							}}
+							onClick={() => setNotApproved((prev) => !prev)}
+							variant="outlined"
+							startIcon={
+								notApproved ? null : ( // <CheckCircleOutlineRoundedIcon />
+									<DoNotDisturbOnOutlinedIcon />
+								)
+							}>
+							{notApproved ? "All By Approved" : "Not Approved "}
+						</Button>
+
+						<Button
+							sx={{
+								bgcolor: palette.secondary[300],
+								color: palette.background.default,
+								width: 180,
+								"&:hover": {
+									color: palette.secondary[300],
+									bgcolor: palette.background.default,
+								},
+								"&:disabled": {
+									bgcolor: palette.grey[500],
+									color: palette.secondary[300],
+								},
+							}}
+							onClick={() => setNotDisplayed((prev) => !prev)}
+							variant="outlined"
+							disabled={notApproved}
+							startIcon={
+								notDisplayed ? null : ( // <CheckCircleOutlineRoundedIcon />
+									<BrowserNotSupportedIcon />
+								)
+							}>
+							{notDisplayed ? "All By Displayed" : "Not Displayed "}
+						</Button>
+					</Box>
 				</Box>
-				<Button
+				{data?.total === 0 && (
+					<Typography
+						fontSize={40}
+						mt={6}
+						fontWeight="bold"
+						textAlign="center"
+						color={palette.secondary[300]}>
+						No posts meet the criteria
+					</Typography>
+				)}
+				<Box
+					mt="20px"
+					display="grid"
+					gridTemplateColumns="repeat(4,minmax(0, 1fr))"
+					justifyContent="space-between"
+					rowGap="20px"
+					columnGap="1.33%"
 					sx={{
-						bgcolor: palette.secondary[300],
-						color: palette.background.default,
-						width: 150,
-						"&:hover": {
-							color: palette.secondary[300],
-							bgcolor: palette.background.default,
+						"& > div": {
+							gridColumn: isNonMobile ? undefined : "span 4",
 						},
-					}}
-					onClick={() => setNotApproved((prev) => !prev)}
-					variant="outlined"
-					startIcon={
-						notApproved ? // <CheckCircleOutlineRoundedIcon />
-						null : (
-							<DoNotDisturbOnOutlinedIcon />
-						)
-					}>
-					{notApproved ? "All Posts" : "Not Approved "}
-				</Button>
-			</Box>
-			{data?.total === 0 && (
-				<Typography
-					fontSize={40}
-					mt={6}
-					fontWeight="bold"
-					textAlign="center"
-					color={palette.secondary[300]}>
-					No posts meet the criteria
-				</Typography>
-			)}
-			<Box
-				mt="20px"
-				display="grid"
-				gridTemplateColumns="repeat(4,minmax(0, 1fr))"
-				justifyContent="space-between"
-				rowGap="20px"
-				columnGap="1.33%"
-				sx={{
-					"& > div": {
-						gridColumn: isNonMobile ? undefined : "span 4",
-					},
-				}}>
-				{data?.posts.map((post) => (
-					<Post
-						key={post?.id}
-						post={post}
-						setDeleteId={setDeleteId}
-						setOpen={setOpen}
-						setApproveId={setApproveId}
-						setApproveOpen={setApproveOpen}
-					/>
-				))}
-			</Box>
-			{data?.total > limit && (
-				<Box display="flex" justifyContent="center" m={4} p={2}>
-					<Button
-						onClick={() => setLimit((prev) => prev + 20)}
-						sx={{
-							color: palette.background.default,
-							bgcolor: palette.secondary[300],
-							"&:hover": {
-								color: palette.secondary[300],
-								bgcolor: palette.primary.main,
-							},
-						}}>
-						Load More
-					</Button>
+					}}>
+					{data?.posts.map((post) => (
+						<Post
+							key={post?.id}
+							post={post}
+							setDeleteId={setDeleteId}
+							setOpen={setOpen}
+							setApproveId={setApproveId}
+							setApproveOpen={setApproveOpen}
+						/>
+					))}
 				</Box>
-			)}
+				{data?.total > limit && (
+					<Box display="flex" justifyContent="center" m={4} p={2}>
+						<Button
+							onClick={() => setLimit((prev) => prev + 20)}
+							sx={{
+								color: palette.background.default,
+								bgcolor: palette.secondary[300],
+								"&:hover": {
+									color: palette.secondary[300],
+									bgcolor: palette.primary.main,
+								},
+							}}>
+							Load More
+						</Button>
+					</Box>
+				)}
+			</Box>
 		</Box>
 	);
 };

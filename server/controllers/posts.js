@@ -57,17 +57,12 @@ exports.getAllPosts = async (req, res) => {
 	const q = req.query;
 	let query;
 
-	const page = parseInt(q.page) || 1;
+	let page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
-	const total = await Posts.countDocuments({ approved: true });
-	const pages = Math.ceil(total / pageSize);
+	let total = Posts.countDocuments({ approved: true, display: true });
 
-	if (page > pages) {
-		return res.status(400).json({ message: "No page found" });
-	}
-
-	query = Posts.find({ approved: true }).lean();
+	query = Posts.find({ approved: true, display: true }).lean();
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
@@ -78,48 +73,32 @@ exports.getAllPosts = async (req, res) => {
 			return sortFormatted;
 		};
 		const sortFormatted = generateSort();
-
-		// console.log(sortFormatted);
-
-		// sortFormatted.forEach((e) => {
-		// 	if (e[0] === "createdAt") {
-		// 		// query.sort({})
-		// 		query = query.sort(
-		// 			{
-		// 				$group: {
-		// 					_id: {
-		// 						month: { $month: "$createdAt" },
-		// 						year: { $year: "$createdAt" },
-		// 						day: { $dayOfYear: "$createdAt" },
-		// 					},
-		// 					transactions: { $push: "$$ROOT" },
-		// 				},
-		// 			},
-		// 			{ $sort: { month: e[1], year: e[1], day: e[1] } },
-		// 		);
-		// 	} else {
-		// 		query = query.sort([e]);
-		// 	}
-		// 	// query = query.sort([e]);
-		// });
-
 		query = query.sort(sortFormatted);
 	}
 	if (q.search) {
 		query = query.find({
 			title: { $regex: q.search, $options: "i" },
 		});
+		total = total.countDocuments({
+			title: { $regex: q.search, $options: "i" },
+		});
 	}
 	if (q?.tags && q?.tags?.length > 0) {
 		const tags = q.tags.split(",");
 		query = query.find({ tags: { $in: tags } });
+		total = total.countDocuments({ tags: { $in: tags } });
 	}
 
 	const posts = await query
 		.populate("user", "username image")
 		.skip(skip)
-		.limit(pageSize);
-
+		.limit(pageSize)
+		.lean();
+	total = await total;
+	const pages = Math.ceil(total / pageSize);
+	if (page > pages) {
+		page = pages;
+	}
 	return res.status(200).json({
 		message: "Post delivered successfully",
 		posts,
@@ -205,7 +184,14 @@ exports.updatePost = async (req, res) => {
 				const updatedPost = await Posts.findByIdAndUpdate(
 					postId,
 					{
-						$set: { title, tags, body, images: uplodRes, approved },
+						$set: {
+							title,
+							tags,
+							body,
+							images: uplodRes,
+							approved,
+							display: false,
+						},
 					},
 					{ new: true },
 				);
@@ -219,7 +205,7 @@ exports.updatePost = async (req, res) => {
 		const updatedPost = await Posts.findByIdAndUpdate(
 			postId,
 			{
-				$set: { title, tags, body, approved },
+				$set: { title, tags, body, approved, display: false },
 			},
 			{ new: true },
 		);
@@ -238,26 +224,39 @@ exports.getPostsByUser = async (req, res) => {
 	let query;
 	const { userId } = req.params;
 
-	const page = parseInt(q.page) || 1;
+	let page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
 	let total;
-	const pages = Math.ceil(total / pageSize);
-	console.log(q);
+	// const pages = Math.ceil(total / pageSize);
 
 	if (q.notApproved === "false") {
-		query = Posts.find({ user: userId });
-		total = await Posts.countDocuments({ user: userId });
+		if (q.notDisplayed === "false") {
+			query = Posts.find({ user: userId });
+			total = Posts.countDocuments({ user: userId });
+		} else {
+			query = Posts.find({ user: userId, display: false });
+			total = Posts.countDocuments({ user: userId, display: false });
+		}
 	} else {
-		query = Posts.find({ user: userId, approved: false });
-		total = await Posts.countDocuments({ user: userId, approved: false });
+		if (q.notDisplayed === "false") {
+			query = Posts.find({ user: userId, approved: false });
+			total = Posts.countDocuments({
+				user: userId,
+				approved: false,
+			});
+		} else {
+			query = Posts.find({ user: userId, approved: false, display: false });
+			total = Posts.countDocuments({
+				user: userId,
+				approved: false,
+				display: false,
+			});
+		}
 	}
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
-			// const sortFormatted = {
-			// 	[sortParsed.field]: (sortParsed.sort = "asc" ? 1 : -1),
-			// };
 			const sortFormatted = Object.entries(sortParsed).map(([k, v]) => [
 				k,
 				v === "asc" ? 1 : -1,
@@ -265,8 +264,6 @@ exports.getPostsByUser = async (req, res) => {
 			return sortFormatted;
 		};
 		const sortFormatted = generateSort();
-		// console.log(sortFormatted);
-		// query = query.sort(sortFormatted);
 		sortFormatted.forEach((e) => {
 			query = query.sort([e]);
 		});
@@ -275,16 +272,26 @@ exports.getPostsByUser = async (req, res) => {
 		query = query.find({
 			title: { $regex: q.search, $options: "i" },
 		});
+		total = total.countDocuments({
+			title: { $regex: q.search, $options: "i" },
+		});
 	}
 	if (q?.tags && q?.tags?.length > 0) {
 		const tags = q.tags.split(",");
 		query = query.find({ tags: { $in: tags } });
+		total = total.countDocuments({ tags: { $in: tags } });
 	}
 
 	const posts = await query
 		.populate("user", "username image")
 		.skip(skip)
-		.limit(pageSize);
+		.limit(pageSize)
+		.lean();
+	total = await total;
+	const pages = Math.ceil(total / pageSize);
+	if (page > pages) {
+		page = pages;
+	}
 	res.status(200).json({
 		message: "User's posts received",
 		posts,
@@ -348,35 +355,68 @@ exports.dislikePost = async (req, res) => {
 
 //get: /posts/admin
 exports.getAllPostsAdmin = async (req, res) => {
-	const { limit = 20, notApproved } = req.query;
+	const { limit = 20, notApproved, notDisplayed } = req.query;
 	const user = req.user;
 	if (user.role !== "admin")
 		return res.status(401).json({ message: "You are not authorized" });
 	let query;
 	let total;
 	if (notApproved === "false") {
-		query = Posts.find().populate("user");
-		total = Posts.countDocuments();
-		if (req.query.search) {
-			query = query.find({
-				title: { $regex: req.query.search, $options: "i" },
-			});
-			total = Posts.countDocuments({
-				title: { $regex: req.query.search, $options: "i" },
-			});
+		if (notDisplayed === "false") {
+			query = Posts.find().populate("user");
+			total = Posts.countDocuments();
+			if (req.query.search) {
+				query = query.find({
+					title: { $regex: req.query.search, $options: "i" },
+				});
+				total = Posts.countDocuments({
+					title: { $regex: req.query.search, $options: "i" },
+				});
+			}
+		} else {
+			query = Posts.find({ display: false }).populate("user");
+			total = Posts.countDocuments({ display: false });
+
+			if (req.query.search) {
+				query = query.find({
+					title: { $regex: req.query.search, $options: "i" },
+					display: false,
+				});
+				total = Posts.countDocuments({
+					title: { $regex: req.query.search, $options: "i" },
+					display: false,
+				});
+			}
 		}
 	} else {
-		query = Posts.find({ approved: false }).populate("user");
-		total = Posts.countDocuments({ approved: false });
-		if (req.query.search) {
-			query = query.find({
-				title: { $regex: req.query.search, $options: "i" },
-				approved: false,
-			});
-			total = Posts.countDocuments({
-				title: { $regex: req.query.search, $options: "i" },
-				approved: false,
-			});
+		if (notDisplayed === "false") {
+			query = Posts.find({ approved: false }).populate("user");
+			total = Posts.countDocuments({ approved: false });
+			if (req.query.search) {
+				query = query.find({
+					title: { $regex: req.query.search, $options: "i" },
+					approved: false,
+				});
+				total = Posts.countDocuments({
+					title: { $regex: req.query.search, $options: "i" },
+					approved: false,
+				});
+			}
+		} else {
+			query = Posts.find({ approved: false, display: false }).populate("user");
+			total = Posts.countDocuments({ approved: false, display: false });
+			if (req.query.search) {
+				query = query.find({
+					title: { $regex: req.query.search, $options: "i" },
+					approved: false,
+					display: false,
+				});
+				total = Posts.countDocuments({
+					title: { $regex: req.query.search, $options: "i" },
+					approved: false,
+					display: false,
+				});
+			}
 		}
 	}
 	// if (req.query.search) {
@@ -387,9 +427,9 @@ exports.getAllPostsAdmin = async (req, res) => {
 	// 		title: { $regex: req.query.search, $options: "i" },
 	// 	});
 	// }
-	const posts = await query.limit(limit);
+	const posts = await query.limit(limit).lean();
 	total = await total;
-	console.log({ total });
+	// console.log({ total });
 	return res.status(200).json({ message: "Posts retrived", posts, total });
 };
 //put /posts/admin/approve
@@ -404,15 +444,36 @@ exports.approvePosts = async (req, res) => {
 	if (count == 0) {
 		res.status(400).json({ message: `No post with id ${postId} exsists` });
 	}
-	const savedPost = await Posts.findByIdAndUpdate(
-		postId,
-		{
-			approved: true,
-		},
-		{ new: true },
-	);
+	const post = await Posts.findById(postId).select("approved display");
+	post.approved = !post.approved;
+	if (post.approved === false) {
+		post.display = false;
+	}
+	await post.save();
 	res.status(201).json({
-		post: savedPost,
 		message: `Post with id ${postId} approved`,
+	});
+};
+//put /posts/display
+exports.displayPost = async (req, res) => {
+	const { postId } = req.body;
+	const count = await Posts.countDocuments({
+		_id: mongoose.Types.ObjectId(postId),
+	});
+	if (count === 0) {
+		res.status(400).json({ message: `No training with id ${postId} exsists` });
+	}
+	const post = await Posts.findById(postId).select("display user");
+	if (
+		req.user.role !== "admin" &&
+		req.user._id.toString() !== post.user.toString()
+	) {
+		return res.status(401).json({ message: "You are not authorized" });
+	}
+	post.display = !post.display;
+	console.log(post);
+	await post.save();
+	res.status(201).json({
+		message: `Training with id ${postId} display is ${post.display}`,
 	});
 };

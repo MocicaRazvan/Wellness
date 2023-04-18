@@ -1,4 +1,11 @@
-import { Box, Button, styled, Tooltip, useTheme } from "@mui/material";
+import {
+	Box,
+	Button,
+	styled,
+	Tooltip,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 import {
 	useGetAllUsersAdminQuery,
@@ -65,29 +72,29 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 			field: "phoneNumber",
 			headerName: "Phone Number",
 			// flex: 0.5,
-			width: 110,
+			width: 120,
 		},
 		{
 			field: "location",
 			headerName: "Location",
 			// flex: 0.4,
-			width: 110,
+			width: 120,
 		},
 		{
 			field: "occupation",
 			headerName: "Occupation",
 			// flex: 0.5,
-			width: 110,
+			width: 120,
 		},
 		{
 			field: "role",
 			headerName: "Role",
 			// flex: 0.6,
-			width: 130,
+			width: 110,
 			renderCell: ({ row: { role, id } }) => (
 				<Box>
 					{role === "user" ? (
-						<Tooltip title="Make Trainer" arrow placement="right">
+						<Tooltip title="Make Trainer" arrow placement="top">
 							<User
 								onClick={() => {
 									settrainerId(id);

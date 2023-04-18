@@ -1,4 +1,10 @@
-import { Button, CircularProgress, IconButton, useTheme } from "@mui/material";
+import {
+	Button,
+	CircularProgress,
+	IconButton,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -22,6 +28,7 @@ const BoughtTrainings = () => {
 	const [searchInput, setSearchInput] = useState("");
 	const { palette } = useTheme();
 	const user = useSelector(selectCurrentUser);
+	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
 
 	const { data, isLoading } = useGetBoughtUserTrainingsQuery(
 		{
@@ -90,7 +97,7 @@ const BoughtTrainings = () => {
 			field: "action",
 			headerName: "Actions",
 			// flex: 2,
-			width: 280,
+			width: 210,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -136,18 +143,27 @@ const BoughtTrainings = () => {
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title="Your Purchases" subtitle="Manage your purchases" />
-			<CustomDataGrid
-				isLoading={isLoading || !data}
-				rows={data?.trainings || []}
-				columns={columns}
-				rowCount={data?.total || 0}
-				page={page}
-				setPage={setPage}
-				setPageSize={setPageSize}
-				setSort={setSort}
-				pageSize={pageSize}
-				toolbar={{ searchInput, setSearchInput, setSearch }}
-			/>
+			<Box
+				maxWidth={1700}
+				display="flex"
+				justifyContent="center"
+				overflow="hidden"
+				m="0 auto">
+				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1220}>
+					<CustomDataGrid
+						isLoading={isLoading || !data}
+						rows={data?.trainings || []}
+						columns={columns}
+						rowCount={data?.total || 0}
+						page={page}
+						setPage={setPage}
+						setPageSize={setPageSize}
+						setSort={setSort}
+						pageSize={pageSize}
+						toolbar={{ searchInput, setSearchInput, setSearch }}
+					/>
+				</Box>
+			</Box>
 		</Box>
 	);
 };

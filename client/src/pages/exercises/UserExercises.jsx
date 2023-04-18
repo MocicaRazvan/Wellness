@@ -1,10 +1,4 @@
-import {
-	Box,
-	Button,
-	CircularProgress,
-	Tooltip,
-	useTheme,
-} from "@mui/material";
+import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -27,6 +21,7 @@ const UserExercises = () => {
 	const user = useSelector(selectCurrentUser);
 	const [open, setOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
+	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
 	const { data, isLoading } = useGetUsersExercisesQuery(
 		{
 			id: user?.id,
@@ -48,45 +43,76 @@ const UserExercises = () => {
 	};
 	const columns = [
 		{
-			field: "id",
-			headerName: "ID",
-			// flex: 1,
-			width: 220,
-			sortable: false,
-		},
-		{
 			field: "title",
 			headerName: "Title",
 			// flex: 1,
-			width: 170,
-		},
-		{
-			field: "user",
-			headerName: "user ID",
-			// flex: 1,
-			width: 220,
-			sortable: false,
+			width: 180,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
 			// flex: 0.7,
-			width: 120,
+			width: 150,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
+		},
+
+		{
+			field: "updatedAt",
+			headerName: "UpdatedAt",
+			// flex: 0.7,
+			width: 150,
+			sortable: false,
+			renderCell: ({ row: { updatedAt } }) =>
+				format(new Date(updatedAt), "dd/MM/yyyy"),
+		},
+		{
+			field: "occurrences",
+			headerName: "Times Used",
+			width: 110,
+		},
+		{
+			field: "videos",
+			headerName: "Videos",
+			width: 85,
+			sortable: false,
+			filterable: false,
+			renderCell: ({ row: { videos } }) => videos.length,
 		},
 		{
 			field: "muscleGroups",
 			headerName: "MuscleGroups",
 			// flex: 2,
-			width: 330,
+			width: 340,
+			renderCell: ({ row: { muscleGroups } }) => (
+				<Box>
+					<div
+						dangerouslySetInnerHTML={{
+							__html: muscleGroups.reduce((acc, cur, i, arr) => {
+								if (arr.length === 1) {
+									acc += `<div>${cur}</div>`;
+								} else if (i % 5 === 4 || i === arr.length - 1) {
+									acc += `${cur} `;
+									acc += `</div>`;
+								} else if (i % 5 === 0) {
+									acc += `<div>`;
+									acc += `${cur} `;
+								} else {
+									acc += `${cur} `;
+								}
+								return acc;
+							}, ``),
+						}}
+					/>
+				</Box>
+			),
 		},
 		{
 			field: "action",
 			headerName: "Actions",
 			// flex: 2,
-			width: 350,
+			width: 260,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -141,18 +167,27 @@ const UserExercises = () => {
 				handleAgree={async () => await handleDeleteExercise(deleteId)}
 			/>
 			<Header title="Your Exercises" subtitle="Manage your exercises" />
-			<CustomDataGrid
-				isLoading={isLoading || !data}
-				rows={data?.exercises || []}
-				columns={columns}
-				rowCount={data?.total || 0}
-				page={page}
-				setPage={setPage}
-				setPageSize={setPageSize}
-				setSort={setSort}
-				pageSize={pageSize}
-				toolbar={{ searchInput, setSearchInput, setSearch }}
-			/>
+			<Box
+				maxWidth={1700}
+				display="flex"
+				justifyContent="center"
+				overflow="hidden"
+				m="0 auto">
+				<Box flex={isNonMobileScreens ? 0.91 : 1} maxWidth={1350}>
+					<CustomDataGrid
+						isLoading={isLoading || !data}
+						rows={data?.exercises || []}
+						columns={columns}
+						rowCount={data?.total || 0}
+						page={page}
+						setPage={setPage}
+						setPageSize={setPageSize}
+						setSort={setSort}
+						pageSize={pageSize}
+						toolbar={{ searchInput, setSearchInput, setSearch }}
+					/>
+				</Box>
+			</Box>
 		</Box>
 	);
 };

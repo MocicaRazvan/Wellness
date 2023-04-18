@@ -22,7 +22,7 @@ const CustomPagination = ({
 		<TablePagination
 			component="div"
 			count={count * rowsPerPage}
-			page={page - 1}
+			page={page - 1 > 0 ? page - 1 : 0}
 			onPageChange={handleChangePage}
 			rowsPerPage={rowsPerPage}
 			rowsPerPageOptions={[12, 24, 36]}

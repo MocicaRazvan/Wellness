@@ -89,8 +89,17 @@ export const postApiSlice = apiSlice.injectEndpoints({
 		}),
 		getPostsByUser: builder.query({
 			///query: () => ({ url: "/posts/user" }),
-			query: ({ search, tags, sorting, page, limit, id, notApproved }) => {
-				const params = { notApproved };
+			query: ({
+				search,
+				tags,
+				sorting,
+				page,
+				limit,
+				id,
+				notApproved,
+				notDisplayed,
+			}) => {
+				const params = { notApproved, notDisplayed };
 				if (search) {
 					params.search = search;
 				}
@@ -129,6 +138,17 @@ export const postApiSlice = apiSlice.injectEndpoints({
 			query: ({ id }) => ({
 				url: `/posts/${id}`,
 				method: "DELETE",
+			}),
+			invalidatesTags: (result, err, arg) => [
+				{ type: "Post", id: arg.id },
+				{ type: "Post", id: "LIST" },
+			],
+		}),
+		displayPost: builder.mutation({
+			query: ({ id }) => ({
+				url: `/posts/display`,
+				method: "PUT",
+				body: { postId: id },
 			}),
 			invalidatesTags: (result, err, arg) => [
 				{ type: "Post", id: arg.id },
@@ -194,6 +214,7 @@ export const {
 	usePostActionsMutation,
 	useGetPostsAdminQuery,
 	useApprovePostMutation,
+	useDisplayPostMutation,
 } = postApiSlice;
 
 export const postsSelector = postAdapter.getSelectors((state) => state.posts);

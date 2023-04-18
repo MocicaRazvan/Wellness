@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.route("/create").post(verifyJwt, postController.createPost);
 router.route("/").get(postController.getAllPosts);
+router.route("/display").put(verifyJwt, postController.displayPost);
 router.route("/admin").get(verifyJwt, postController.getAllPostsAdmin);
 router.route("/admin/approve").put(verifyJwt, postController.approvePosts);
 router.route("/find/:postId").get(postController.getPostById);

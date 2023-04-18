@@ -160,7 +160,7 @@ const Footer = () => {
 						Contact Us
 					</CustomTypography>
 					<CustomTypography mb="30px" color={theme.palette.secondary[200]}>
-						Str Iuliu Maniu nr36
+						Bld. Iuliu Maniu nr 36
 					</CustomTypography>
 					<CustomTypography
 						mb="30px"

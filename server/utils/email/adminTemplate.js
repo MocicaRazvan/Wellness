@@ -1,4 +1,4 @@
-const makeAdmin = (text) => `<!DOCTYPE html
+const makeAdmin = (text, title) => `<!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -38,7 +38,7 @@ const makeAdmin = (text) => `<!DOCTYPE html
                                     <tr>
                                         <td style="padding: 0 62px 10px;">
                                           
-                                            <p style="font-size: 20px; font-weight: bold;">WELCOME</p>
+                                            <p style="font-size: 20px; font-weight: bold;">${title}</p>
                                         </td>
                                     </tr>
                                 </table>

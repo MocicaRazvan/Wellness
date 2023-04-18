@@ -1,4 +1,5 @@
 import {
+	Avatar,
 	Box,
 	Button,
 	Card,
@@ -18,6 +19,8 @@ import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import moment from "moment";
+import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 
 const TrainingCard = ({ item }) => {
 	const [showOptions, setShowOptions] = useState(false);
@@ -98,13 +101,33 @@ const TrainingCard = ({ item }) => {
 						/>
 					))}
 				</Box>
-				<Box sx={{ m: 1 }}>
-					<Box display="flex" justifyContent="space-between">
-						<Typography
+				<Box sx={{ mt: 1.5 }}>
+					<Box
+						display="flex"
+						justifyContent="space-between"
+						alignItems="center">
+						{/* <Typography
 							variant="subtitle2"
 							color={theme.palette.secondary[300]}>
 							Made By: {item?.user?.username}
-						</Typography>
+						</Typography> */}
+						<Box sx={{ display: "flex" }}>
+							<Avatar src={item?.user?.image?.url || blankImage} />
+							<Box ml={2}>
+								<Typography
+									variant="subtitle2"
+									component="p"
+									color={theme.palette.secondary[100]}>
+									{item?.user?.username}
+								</Typography>
+								<Typography
+									variant="subtitle2"
+									color={theme.palette.secondary[100]}
+									component="p">
+									{moment(item.createdAt).format("YYYY-MM-DD")}
+								</Typography>
+							</Box>
+						</Box>
 						<Typography
 							variant="subtitle1"
 							fontWeight="bold"
@@ -125,7 +148,13 @@ const TrainingCard = ({ item }) => {
 				)}
 				{!isBoughtOrInCart && (
 					<ProductActionsWrapper show={showOptions}>
-						<Stack direction="column">
+						<Stack
+							direction="column"
+							sx={{
+								bgcolor: "rgba(0,0,0,0.75)",
+								borderRadius: "50%",
+								p: 0.75,
+							}}>
 							<IconButton
 								onClick={handleAddTocard}
 								sx={{ color: theme.palette.secondary[500] }}>

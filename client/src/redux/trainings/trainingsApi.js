@@ -41,7 +41,8 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				const loadedTrainings = trainings.map((training) => ({
 					...training,
 					id: training._id,
-					app: training.approved ? "approved" : "not approved",
+					app: training?.approved ? "approved" : "not approved",
+					disp: training?.display ? "displayed" : "not displayed",
 				}));
 
 				return { trainings: loadedTrainings, page, pages, count };
@@ -76,6 +77,8 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				const loadedTrainings = trainings.map((training) => ({
 					...training,
 					id: training._id,
+					app: training?.approved ? "approved" : "not approved",
+					disp: training?.display ? "displayed" : "not displayed",
 				}));
 				return { trainings: loadedTrainings, total };
 			},
@@ -139,6 +142,17 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				{ type: "Training", id: "LIST" },
 			],
 		}),
+		displayTraining: builder.mutation({
+			query: ({ id }) => ({
+				url: `/trainings/display`,
+				method: "PUT",
+				body: { trainingId: id },
+			}),
+			invalidatesTags: (result, err, arg) => [
+				{ type: "Training", id: arg.id },
+				{ type: "Training", id: "LIST" },
+			],
+		}),
 		trainingActions: builder.mutation({
 			query: ({ id, action }) => ({
 				url: `/trainings/action/${action}/${id}`,
@@ -184,4 +198,5 @@ export const {
 	useGetBoughtUserTrainingsQuery,
 	useGetTrainingsByOrderQuery,
 	useApproveTrainingMutation,
+	useDisplayTrainingMutation,
 } = trainingApiSlice;
