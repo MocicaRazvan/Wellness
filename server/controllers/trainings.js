@@ -346,22 +346,37 @@ exports.updateTraining = async (req, res) => {
 exports.likeTraining = async (req, res) => {
 	const userId = req.user._id;
 	const { trainingId } = req.params;
-	await Trainings.findByIdAndUpdate(trainingId, {
-		$addToSet: { likes: userId },
-		$pull: { dislikes: userId },
+	const training = await Trainings.findById(trainingId).select("likes");
+	if (training.likes.includes(userId)) {
+		training.likes = training.likes.filter((e) => e !== userId.toString());
+		await training.save();
+	} else {
+		await Trainings.findByIdAndUpdate(trainingId, {
+			$addToSet: { likes: userId },
+			$pull: { dislikes: userId },
+		});
+	}
+	res.status(200).json({
+		message: `Training with id ${trainingId} was liked succesfully`,
 	});
-	res
-		.status(200)
-		.json({ message: `Training with id ${trainingId} was liked succesfully` });
 };
 //put: /trainings/action/dislikes/:trainingId
 exports.dislikeTraining = async (req, res) => {
 	const userId = req.user._id;
 	const { trainingId } = req.params;
-	await Trainings.findByIdAndUpdate(trainingId, {
-		$addToSet: { dislikes: userId },
-		$pull: { likes: userId },
-	});
+	const training = await Trainings.findById(trainingId).select("dislikes");
+	if (training.dislikes.includes(userId)) {
+		training.dislikes = training.dislikes.filter(
+			(e) => e !== userId.toString(),
+		);
+		await training.save();
+	} else {
+		await Trainings.findByIdAndUpdate(trainingId, {
+			$addToSet: { dislikes: userId },
+			$pull: { likes: userId },
+		});
+	}
+
 	res.status(200).json({
 		message: `Training with id ${trainingId} was disliked succesfully`,
 	});

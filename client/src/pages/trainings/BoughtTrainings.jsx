@@ -1,4 +1,4 @@
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import { Button, CircularProgress, IconButton, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -20,6 +20,7 @@ const BoughtTrainings = () => {
 	const [sort, setSort] = useState({});
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
+	const { palette } = useTheme();
 	const user = useSelector(selectCurrentUser);
 
 	const { data, isLoading } = useGetBoughtUserTrainingsQuery(
@@ -109,10 +110,22 @@ const BoughtTrainings = () => {
 							</Button>
 						</Link>
 						<IconButton onClick={() => handleAction(params.row.id, "likes")}>
-							<ThumbUpIcon color="success" />
+							<ThumbUpIcon
+								sx={{
+									color: params.row.likes.includes(user?.id)
+										? palette.secondary[300]
+										: palette.success.main,
+								}}
+							/>
 						</IconButton>
 						<IconButton onClick={() => handleAction(params.row.id, "dislikes")}>
-							<ThumbDownIcon color="error" />
+							<ThumbDownIcon
+								sx={{
+									color: params.row.dislikes.includes(user?.id)
+										? palette.secondary[300]
+										: palette.error.main,
+								}}
+							/>
 						</IconButton>
 					</Box>
 				);

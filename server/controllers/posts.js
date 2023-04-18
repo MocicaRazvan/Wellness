@@ -311,10 +311,16 @@ exports.getPostById = async (req, res) => {
 exports.likePost = async (req, res) => {
 	const userId = req.user._id;
 	const { postId } = req.params;
-	await Posts.findByIdAndUpdate(postId, {
-		$addToSet: { likes: userId },
-		$pull: { dislikes: userId },
-	}).lean();
+	const post = await Posts.findById(postId).select("likes");
+	if (post.likes.includes(userId)) {
+		post.likes = post.likes.filter((e) => e !== userId.toString());
+		await post.save();
+	} else {
+		await Posts.findByIdAndUpdate(postId, {
+			$addToSet: { likes: userId },
+			$pull: { dislikes: userId },
+		}).lean();
+	}
 
 	res
 		.status(200)
@@ -325,10 +331,16 @@ exports.likePost = async (req, res) => {
 exports.dislikePost = async (req, res) => {
 	const userId = req.user._id;
 	const { postId } = req.params;
-	await Posts.findByIdAndUpdate(postId, {
-		$addToSet: { dislikes: userId },
-		$pull: { likes: userId },
-	});
+	const post = await Posts.findById(postId).select("dislikes");
+	if (post.dislikes.includes(userId)) {
+		post.dislikes = post.dislikes.filter((e) => e !== userId.toString());
+		await post.save();
+	} else {
+		await Posts.findByIdAndUpdate(postId, {
+			$addToSet: { dislikes: userId },
+			$pull: { likes: userId },
+		});
+	}
 	res
 		.status(200)
 		.json({ message: `Post with id ${postId} was disliked succesfully` });

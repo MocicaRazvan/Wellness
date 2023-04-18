@@ -104,7 +104,7 @@ const AdminTrainings = () => {
 			field: "price",
 			headerName: "Price",
 			// flex: 0.5,
-			width: 110,
+			width: 60,
 			renderCell: ({ row: { price } }) => `$${price}`,
 		},
 		{

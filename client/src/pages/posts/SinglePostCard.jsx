@@ -42,7 +42,13 @@ const SinglePostCard = ({ post }) => {
 						gap={0.5}>
 						<IconButton
 							onClick={async () => await handleAction(post?.id, "likes")}>
-							<ThumbUpIcon color="success" />
+							<ThumbUpIcon
+								sx={{
+									color: post?.likes.includes(user?.id)
+										? theme.palette.secondary[300]
+										: theme.palette.success.main,
+								}}
+							/>
 						</IconButton>
 						<Typography
 							sx={{ alignSelf: "end" }}
@@ -54,7 +60,13 @@ const SinglePostCard = ({ post }) => {
 						</Typography>
 						<IconButton
 							onClick={async () => await handleAction(post?.id, "dislikes")}>
-							<ThumbDownIcon color="error" />
+							<ThumbDownIcon
+								sx={{
+									color: post?.dislikes.includes(user?.id)
+										? theme.palette.secondary[300]
+										: theme.palette.error.main,
+								}}
+							/>
 						</IconButton>
 						<Typography
 							sx={{ alignSelf: "end" }}

@@ -39,7 +39,13 @@ const Actions = ({ comment }) => {
 				onClick={() => {
 					handleActions("likes");
 				}}>
-				<ThumbUpIcon color="success" sx={{ height: "20px", width: " 20px" }} />
+				<ThumbUpIcon
+					sx={{
+						color: comment?.likes.includes(user?.id)
+							? palette.secondary[300]
+							: palette.success.main,
+					}}
+				/>
 			</IconButton>
 			<Typography sx={{ color: palette.secondary[400], fontWeight: 500 }}>
 				{comment?.likes?.length - comment?.dislikes?.length}
@@ -50,7 +56,13 @@ const Actions = ({ comment }) => {
 				onClick={() => {
 					handleActions("dislikes");
 				}}>
-				<ThumbDownIcon color="error" sx={{ height: "20px", width: " 20px" }} />
+				<ThumbDownIcon
+					sx={{
+						color: comment?.dislikes.includes(user?.id)
+							? palette.secondary[300]
+							: palette.error.main,
+					}}
+				/>
 			</IconButton>
 		</Box>
 	);

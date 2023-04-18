@@ -40,10 +40,16 @@ exports.createComment = async (req, res) => {
 exports.likeComment = async (req, res) => {
 	const userId = req.user._id;
 	const { commentId } = req.params;
-	await Comments.findByIdAndUpdate(commentId, {
-		$addToSet: { likes: userId },
-		$pull: { dislikes: userId },
-	});
+	const comment = await Comments.findById(commentId).select("likes");
+	if (comment.likes.includes(userId)) {
+		comment.likes = comment.likes.filter((e) => e !== userId.toString());
+		await comment.save();
+	} else {
+		await Comments.findByIdAndUpdate(commentId, {
+			$addToSet: { likes: userId },
+			$pull: { dislikes: userId },
+		});
+	}
 	res
 		.status(200)
 		.json({ message: `Post with id ${commentId} was liked succesfully` });
@@ -53,10 +59,16 @@ exports.likeComment = async (req, res) => {
 exports.dislikeComment = async (req, res) => {
 	const userId = req.user._id;
 	const { commentId } = req.params;
-	await Comments.findByIdAndUpdate(commentId, {
-		$addToSet: { dislikes: userId },
-		$pull: { likes: userId },
-	});
+	const comment = await Comments.findById(commentId).select("dislikes");
+	if (comment.dislikes.includes(userId)) {
+		comment.dislikes = comment.dislikes.filter((e) => e !== userId.toString());
+		await comment.save();
+	} else {
+		await Comments.findByIdAndUpdate(commentId, {
+			$addToSet: { dislikes: userId },
+			$pull: { likes: userId },
+		});
+	}
 	res
 		.status(200)
 		.json({ message: `Post with id ${commentId} was disliked succesfully` });
