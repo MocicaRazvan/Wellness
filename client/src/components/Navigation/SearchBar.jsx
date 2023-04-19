@@ -7,8 +7,9 @@ import {
 	setSearch,
 } from "../../redux/searchState/searchSlice";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 //getLimitTagsText
 function SearchBar() {
@@ -19,12 +20,19 @@ function SearchBar() {
 			JSON.parse(localStorage["searchHistory"])) ||
 			[],
 	);
+	const { pathname } = useLocation();
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(setSearch(""));
+	}, [dispatch, pathname]);
+
 	const handleSearchChange = (e, prop) => {
 		e.stopPropagation();
 		dispatch(setSearch(e.target[prop]));
 		//console.log(e.target.value);
 	};
+
 	const handleBlur = (e) => {
 		if (e.target.value !== "") {
 			localStorage["searchHistory"]
