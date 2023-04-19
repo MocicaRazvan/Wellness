@@ -49,6 +49,10 @@ exports.getNotificationsByUser = async (req, res) => {
 		receiver,
 		type: "training/delete",
 	});
+	const trainingBought = await Notification.find({
+		receiver,
+		type: "training/bought",
+	});
 
 	console.log({ postApprove, postDisapprove });
 
@@ -61,6 +65,7 @@ exports.getNotificationsByUser = async (req, res) => {
 		trainingApprove,
 		trainingDisapprove,
 		trainingDelete,
+		trainingBought,
 	});
 };
 
@@ -108,7 +113,12 @@ exports.deleteUserApproved = async (req, res) => {
 	if (type === "post") {
 		types = ["post/approve", "post/disapprove", "post/delete"];
 	} else if (type === "training") {
-		types = ["training/approve", "training/disapprove", "training/delete"];
+		types = [
+			"training/approve",
+			"training/disapprove",
+			"training/delete",
+			"training/bought",
+		];
 	}
 
 	const ids = await Notification.find({

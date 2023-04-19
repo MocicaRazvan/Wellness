@@ -21,6 +21,7 @@ const notificationSchema = new mongoose.Schema(
 				"training/approve",
 				"training/disapprove",
 				"training/delete",
+				"training/bought",
 			],
 		},
 		ref: {

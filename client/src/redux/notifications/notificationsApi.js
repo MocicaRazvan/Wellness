@@ -25,6 +25,7 @@ export const notificationsApiSlice = apiSlice.injectEndpoints({
 				trainingApprove,
 				trainingDisapprove,
 				trainingDelete,
+				trainingBought,
 			}) => ({
 				notifications: notifications.map((n) => ({ ...n, id: n._id })),
 				postApprove: postApprove.map((n) => ({ ...n, id: n._id })),
@@ -36,6 +37,10 @@ export const notificationsApiSlice = apiSlice.injectEndpoints({
 					id: n._id,
 				})),
 				trainingDelete: trainingDelete.map((n) => ({
+					...n,
+					id: n._id,
+				})),
+				trainingBought: trainingBought.map((n) => ({
 					...n,
 					id: n._id,
 				})),

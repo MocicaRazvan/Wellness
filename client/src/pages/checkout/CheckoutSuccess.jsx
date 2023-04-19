@@ -1,6 +1,6 @@
 import { Button, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,12 +8,17 @@ import { updateUser } from "../../redux/auth/authSlice";
 import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { useGetSingleUserQuery } from "../../redux/user/userApi";
 import checkout from "../../utils/lottie/checkout.json";
+import { selectSocket } from "../../redux/socket/socketSlice";
+import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 const CheckoutSuccess = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();
 	const cartItems = useSelector(selectCartItems);
 	const { data: user, isLoading } = useGetSingleUserQuery();
 	const dispatch = useDispatch();
+	const socketRedux = useSelector(selectSocket);
+	const [createNotification] = useCreateNotificationMutation();
+	const [items, setItems] = useState([]);
 
 	useEffect(() => {
 		if (user && !isLoading) {
@@ -22,10 +27,44 @@ const CheckoutSuccess = () => {
 		}
 	}, [dispatch, isLoading, user]);
 	useEffect(() => {
-		if (cartItems?.length > 0) {
+		if (cartItems.length > 0 && user?._id) {
+			setItems(cartItems);
 			dispatch(clearCart());
 		}
-	}, [cartItems?.length, dispatch]);
+	}, [cartItems, cartItems.length, dispatch, user?._id]);
+	useEffect(() => {
+		if (items?.length > 0 && user?._id && socketRedux) {
+			(async () => {
+				try {
+					await Promise.all(
+						items?.map(async ({ id, user: { _id } }) => {
+							const ob = {
+								receiver: _id,
+								type: "training/bought",
+								sender: user?._id,
+								ref: id,
+							};
+							socketRedux.emit("notifApproved", {
+								...ob,
+								receiverId: ob.receiver,
+							});
+							return await createNotification(ob).unwrap();
+						}),
+					);
+					setItems([]);
+				} catch (error) {
+					console.log(error);
+				}
+			})();
+		}
+	}, [
+		items,
+		items?.length,
+		createNotification,
+		dispatch,
+		socketRedux,
+		user?._id,
+	]);
 
 	return (
 		<Box

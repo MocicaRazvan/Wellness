@@ -26,6 +26,7 @@ const PopupWrapper = () => {
 		trainingApprove: [],
 		trainingDisapprove: [],
 		trainingDelete: [],
+		trainingBought: [],
 	});
 	const senderId = useSelector(selectSenderNotification);
 	const disaptch = useDispatch();
@@ -57,6 +58,7 @@ const PopupWrapper = () => {
 				data?.trainingApprove,
 				data?.trainingDisapprove,
 				data?.trainingDelete,
+				data?.trainingBought,
 			].every(Boolean)
 		) {
 			setApproved({
@@ -66,6 +68,7 @@ const PopupWrapper = () => {
 				trainingApprove: data?.trainingApprove,
 				trainingDisapprove: data?.trainingDisapprove,
 				trainingDelete: data?.trainingDelete,
+				trainingBought: data?.trainingBought,
 			});
 		}
 	}, [
@@ -73,6 +76,7 @@ const PopupWrapper = () => {
 		data?.postDelete,
 		data?.postDisapprove,
 		data?.trainingApprove,
+		data?.trainingBought,
 		data?.trainingDelete,
 		data?.trainingDisapprove,
 	]);
@@ -103,6 +107,7 @@ const PopupWrapper = () => {
 						trainingApprove: [],
 						trainingDisapprove: [],
 						trainingDelete: [],
+						trainingBought: [],
 					}));
 				} catch (error) {
 					console.log(error);
@@ -180,6 +185,7 @@ const PopupWrapper = () => {
 								trainingApprove: [],
 								trainingDisapprove: [],
 								trainingDelete: [],
+								trainingBought: [],
 							}));
 						} catch (error) {
 							console.log(error);

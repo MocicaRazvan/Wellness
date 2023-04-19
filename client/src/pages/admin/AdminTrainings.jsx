@@ -242,34 +242,36 @@ const AdminTrainings = () => {
 								</Button>
 							</Box>
 						</Tooltip>
-						<Box>
-							<Button
-								variant="contained"
-								size="small"
-								sx={{
-									width: 82,
-									color: palette.secondary[400],
-									bgcolor: !params.row.approved
-										? palette.success.dark
-										: palette.warning.dark,
-									"&:hover": {
-										bgcolor: palette.secondary[400],
-										color: !params.row.approved
+						{params.row.user._id !== user.id && (
+							<Box>
+								<Button
+									variant="contained"
+									size="small"
+									sx={{
+										width: 82,
+										color: palette.secondary[400],
+										bgcolor: !params.row.approved
 											? palette.success.dark
 											: palette.warning.dark,
-									},
-								}}
-								onClick={() => {
-									setApprovedId({
-										id: params.row.id,
-										state: !params.row.approved,
-										user: params.row.user._id,
-									});
-									setApproveOpen(true);
-								}}>
-								{!params.row.approved ? "Approve" : "Disaprove"}
-							</Button>
-						</Box>
+										"&:hover": {
+											bgcolor: palette.secondary[400],
+											color: !params.row.approved
+												? palette.success.dark
+												: palette.warning.dark,
+										},
+									}}
+									onClick={() => {
+										setApprovedId({
+											id: params.row.id,
+											state: !params.row.approved,
+											user: params.row.user._id,
+										});
+										setApproveOpen(true);
+									}}>
+									{!params.row.approved ? "Approve" : "Disaprove"}
+								</Button>
+							</Box>
+						)}
 					</Box>
 				);
 			},

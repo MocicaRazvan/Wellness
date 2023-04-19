@@ -54,6 +54,7 @@ export default function PopUp({
 				trainingApprove: [],
 				trainingDisapprove: [],
 				trainingDelete: [],
+				trainingBought: [],
 			});
 		}
 		setOpen((prev) => !prev);
@@ -136,7 +137,8 @@ export default function PopUp({
 		!approved?.trainingApprove ||
 		!approved?.trainingDisapprove ||
 		!approved?.postDelete ||
-		!approved?.trainingDelete
+		!approved?.trainingDelete ||
+		!approved?.trainingBought
 	)
 		return <></>;
 
@@ -365,6 +367,30 @@ export default function PopUp({
 												? "Trainings"
 												: "Training"}{" "}
 											Deleted
+										</Typography>
+									</Box>
+								)}
+								{approved?.trainingBought.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										px={2}
+										pt={2}
+										gap={1}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.trainingBought.length}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.trainingBought.length > 1
+												? "Trainings"
+												: "Training"}{" "}
+											Bought
 										</Typography>
 									</Box>
 								)}
