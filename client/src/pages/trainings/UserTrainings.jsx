@@ -8,7 +8,7 @@ import {
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
@@ -33,6 +33,7 @@ const Trainings = () => {
 	const user = useSelector(selectCurrentUser);
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
 	const { palette } = useTheme();
+	const navigate = useNavigate();
 
 	const { data, isLoading } = useGetUserTrainingsQuery(
 		{
@@ -42,7 +43,12 @@ const Trainings = () => {
 			sort: JSON.stringify(sort),
 			search,
 		},
-		{ skip: !user?.id, refetchOnFocus: true },
+		{
+			skip: !user?.id,
+			refetchOnFocus: true,
+			refetchOnMountOrArgChange: true,
+			refetchOnReconnect: true,
+		},
 	);
 	const [deleteTraining] = useDeleteTrainingMutation();
 	const [displayTraining] = useDisplayTrainingMutation();
@@ -144,7 +150,7 @@ const Trainings = () => {
 			field: "action",
 			headerName: "Actions",
 			// flex: 2,
-			width: 230,
+			width: 300,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -178,11 +184,10 @@ const Trainings = () => {
 									size="small"
 									sx={{
 										color: palette.secondary[300],
-										bgcolor: palette.background.default,
-
+										bgcolor: palette.error.dark,
 										"&:hover": {
 											bgcolor: palette.secondary[300],
-											color: palette.background.default,
+											color: palette.error.dark,
 										},
 									}}
 									disabled={params.row?.occurrences > 0}
@@ -200,11 +205,10 @@ const Trainings = () => {
 								size="small"
 								sx={{
 									color: palette.secondary[300],
-									bgcolor: palette.background.default,
-
+									bgcolor: palette.warning.dark,
 									"&:hover": {
 										bgcolor: palette.secondary[300],
-										color: palette.background.default,
+										color: palette.warning.dark,
 									},
 								}}
 								onClick={() => {
@@ -217,12 +221,27 @@ const Trainings = () => {
 								{params.row.display ? "hide" : "show"}
 							</Button>
 						)}
+						<Button
+							variant="contained"
+							size="small"
+							sx={{
+								color: palette.secondary[300],
+								bgcolor: palette.success.dark,
+								"&:hover": {
+									bgcolor: palette.secondary[300],
+									color: palette.success.dark,
+								},
+							}}
+							onClick={() =>
+								void navigate(`/trainings/user/edit/${params.row.id}`)
+							}>
+							Update
+						</Button>
 					</Box>
 				);
 			},
 		},
 	];
-
 	return (
 		<Box m="1.5rem 2.5rem">
 			<UserAgreement
@@ -250,7 +269,7 @@ const Trainings = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1400}>
+				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1430}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.trainings || []}

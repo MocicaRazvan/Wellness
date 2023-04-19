@@ -36,11 +36,12 @@ const AdminTrainings = () => {
 	const { data, isLoading } = useGetTrainingsQuery(
 		{
 			userId: user?.id,
-			page,
+			page: page + 1,
 			pageSize,
 			sort: JSON.stringify(sort),
 			search,
 			admin: true,
+			limit: pageSize,
 		},
 		{ skip: !user?.id, refetchOnFocus: true },
 	);
@@ -278,6 +279,8 @@ const AdminTrainings = () => {
 		},
 	];
 
+	console.log({ pageSize });
+
 	return (
 		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
 			<Header title="Trainings" subtitle="See the list of trainings." />
@@ -310,7 +313,7 @@ const AdminTrainings = () => {
 						isLoading={isLoading || !data}
 						rows={data?.trainings || []}
 						columns={columns}
-						rowCount={data?.count || 0}
+						rowCount={data?.total || 0}
 						page={page}
 						setPage={setPage}
 						setPageSize={setPageSize}

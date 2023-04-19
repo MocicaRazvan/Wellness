@@ -49,6 +49,7 @@ import AdminTrainings from "./pages/admin/AdminTrainings";
 import Email from "./pages/admin/Email";
 import OurStory from "./pages/aboutUs/OurStory";
 import OrderTroubleshoot from "./pages/customerCare/OrderTroubleshoot";
+import UpdateTraining from "./pages/trainings/UpdateTraining";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -97,6 +98,10 @@ function App() {
 									<Route path="user" element={<UserTrainings />} />
 									<Route path="create" element={<CreateTraining />} />
 									<Route path="bought" element={<BoughtTrainings />} />
+									<Route
+										path="user/edit/:trainingId"
+										element={<UpdateTraining />}
+									/>
 								</Route>
 								<Route path="/cart" element={<Cart />} />
 								<Route path="/checkout-success" element={<CheckoutSuccess />} />

@@ -60,7 +60,7 @@ const Form = ({ post }) => {
 		pictures: [],
 	};
 	const handleFormSubmit = async (values, onSubmitProps) => {
-		if (body === "") {
+		if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
 			setMessage("Plese provide a body to the post");
 			setCredentials((prev) => ({
 				...prev,

@@ -1,47 +1,31 @@
 import {
 	Box,
 	Button,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
 	TextField,
 	Typography,
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import { Formik } from "formik";
-import { useState } from "react";
-import Dropzone from "react-dropzone";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import CustomCarousel from "../../components/reusable/CustomCarousel";
-import Loading from "../../components/reusable/Loading";
-import TextEditor from "../../components/reusable/TextEditor";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useGetAllExercisesIdsByUserQuery } from "../../redux/exercises/exercisesApi";
-import { useCreateTriningMutation } from "../../redux/trainings/trainingsApi";
-import tags from "../../utils/consts/tags";
-
+import { useUpdateTrainingMutation } from "../../redux/trainings/trainingsApi";
+import Loading from "../../components/reusable/Loading";
+import { Formik } from "formik";
+import TextEditor from "../../components/reusable/TextEditor";
+import Dropzone from "react-dropzone";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
 const trainingSchema = yup.object().shape({
-	title: yup.string().required("Please enter the title"),
-	tags: yup
-		.array()
-		.required("Please enter the tags")
-		.min(1, "Please enter at least one tag"),
-	exercises: yup
-		.array()
-		.required("Please enter the exercises")
-		.min(1, "Please enter at least one exercise"),
-	price: yup.number().required("Please enter the price").min(0),
+	price: yup.number().required("Please enter the price").min(1),
 	pictures: yup.array().required("Please enter pictures"),
 });
-
-const Form = ({ training }) => {
+const UpdateForm = ({ training }) => {
 	const [description, setDescription] = useState(training?.description || "");
+	console.log({ description });
 	const [loading, setLoading] = useState({
-		msg: "Creating the training...",
+		msg: "Updating the training...",
 		show: false,
 	});
 	const [openCarousel, setOpenCarousel] = useState(false);
@@ -55,26 +39,11 @@ const Form = ({ training }) => {
 	const theme = useTheme();
 	const user = useSelector(selectCurrentUser);
 	const navigate = useNavigate();
-
-	const [createTraining] = useCreateTriningMutation();
-	const { data: ids } = useGetAllExercisesIdsByUserQuery(
-		{ id: user?.id },
-		{ skip: !user?.id },
-	);
-
-	console.log(ids);
-	if (!ids) {
-		return <></>;
-	}
-
+	const [updateTraining] = useUpdateTrainingMutation();
 	const initialValues = {
-		title: training?.title || "",
-		tags: training?.tags || [],
-		exercises: training?.exercises || [],
 		price: training?.price || null,
-		pictures: training?.images || [],
+		pictures: [],
 	};
-
 	const fileBase64 = (img) => {
 		return new Promise((resolve, reject) => {
 			let fileReader = new FileReader();
@@ -85,7 +54,6 @@ const Form = ({ training }) => {
 			fileReader.readAsDataURL(img);
 		});
 	};
-
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (description === "" || description.replace(/(<([^>]+)>)/gi, "") === "") {
 			setMessage("Please provide a description");
@@ -100,54 +68,38 @@ const Form = ({ training }) => {
 				2000,
 			);
 		} else {
-			const { title, tags, exercises, price, pictures } = values;
-			if (!training) {
-				if (pictures?.length === 0) {
+			const { price, pictures } = values;
+
+			try {
+				setLoading((prev) => ({ ...prev, show: true }));
+				const res = await updateTraining({
+					id: training?.id,
+					price,
+					description,
+					images: pictures,
+				});
+				setLoading((prev) => ({ ...prev, show: false }));
+				if (res?.error) {
 					setAlert((prev) => ({
 						...prev,
 						show: true,
-						msg: "Please enter at least 1 picture!",
+						msg: res.error.data.message,
 					}));
-
+					setMessage(res.error.data.message);
+					onSubmitProps.setFieldError("title", res.error.data.message);
 					setTimeout(
 						() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
 						2000,
 					);
 				} else {
-					try {
-						setLoading((prev) => ({ ...prev, show: true }));
-						const res = await createTraining({
-							title,
-							tags,
-							exercises,
-							price,
-							description,
-							images: pictures,
-						});
-						setLoading((prev) => ({ ...prev, show: false }));
-						if (res?.error) {
-							setAlert((prev) => ({
-								...prev,
-								show: true,
-								msg: res.error.data.message,
-							}));
-							setMessage(res.error.data.message);
-							onSubmitProps.setFieldError("title", res.error.data.message);
-							setTimeout(
-								() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
-								2000,
-							);
-						} else {
-							setMessage("");
-							onSubmitProps.resetForm();
-							navigate("/trainings/user");
-						}
-					} catch (error) {
-						console.log(error);
-						setDescription("");
-						onSubmitProps.resetForm();
-					}
+					setMessage("");
+					onSubmitProps.resetForm();
+					navigate("/trainings/user");
 				}
+			} catch (error) {
+				console.log(error);
+				setDescription("");
+				onSubmitProps.resetForm();
 			}
 		}
 	};
@@ -179,81 +131,32 @@ const Form = ({ training }) => {
 							sx={{
 								"& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
 							}}>
-							<TextField
-								label="Title"
-								onBlur={handleBlur}
-								onChange={handleChange}
-								value={values.title}
-								name="title"
-								error={Boolean(touched.title) && Boolean(errors.title)}
-								helperText={touched.title && errors.title}
-								sx={{ gridColumn: "span 2" }}
-							/>
-							<TextField
-								label="Price"
-								onBlur={handleBlur}
-								onChange={handleChange}
-								value={values.price}
-								name="price"
-								type="number"
-								InputProps={{
-									inputProps: { min: 0, step: 1, type: "number" },
-								}}
-								error={Boolean(touched.price) && Boolean(errors.price)}
-								helperText={touched.price && errors.price}
-								sx={{ gridColumn: "span 2" }}
-							/>
-							<FormControl sx={{ gridColumn: "span 2" }}>
-								<InputLabel htmlFor="select">Tags</InputLabel>
-								<Select
-									label="Tags"
-									multiple={true}
-									id="select"
+							<Box sx={{ gridColumn: "span 4", px: 5.5 }}>
+								<TextField
+									label="Price"
 									onBlur={handleBlur}
-									name="tags"
 									onChange={handleChange}
-									value={values.tags}
-									error={Boolean(touched.tags) && Boolean(errors.tags)}
-									helperText={touched.tags && errors.tags}
-									sx={{
-										gridColumn: "span 2",
-									}}>
-									{tags.map((tag) => (
-										<MenuItem key={tag} value={tag}>
-											{tag}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-							<FormControl sx={{ gridColumn: "span 2" }}>
-								<InputLabel htmlFor="selectEx">Exercises</InputLabel>
-								<Select
-									multiple={true}
-									id="selectEx"
-									onBlur={handleBlur}
-									name="exercises"
-									onChange={handleChange}
-									value={values.exercises}
-									error={
-										Boolean(touched.exercises) && Boolean(errors.exercises)
-									}
-									helperText={touched.exercises && errors.exercises}
-									sx={{
-										gridColumn: "span 2",
-									}}>
-									{ids.map((tag) => (
-										<MenuItem key={tag.id} value={tag.id}>
-											{tag.title}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
+									value={values.price}
+									name="price"
+									type="number"
+									InputProps={{
+										inputProps: { min: 0, step: 1, type: "number" },
+									}}
+									error={Boolean(touched.price) && Boolean(errors.price)}
+									helperText={touched.price && errors.price}
+									sx={{ width: "100%" }}
+								/>
+							</Box>
 							<Box
 								gridColumn="span 4"
 								mb={4}
 								display="flex"
 								justifyContent="center">
-								<TextEditor name="body" setValue={setDescription} />
+								<TextEditor
+									name="body"
+									setValue={setDescription}
+									value={training?.description}
+								/>
 							</Box>
 							<Box
 								gridColumn="span 4"
@@ -292,7 +195,7 @@ const Form = ({ training }) => {
 													color={theme.palette.secondary[200]}
 													textAlign="center"
 													fontWeight="bold">
-													Add Pictures
+													If not pictures are added the old ones will stay
 												</Typography>
 											) : (
 												<Typography
@@ -354,4 +257,4 @@ const Form = ({ training }) => {
 	);
 };
 
-export default Form;
+export default UpdateForm;

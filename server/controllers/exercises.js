@@ -1,6 +1,7 @@
 const Exercises = require("../models/Exercise");
 const cloudinary = require("../utils/cloudinary");
 const mongoose = require("mongoose");
+const Trainings = require("../models/Training");
 
 //post: /exercises/create
 exports.createExercise = async (req, res) => {
@@ -205,6 +206,7 @@ exports.getAllExercises = async (req, res) => {
 exports.updateExercise = async (req, res) => {
 	const { exerciseId } = req.params;
 	const { title, muscleGroups, body, videos } = req.body;
+	const admin = req.user.role === "admin";
 
 	const count = await Exercises.countDocuments({
 		title,
@@ -252,6 +254,10 @@ exports.updateExercise = async (req, res) => {
 					},
 					{ new: true },
 				);
+				await Trainings.updateMany(
+					{ exercises: mongoose.Types.ObjectId(exerciseId) },
+					{ approved: admin, display: false },
+				);
 				return res.status(200).json({
 					message: `Exercise with id ${exerciseId} was updated succesfully`,
 					updatedExercise,
@@ -266,6 +272,11 @@ exports.updateExercise = async (req, res) => {
 			},
 			{ new: true },
 		);
+		 await Trainings.updateMany(
+			{ exercises: mongoose.Types.ObjectId(exerciseId) },
+			{ approved: admin, display: false },
+		);
+		
 		return res.status(200).json({
 			message: `Post with id ${exerciseId} was updated succesfully`,
 			updatedExercise,

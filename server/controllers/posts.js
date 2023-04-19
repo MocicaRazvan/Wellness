@@ -103,6 +103,7 @@ exports.getAllPosts = async (req, res) => {
 		message: "Post delivered successfully",
 		posts,
 		count: posts.length,
+		total,
 		page,
 		pages,
 	});
@@ -296,6 +297,7 @@ exports.getPostsByUser = async (req, res) => {
 		message: "User's posts received",
 		posts,
 		count: posts.length,
+		total,
 		page,
 		pages,
 	});

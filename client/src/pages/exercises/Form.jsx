@@ -84,7 +84,7 @@ const Form = ({ exercise }) => {
 	}
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
-		if (body === "") {
+		if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
 			setMessage("Plese provide a body to the exercise");
 			setCredentials((prev) => ({
 				...prev,

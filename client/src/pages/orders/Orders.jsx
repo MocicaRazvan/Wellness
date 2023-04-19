@@ -151,7 +151,6 @@ const Orders = () => {
 		},
 	];
 
-	console.log({ search });
 
 	return (
 		<Box m="1.5rem 2.5rem">

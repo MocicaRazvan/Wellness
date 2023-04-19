@@ -155,6 +155,7 @@ const UserExercises = () => {
 			},
 		},
 	];
+	console.log({ data });
 	return (
 		<Box m="1.5rem 2.5rem">
 			<UserAgreement

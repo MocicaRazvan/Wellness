@@ -186,6 +186,7 @@ exports.getAllTrainings = async (req, res) => {
 		message: "Training delivered successfully",
 		trainings,
 		count: trainings.length,
+		total,
 		page,
 		pages,
 	});
@@ -197,7 +198,7 @@ exports.getTrainingsByUser = async (req, res) => {
 	let query;
 
 	const { userId } = req.params;
-
+	console.log({ l: q.limit });
 	const page = parseInt(q.page) || 1;
 	const pageSize = parseInt(q.limit) || 20;
 	const skip = (page - 1) * pageSize;
@@ -228,6 +229,7 @@ exports.getTrainingsByUser = async (req, res) => {
 		message: "Trainings delivered successfully",
 		trainings,
 		count: trainings.length,
+		total,
 		page,
 		pages,
 	});
@@ -283,17 +285,8 @@ exports.deleteTraining = async (req, res) => {
 //put: /trainings/:trainingId
 exports.updateTraining = async (req, res) => {
 	const { trainingId } = req.params;
-	const { title, tags, exercises, price, images, description } = req.body;
-
-	const count = await Trainings.countDocuments({
-		title,
-		_id: { $ne: mongoose.Types.ObjectId(trainingId) },
-	});
-	if (count > 0)
-		return res
-			.status(400)
-			.json({ message: "Please enter a title that havent been used!" });
-
+	const { price, images, description } = req.body;
+	const admin = req.user.role === "admin";
 	if (images && images.length > 0) {
 		const training = await Trainings.findById(trainingId).lean();
 		if (!training)
@@ -319,12 +312,11 @@ exports.updateTraining = async (req, res) => {
 					trainingId,
 					{
 						$set: {
-							title,
-							tags,
-							exercises,
 							price,
 							description,
 							images: uplodRes,
+							approved: admin,
+							display: false,
 						},
 					},
 					{ new: true },
@@ -339,7 +331,7 @@ exports.updateTraining = async (req, res) => {
 		const updatedTraining = await Trainings.findByIdAndUpdate(
 			trainingId,
 			{
-				$set: { title, tags, exercises, price, description },
+				$set: { price, description, approved: admin, display: false },
 			},
 			{ new: true },
 		);
@@ -466,8 +458,6 @@ exports.getTrainingsByOrder = async (req, res) => {
 	const { trainings, total, user } = await Order.findById(orderId)
 		.populate("trainings")
 		.select("trainings total user -_id");
-
-	console.log(trainings, total, user);
 
 	return res.status(200).json({
 		trainings,

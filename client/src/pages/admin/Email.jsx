@@ -49,7 +49,7 @@ const Test = () => {
 	}, [body, quill, quillRef]);
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
-		if (body === "") {
+		if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
 			setAlert((prev) => ({
 				...prev,
 				show: true,
