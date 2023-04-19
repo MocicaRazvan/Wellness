@@ -16,7 +16,13 @@ import {
 import { useDispatch } from "react-redux";
 import { setNotReload } from "../../redux/messages/messagesSlice";
 
-export default function PopUp({ notifications, userId, setNotifications }) {
+export default function PopUp({
+	notifications,
+	userId,
+	setNotifications,
+	approved,
+	setApproved,
+}) {
 	const [open, setOpen] = useState(false);
 	const ref = useRef(null);
 	const theme = useTheme();
@@ -24,6 +30,10 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 	const [deleteByReceiver] = useDeleteNotificationsByReceiverMutation();
 	const [deleteBySender] = useDeleteNotifcationsBySenderMutation();
 	const dispatch = useDispatch();
+	const badgeContent =
+		notifications?.length +
+		Object.values(approved).reduce((acc, cur) => (acc += cur.length), 0);
+
 	//when open the notification the count will be 0
 
 	const handleClick = (e) => {
@@ -37,6 +47,14 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 				}
 			})();
 			setNotifications([]);
+			setApproved({
+				postApprove: [],
+				postDisapprove: [],
+				postDelete: [],
+				trainingApprove: [],
+				trainingDisapprove: [],
+				trainingDelete: [],
+			});
 		}
 		setOpen((prev) => !prev);
 	};
@@ -111,7 +129,16 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 
 	// console.log({ parsed });
 
-	if (!notifications) return <></>;
+	if (
+		!notifications ||
+		!approved?.postApprove ||
+		!approved?.postDisapprove ||
+		!approved?.trainingApprove ||
+		!approved?.trainingDisapprove ||
+		!approved?.postDelete ||
+		!approved?.trainingDelete
+	)
+		return <></>;
 
 	// const cont = Object.entries(parsed).map(([key, { total, user }]) => (
 	// 	<Box
@@ -180,7 +207,179 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 							}}>
 							{/* {content} */}
 							{cont}
-							{notifications.length > 0 && (
+							<Box
+								width="100%"
+								display="flex"
+								justifyContent="center"
+								flexDirection="column"
+								alignItems="center"
+								mt={0.5}
+								gap={1}
+								// p={2}
+								sx={{ cursor: "pointer" }}
+								onClick={() => navigate("/posts/user")}>
+								{approved?.postApprove.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										pt={2}
+										px={2}
+										gap={1}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.postApprove.length}{" "}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.postApprove.length > 1 ? "Posts" : "Post"}{" "}
+											Approved
+										</Typography>{" "}
+									</Box>
+								)}
+								{approved?.postDisapprove.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										gap={1}
+										pt={2}
+										px={2}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.postDisapprove.length}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.postDisapprove.length > 1 ? "Posts" : "Post"}{" "}
+											Disapproved
+										</Typography>
+									</Box>
+								)}
+								{approved?.postDelete.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										gap={1}
+										pt={2}
+										px={2}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.postDelete.length}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.postDelete.length > 1 ? "Posts" : "Post"}{" "}
+											Deleted
+										</Typography>
+									</Box>
+								)}
+							</Box>
+							<Box
+								width="100%"
+								display="flex"
+								justifyContent="center"
+								flexDirection="column"
+								alignItems="center"
+								mt={0.5}
+								gap={1}
+								// p={2}
+								sx={{ cursor: "pointer" }}
+								onClick={() => navigate("/trainings/user")}>
+								{approved?.trainingApprove.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										pt={2}
+										px={2}
+										gap={1}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.trainingApprove.length}{" "}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.trainingApprove.length > 1
+												? "Trainings"
+												: "Training"}{" "}
+											Approved
+										</Typography>{" "}
+									</Box>
+								)}
+								{approved?.trainingDisapprove.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										px={2}
+										pt={2}
+										gap={1}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.trainingDisapprove.length}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.trainingDisapprove.length > 1
+												? "Trainings"
+												: "Training"}{" "}
+											Disapproved
+										</Typography>
+									</Box>
+								)}
+								{approved?.trainingDelete.length > 0 && (
+									<Box
+										width="100%"
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										px={2}
+										pt={2}
+										gap={1}>
+										<Typography
+											color={theme.palette.secondary[200]}
+											fontWeight={900}>
+											{approved?.trainingDelete.length}
+										</Typography>
+										<Typography
+											color={theme.palette.secondary[300]}
+											textAlign="end">
+											{approved?.trainingDelete.length > 1
+												? "Trainings"
+												: "Training"}{" "}
+											Deleted
+										</Typography>
+									</Box>
+								)}
+							</Box>
+							{/* {approved?.trainingApprove.length > 0 && (
+								<Typography>
+									{approved?.trainingApprove.length} trainings app
+								</Typography>
+							)}
+							{approved?.trainingApprove.length > 0 && (
+								<Typography>
+									{approved?.trainingApprove.length} trainings app
+								</Typography>
+							)} */}
+							{badgeContent > 0 && (
 								<Tooltip title="Notifications will be deleted" arrow>
 									<Button
 										sx={{
@@ -208,7 +407,7 @@ export default function PopUp({ notifications, userId, setNotifications }) {
 					justifyContent: "center",
 				}}>
 				<IconBtn
-					badgeContent={notifications?.length || 0}
+					badgeContent={badgeContent || 0}
 					///badgeContent={notifications}
 					icon={<MailIcon />}
 					onClick={handleClick}

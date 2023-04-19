@@ -101,6 +101,14 @@ io.on("connection", (socket) => {
 		io.emit("getUsers", users);
 	});
 
+	socket.on("notifApproved", ({ receiverId, type, sender, ref }) => {
+		const user = getUser(receiverId);
+		if (user) {
+			console.log("appsend");
+			io.to(user?.socketId).emit("getNotifApproved", { type, sender, ref });
+		}
+	});
+
 	//when diconnect
 	socket.on("disconnect", () => {
 		console.log("a user disconnected");

@@ -27,6 +27,9 @@ import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import { format } from "date-fns";
 import UserAgreement from "../../components/reusable/UserAgreement";
 import { useOutletContext } from "react-router-dom";
+import { selectSocket } from "../../redux/socket/socketSlice";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 
 const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 	const theme = useTheme();
@@ -156,7 +159,7 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 						<Button
 							color="error"
 							onClick={() => {
-								setDeleteId(post?.id);
+								setDeleteId({ id: post?.id, user: post?.user?._id });
 								setOpen((prev) => !prev);
 							}}>
 							DELETE
@@ -169,7 +172,11 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 										: theme.palette.success.main,
 								}}
 								onClick={() => {
-									setApproveId({ id: post?.id, state: !post?.approved });
+									setApproveId({
+										id: post?.id,
+										state: !post?.approved,
+										user: post?.user?._id,
+									});
 									setApproveOpen((prev) => !prev);
 								}}>
 								{post?.approved ? "Disapprove" : "Approve"}
@@ -190,27 +197,62 @@ const AllPostsAdmin = () => {
 	const [deletePost] = useDeletePostMutation();
 	const [approvePost] = useApprovePostMutation();
 	const [open, setOpen] = useState(false);
-	const [deleteId, setDeleteId] = useState(null);
+	const [deleteId, setDeleteId] = useState({ id: null, user: null });
 	const [approveOpen, setApproveOpen] = useState(false);
-	const [approveId, setApproveId] = useState({ id: null, state: false });
+	const [approveId, setApproveId] = useState({
+		id: null,
+		state: false,
+		user: null,
+	});
 	const [notApproved, setNotApproved] = useState(false);
 	const [notDisplayed, setNotDisplayed] = useState(false);
 	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
 	const isSideBarOpen = useOutletContext();
+	const socketRedux = useSelector(selectSocket);
+	const user = useSelector(selectCurrentUser);
+	const [createNotification] = useCreateNotificationMutation();
 
 	const handleDelete = async (id) => {
-		if (deleteId) {
+		if (deleteId?.id) {
 			try {
 				await deletePost({ id }).unwrap();
+				if (socketRedux) {
+					if (deleteId?.user !== user?.id) {
+						const ob = {
+							receiver: deleteId?.user,
+							type: "post/delete",
+							sender: user?.id,
+							ref: deleteId.id,
+						};
+						socketRedux.emit("notifApproved", {
+							...ob,
+							receiverId: ob.receiver,
+						});
+						await createNotification(ob).unwrap();
+					}
+				}
 			} catch (error) {
 				console.log(error);
 			}
 		}
 	};
 	const handleApprove = async (id) => {
-		if (approveId) {
+		if (approveId?.id) {
 			try {
 				await approvePost({ id }).unwrap();
+				if (socketRedux) {
+					const ob = {
+						receiver: approveId?.user,
+						type: approveId?.state ? "post/approve" : "post/disapprove",
+						sender: user?.id,
+						ref: approveId.id,
+					};
+					socketRedux.emit("notifApproved", {
+						...ob,
+						receiverId: ob.receiver,
+					});
+					await createNotification(ob).unwrap();
+				}
 			} catch (error) {
 				console.log(error);
 			}
@@ -225,7 +267,7 @@ const AllPostsAdmin = () => {
 	);
 	// console.log(data?.posts?.map(({ likes, dislikes }) => ({ likes, dislikes })));
 
-	if (isLoading || !data)
+	if (isLoading || !data || !socketRedux || !user?.id)
 		return (
 			<CircularProgress
 				sx={{ position: "absolute", top: "50%", left: "50%" }}
@@ -242,7 +284,7 @@ const AllPostsAdmin = () => {
 				text={
 					"Are you sure you want to delete this post? You can't undo after you press Agree, be careful what you want."
 				}
-				handleAgree={async () => await handleDelete(deleteId)}
+				handleAgree={async () => await handleDelete(deleteId.id)}
 			/>
 			<UserAgreement
 				open={approveOpen}

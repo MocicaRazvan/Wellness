@@ -11,7 +11,9 @@ router
 router
 	.route("/:notificationId")
 	.delete(verifyJwt, notificationsController.deleteNotificationById);
-
+router
+	.route("/user/approved/:type")
+	.delete(verifyJwt, notificationsController.deleteUserApproved);
 router
 	.route("/user/:receiverId")
 	.delete(verifyJwt, notificationsController.deleteUserNotifications);

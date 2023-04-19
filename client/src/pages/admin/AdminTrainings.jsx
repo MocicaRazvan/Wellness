@@ -12,6 +12,8 @@ import {
 	useGetTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
 import { format } from "date-fns";
+import { selectSocket } from "../../redux/socket/socketSlice";
+import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 
 const AdminTrainings = () => {
 	const [page, setPage] = useState(0);
@@ -20,11 +22,16 @@ const AdminTrainings = () => {
 	const [search, setSearch] = useState("");
 	const [searchInput, setSearchInput] = useState("");
 	const [open, setOpen] = useState(false);
-	const [deleteId, setDeleteId] = useState(null);
+	const [deleteId, setDeleteId] = useState({ id: null, user: null });
 	const [approveOpen, setApproveOpen] = useState(false);
-	const [approvedId, setApprovedId] = useState({ id: null, state: false });
+	const [approvedId, setApprovedId] = useState({
+		id: null,
+		state: false,
+		user: null,
+	});
 	const user = useSelector(selectCurrentUser);
 	const { palette } = useTheme();
+	const socketRedux = useSelector(selectSocket);
 
 	const { data, isLoading } = useGetTrainingsQuery(
 		{
@@ -35,24 +42,55 @@ const AdminTrainings = () => {
 			search,
 			admin: true,
 		},
-		{ skip: !user?.id },
+		{ skip: !user?.id, refetchOnFocus: true },
 	);
 
 	const [deleteTraining] = useDeleteTrainingMutation();
 	const [approveTraining] = useApproveTrainingMutation();
+	const [createNotification] = useCreateNotificationMutation();
 
 	const handleDeleteTraining = async (id) => {
-		if (deleteId)
+		if (deleteId.id)
 			try {
 				await deleteTraining({ id }).unwrap();
+				if (socketRedux) {
+					if (deleteId?.user !== user?.id) {
+						const ob = {
+							receiver: deleteId?.user,
+							type: "training/delete",
+							sender: user?.id,
+							ref: deleteId.id,
+						};
+						socketRedux.emit("notifApproved", {
+							...ob,
+							receiverId: ob.receiver,
+						});
+						await createNotification(ob).unwrap();
+					}
+				}
 			} catch (error) {
 				console.log(error);
 			}
 	};
 	const handleApproveTraining = async (id) => {
-		if (approvedId)
+		if (approvedId.id)
 			try {
 				await approveTraining({ id }).unwrap();
+				if (socketRedux) {
+					const ob = {
+						receiver: approvedId?.user,
+						type: approvedId?.state
+							? "training/approve"
+							: "training/disapprove",
+						sender: user?.id,
+						ref: approvedId.id,
+					};
+					socketRedux.emit("notifApproved", {
+						...ob,
+						receiverId: ob.receiver,
+					});
+					await createNotification(ob).unwrap();
+				}
 			} catch (error) {
 				console.log(error);
 			}
@@ -194,7 +232,10 @@ const AdminTrainings = () => {
 										},
 									}}
 									onClick={() => {
-										setDeleteId(params.row.id);
+										setDeleteId({
+											id: params.row.id,
+											user: params.row.user._id,
+										});
 										setOpen(true);
 									}}>
 									Delete
@@ -222,6 +263,7 @@ const AdminTrainings = () => {
 									setApprovedId({
 										id: params.row.id,
 										state: !params.row.approved,
+										user: params.row.user._id,
 									});
 									setApproveOpen(true);
 								}}>
@@ -244,7 +286,7 @@ const AdminTrainings = () => {
 				text={
 					"Are you sure you want to delete this training? You can't undo after you press Agree, be careful what you want."
 				}
-				handleAgree={async () => await handleDeleteTraining(deleteId)}
+				handleAgree={async () => await handleDeleteTraining(deleteId.id)}
 			/>
 			<UserAgreement
 				open={approveOpen}

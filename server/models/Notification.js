@@ -13,7 +13,15 @@ const notificationSchema = new mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: ["message"],
+			enum: [
+				"message",
+				"post/approve",
+				"post/disapprove",
+				"post/delete",
+				"training/approve",
+				"training/disapprove",
+				"training/delete",
+			],
 		},
 		ref: {
 			type: String,
