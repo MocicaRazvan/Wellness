@@ -22,12 +22,15 @@ import { useNavigate } from "react-router-dom";
 
 //username, email, role, subscription, image, location, occupation, phonenumber
 //tbd update user function
-const UserInfo = ({ user, width = "50%" }) => {
+const UserInfo = ({ user, width = "50%", own = "false" }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const theme = useTheme();
-	const { data, isLoading } = useGetCountStatsQuery(null, {
-		refetchOnMountOrArgChange: true,
-	});
+	const { data, isLoading } = useGetCountStatsQuery(
+		{ id: user?.id },
+		{
+			refetchOnMountOrArgChange: true,
+		},
+	);
 	const navigate = useNavigate();
 	const open = Boolean(anchorEl);
 	const isAbove = user?.role === "trainer" || user?.role === "admin";
@@ -78,33 +81,37 @@ const UserInfo = ({ user, width = "50%" }) => {
 						</Typography>
 					</Box>
 				</FlexBetween>
-				<ManageAccountsOutlined
-					onClick={handleClick}
-					sx={{ cursor: "pointer", color: theme.palette.secondary[400] }}
-				/>
-				<Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-					<MenuItem
-						onClick={() => {
-							navigate("/forgotPassword", { state: user?.email });
-							handleClose();
-						}}>
-						Reset password
-					</MenuItem>
-					<MenuItem
-						onClick={() => {
-							handleClose();
-							navigate("/user/update", { state: user });
-						}}>
-						Update Account
-					</MenuItem>
-					<MenuItem
-						onClick={() => {
-							handleClose();
-							navigate("/orders");
-						}}>
-						Track your orders
-					</MenuItem>
-				</Menu>
+				{own === "true" && (
+					<>
+						<ManageAccountsOutlined
+							onClick={handleClick}
+							sx={{ cursor: "pointer", color: theme.palette.secondary[400] }}
+						/>
+						<Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+							<MenuItem
+								onClick={() => {
+									navigate("/forgotPassword", { state: user?.email });
+									handleClose();
+								}}>
+								Reset password
+							</MenuItem>
+							<MenuItem
+								onClick={() => {
+									handleClose();
+									navigate("/user/update", { state: user });
+								}}>
+								Update Account
+							</MenuItem>
+							<MenuItem
+								onClick={() => {
+									handleClose();
+									navigate("/orders");
+								}}>
+								Track your orders
+							</MenuItem>
+						</Menu>
+					</>
+				)}
 			</FlexBetween>
 			<Divider />
 			{/* second row */}
@@ -142,7 +149,9 @@ const UserInfo = ({ user, width = "50%" }) => {
 			<Box p="1rem 0">
 				<FlexBetween mb="0.5rem">
 					<Typography color={theme.palette.secondary[200]}>
-						How many comments you have left
+						{own === "true"
+							? "How many comments you have left"
+							: "Comments left by user"}
 					</Typography>
 					<Typography color={theme.palette.secondary[300]} fontWeight="500">
 						{data?.comments}
@@ -152,7 +161,9 @@ const UserInfo = ({ user, width = "50%" }) => {
 					<>
 						<FlexBetween mb="0.5rem">
 							<Typography color={theme.palette.secondary[200]}>
-								How many posts you have created
+								{own === "true"
+									? "How many posts you have created"
+									: "Posts created by user"}
 							</Typography>
 							<Typography color={theme.palette.secondary[300]} fontWeight="500">
 								{data?.posts}
@@ -160,7 +171,9 @@ const UserInfo = ({ user, width = "50%" }) => {
 						</FlexBetween>
 						<FlexBetween mb="0.5rem">
 							<Typography color={theme.palette.secondary[200]}>
-								How many exercises you have created
+								{own === "true"
+									? "How many exercises you have created"
+									: "Exercises created by user"}
 							</Typography>
 							<Typography color={theme.palette.secondary[300]} fontWeight="500">
 								{data?.exercises}
@@ -168,7 +181,9 @@ const UserInfo = ({ user, width = "50%" }) => {
 						</FlexBetween>
 						<FlexBetween mb="0.5rem">
 							<Typography color={theme.palette.secondary[200]}>
-								How many trainings you have created
+								{own === "true"
+									? "How many trainings you have created"
+									: "Trainings created by user"}
 							</Typography>
 							<Typography color={theme.palette.secondary[300]} fontWeight="500">
 								{data?.trainings}

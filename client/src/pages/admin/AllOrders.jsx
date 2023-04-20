@@ -1,4 +1,4 @@
-import { Box, Button, styled, useTheme } from "@mui/material";
+import { Box, Button, Typography, styled, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
@@ -43,6 +43,29 @@ const AllOrders = () => {
 					user: { _id },
 				},
 			}) => <p key={_id}>{_id}</p>,
+		},
+		{
+			field: "username",
+			headerName: "Username",
+			// flex: 1,
+			width: 120,
+			sortable: false,
+			filterable: false,
+			renderCell: ({
+				row: {
+					user: { username, _id },
+				},
+			}) => (
+				<Typography
+					fontSize={12.3}
+					sx={{
+						cursor: "pointer",
+						"&:hover": { color: palette.secondary[300] },
+					}}
+					onClick={() => void navigate("/user/author", { state: _id })}>
+					{username}
+				</Typography>
+			),
 		},
 		{
 			field: "createdAt",
@@ -132,7 +155,7 @@ const AllOrders = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isSmall ? 0.85 : 1} maxWidth={1200}>
+				<Box flex={isSmall ? 0.85 : 1} maxWidth={1300}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.orders || []}

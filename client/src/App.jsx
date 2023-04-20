@@ -50,6 +50,7 @@ import Email from "./pages/admin/Email";
 import OurStory from "./pages/aboutUs/OurStory";
 import OrderTroubleshoot from "./pages/customerCare/OrderTroubleshoot";
 import UpdateTraining from "./pages/trainings/UpdateTraining";
+import AutorProfile from "./pages/user/AutorProfile";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -112,6 +113,7 @@ function App() {
 								<Route path="/user">
 									<Route path="profile" element={<UserProfile />} />
 									<Route path="update" element={<Register />} />
+									<Route path="author" element={<AutorProfile />} />
 								</Route>
 								<Route path="/messenger">
 									<Route index element={<MessengerWrapper />} />

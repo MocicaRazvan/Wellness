@@ -106,7 +106,16 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 						alignItems={"center"}
 						width="100%">
 						<Typography>Author: </Typography>
-						<Typography>{post?.user?.username} </Typography>
+						<Typography
+							sx={{
+								cursor: "pointer",
+								"&:hover": { color: theme.palette.secondary[300] },
+							}}
+							onClick={() =>
+								void navigate("/user/author", { state: post?.user?._id })
+							}>
+							{post?.user?.username}{" "}
+						</Typography>
 					</Box>
 					<Box
 						m={1}

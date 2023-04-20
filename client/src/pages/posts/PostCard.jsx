@@ -160,7 +160,14 @@ const PostCard = ({ item, user }) => {
 								<Typography
 									variant="subtitle2"
 									component="p"
-									color={theme.palette.secondary[100]}>
+									sx={{
+										cursor: "pointer",
+										"&:hover": { color: theme.palette.secondary[300] },
+									}}
+									color={theme.palette.secondary[100]}
+									onClick={() =>
+										void navigate("/user/author", { state: item?.user?._id })
+									}>
 									{item?.user?.username}
 								</Typography>
 								<Typography

@@ -5,7 +5,7 @@ const userController = require("../controllers/user");
 const router = express.Router();
 
 router.route("/single").get(verifyJwt, userController.getSingleUser);
-router.route("/countStats").get(verifyJwt, userController.getCountStats);
+router.route("/countStats/:userId").get(verifyJwt, userController.getCountStats);
 router.route("/admin/totalMonth").get(verifyJwt, userController.getTotalMonth);
 router.route("/admin/all").get(verifyJwt, userController.getAllUsersAdmin);
 router

@@ -23,6 +23,7 @@ import {
 import { format } from "timeago.js";
 import Perspective from "perspective-api-client";
 import Loading from "../reusable/Loading";
+import { useNavigate } from "react-router-dom";
 
 const perspective = new Perspective({
 	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -37,6 +38,7 @@ const Comment = ({ comment }) => {
 	const user = useSelector(selectCurrentUser);
 	const isAuth = user?.id === comment?.user?._id || user?.role === "admin";
 	const theme = useTheme();
+	const navigate = useNavigate();
 
 	const [deleteComment] = useDeleteCommentMutation();
 	const [updateComment] = useUpdateCommentMutation();
@@ -125,7 +127,12 @@ const Comment = ({ comment }) => {
 									sx={{
 										color: theme.palette.secondary[200],
 										fontWeight: "600",
-									}}>
+										cursor: "pointer",
+										"&:hover": { color: theme.palette.background.default },
+									}}
+									onClick={() =>
+										void navigate("/user/author", { state: comment?.user?._id })
+									}>
 									{comment?.user?.username}
 								</Typography>
 								<Typography sx={{ color: theme.palette.secondary[300] }}>

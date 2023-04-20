@@ -3,6 +3,7 @@ import {
 	Button,
 	styled,
 	Tooltip,
+	Typography,
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
@@ -61,6 +62,17 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 			headerName: "Username",
 			// flex: 0.5,
 			width: 110,
+			renderCell: ({ row: { username, _id } }) => (
+				<Typography
+					fontSize={12.3}
+					sx={{
+						cursor: "pointer",
+						"&:hover": { color: palette.secondary[300] },
+					}}
+					onClick={() => void navigate("/user/author", { state: _id })}>
+					{username}
+				</Typography>
+			),
 		},
 		{
 			field: "email",

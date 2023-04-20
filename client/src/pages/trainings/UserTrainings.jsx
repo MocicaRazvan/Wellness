@@ -99,6 +99,15 @@ const Trainings = () => {
 				format(new Date(createdAt), "dd/MM/yyyy"),
 		},
 		{
+			field: "updatedAt",
+			headerName: "UpdatedAt",
+			// flex: 0.7,
+			width: 140,
+			sortable: false,
+			renderCell: ({ row: { updatedAt } }) =>
+				format(new Date(updatedAt), "dd/MM/yyyy"),
+		},
+		{
 			field: "tags",
 			headerName: "Tags",
 			// flex: 1.4,
@@ -199,28 +208,36 @@ const Trainings = () => {
 								</Button>
 							</Box>
 						</Tooltip>
-						{params.row.approved && (
-							<Button
-								variant="contained"
-								size="small"
-								sx={{
-									color: palette.secondary[300],
-									bgcolor: palette.warning.dark,
-									"&:hover": {
-										bgcolor: palette.secondary[300],
-										color: palette.warning.dark,
-									},
-								}}
-								onClick={() => {
-									setDisplayId({
-										id: params.row.id,
-										state: !params.row.display,
-									});
-									setDisplayOpen(true);
-								}}>
-								{params.row.display ? "hide" : "show"}
-							</Button>
-						)}
+
+						<Tooltip
+							title={!params.row.approved ? "Not Approved" : ""}
+							placement="top"
+							arrow>
+							<Box>
+								<Button
+									variant="contained"
+									size="small"
+									sx={{
+										color: palette.secondary[300],
+										bgcolor: palette.warning.dark,
+										"&:hover": {
+											bgcolor: palette.secondary[300],
+											color: palette.warning.dark,
+										},
+									}}
+									disabled={!params.row.approved}
+									onClick={() => {
+										setDisplayId({
+											id: params.row.id,
+											state: !params.row.display,
+										});
+										setDisplayOpen(true);
+									}}>
+									{params.row.display ? "hide" : "show"}
+								</Button>
+							</Box>
+						</Tooltip>
+
 						<Button
 							variant="contained"
 							size="small"
@@ -269,7 +286,7 @@ const Trainings = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1430}>
+				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1580}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.trainings || []}

@@ -1,7 +1,14 @@
-import { Box, Button, Tooltip, styled, useTheme } from "@mui/material";
+import {
+	Box,
+	Button,
+	Tooltip,
+	Typography,
+	styled,
+	useTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
@@ -32,6 +39,7 @@ const AdminTrainings = () => {
 	const user = useSelector(selectCurrentUser);
 	const { palette } = useTheme();
 	const socketRedux = useSelector(selectSocket);
+	const navigate = useNavigate();
 
 	const { data, isLoading } = useGetTrainingsQuery(
 		{
@@ -113,16 +121,26 @@ const AdminTrainings = () => {
 		},
 		{
 			field: "user",
-			headerName: "Username",
+			headerName: "Author",
 			// flex: 1,
 			width: 130,
 			sortable: false,
 			filterable: false,
 			renderCell: ({
 				row: {
-					user: { username },
+					user: { username, _id },
 				},
-			}) => username,
+			}) => (
+				<Typography
+					fontSize={12.3}
+					sx={{
+						cursor: "pointer",
+						"&:hover": { color: palette.secondary[300] },
+					}}
+					onClick={() => void navigate("/user/author", { state: _id })}>
+					{username}
+				</Typography>
+			),
 		},
 		{
 			field: "createdAt",

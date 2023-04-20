@@ -4,11 +4,12 @@ import {
 	IconButton,
 	useMediaQuery,
 	useTheme,
+	Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
@@ -29,6 +30,7 @@ const BoughtTrainings = () => {
 	const { palette } = useTheme();
 	const user = useSelector(selectCurrentUser);
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
+	const navigate = useNavigate();
 
 	const { data, isLoading } = useGetBoughtUserTrainingsQuery(
 		{
@@ -61,12 +63,6 @@ const BoughtTrainings = () => {
 
 	const columns = [
 		{
-			field: "id",
-			headerName: "ID",
-			// flex: 1,
-			width: 215,
-		},
-		{
 			field: "title",
 			headerName: "Title",
 			// flex: 1,
@@ -79,9 +75,19 @@ const BoughtTrainings = () => {
 			width: 175,
 			renderCell: ({
 				row: {
-					user: { username },
+					user: { username, _id },
 				},
-			}) => username,
+			}) => (
+				<Typography
+					fontSize={12.3}
+					sx={{
+						cursor: "pointer",
+						"&:hover": { color: palette.secondary[300] },
+					}}
+					onClick={() => void navigate("/user/author", { state: _id })}>
+					{username}
+				</Typography>
+			),
 		},
 		{
 			field: "createdAt",
@@ -102,16 +108,28 @@ const BoughtTrainings = () => {
 				format(new Date(updatedAt), "dd/MM/yyyy"),
 		},
 		{
+			field: "exercises",
+			headerName: "Exercises",
+			// flex: 1,
+			width: 80,
+			sortable: false,
+			filterable: false,
+			renderCell: ({ row: { exercises } }) => exercises.length,
+		},
+		{
 			field: "tags",
 			headerName: "Tags",
 			// flex: 2,
 			width: 270,
+			sortable: false,
+			renderCell: ({ row: { tags } }) =>
+				tags.reduce((acc, cur) => (acc += `${cur} `), ``),
 		},
 		{
 			field: "action",
 			headerName: "Actions",
 			// flex: 2,
-			width:170,
+			width: 170,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -163,7 +181,7 @@ const BoughtTrainings = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1220}>
+				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1100}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.trainings || []}

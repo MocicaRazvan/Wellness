@@ -6,11 +6,11 @@ const Comment = require("../models/Comment");
 const cloudinary = require("../utils/cloudinary");
 const sendEmail = require("../utils/email/sendEmail");
 const makeAdmin = require("../utils/email/adminTemplate");
+const mongoose = require("mongoose");
 
-//get /user/countStats
+//get /user/countStats/:userId
 exports.getCountStats = async (req, res) => {
-	const userId = req.user._id;
-
+	const userId = mongoose.Types.ObjectId(req.params.userId);
 	const posts = await Posts.countDocuments({ user: userId });
 	const exercises = await Exercises.countDocuments({ user: userId });
 	const trainings = await Training.countDocuments({ user: userId });

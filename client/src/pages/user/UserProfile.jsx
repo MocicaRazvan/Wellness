@@ -20,7 +20,11 @@ const UserProfile = () => {
 			alignItems="center"
 			flexDirection="column"
 			gap="2rem">
-			<UserInfo user={user} width={isNonMobileScreens ? "50%" : "100%"} />
+			<UserInfo
+				user={user}
+				width={isNonMobileScreens ? "50%" : "100%"}
+				own="true"
+			/>
 		</Box>
 	);
 };

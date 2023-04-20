@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
-import { slideInBottom, slideInRight } from "../../animation/animations";
+import { slideInBottom, slideInLeft, slideInRight } from "../../animation/animations";
 import { useNavigate } from "react-router-dom";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { useDispatch, useSelector } from "react-redux";
@@ -117,7 +117,14 @@ const TrainingCard = ({ item }) => {
 								<Typography
 									variant="subtitle2"
 									component="p"
-									color={theme.palette.secondary[100]}>
+									sx={{
+										cursor: "pointer",
+										"&:hover": { color: theme.palette.secondary[300] },
+									}}
+									color={theme.palette.secondary[100]}
+									onClick={() =>
+										void navigate("/user/author", { state: item?.user?._id })
+									}>
 									{item?.user?.username}
 								</Typography>
 								<Typography
@@ -174,12 +181,12 @@ export const ProductViewMore = styled(Button, {
 	fontSize: "12px",
 	position: "absolute",
 	bottom: "2%",
-	left: "25%",
+	left: "48%",
 	width: "50%",
 	padding: "10px 5px",
 	animation:
 		show &&
-		`${slideInBottom} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both`,
+		`${slideInRight} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both`,
 	color: theme.palette.secondary[300],
 	background: theme.palette.background.alt,
 	opacity: 0.9,
