@@ -285,8 +285,9 @@ exports.deleteTraining = async (req, res) => {
 //put: /trainings/:trainingId
 exports.updateTraining = async (req, res) => {
 	const { trainingId } = req.params;
-	const { price, images, description } = req.body;
+	const { price, images, description, tags } = req.body;
 	const admin = req.user.role === "admin";
+	console.log({ tags });
 	if (images && images.length > 0) {
 		const training = await Trainings.findById(trainingId).lean();
 		if (!training)
@@ -315,6 +316,7 @@ exports.updateTraining = async (req, res) => {
 							price,
 							description,
 							images: uplodRes,
+							tags,
 							approved: admin,
 							display: false,
 						},
@@ -331,7 +333,7 @@ exports.updateTraining = async (req, res) => {
 		const updatedTraining = await Trainings.findByIdAndUpdate(
 			trainingId,
 			{
-				$set: { price, description, approved: admin, display: false },
+				$set: { price, description, tags, approved: admin, display: false },
 			},
 			{ new: true },
 		);

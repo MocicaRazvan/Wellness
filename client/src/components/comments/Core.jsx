@@ -6,7 +6,14 @@ import AddComment from "./AddComment";
 import Comment from "./Comment";
 
 const Core = ({ type, id }) => {
-	const { data, isLoading } = useGetCommentsQuery({ [type]: id });
+	const { data, isLoading } = useGetCommentsQuery(
+		{ [type]: id },
+		{
+			refetchOnMountOrArgChange: true,
+			refetchOnReconnect: true,
+			refetchOnFocus: true,
+		},
+	);
 	const user = useSelector(selectCurrentUser);
 	if (isLoading)
 		return (

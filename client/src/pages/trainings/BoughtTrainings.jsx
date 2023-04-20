@@ -146,7 +146,19 @@ const BoughtTrainings = () => {
 						<Link
 							to={`/trainings/find/${params.row.id}`}
 							style={{ textDecoration: "none" }}>
-							<Button variant="contained" size="small" className="cellBtn">
+							<Button
+								variant="contained"
+								size="small"
+								className="cellBtn"
+								sx={{
+									color: palette.secondary[300],
+									bgcolor: palette.background.default,
+
+									"&:hover": {
+										bgcolor: palette.secondary[300],
+										color: palette.background.default,
+									},
+								}}>
 								View
 							</Button>
 						</Link>

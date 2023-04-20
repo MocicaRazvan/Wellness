@@ -17,9 +17,14 @@ import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
 const SingleTraining = () => {
 	const { trainingId } = useParams();
 	const theme = useTheme();
-	const { data: training, isLoading } = useGetSingleTrainingQuery({
-		id: trainingId,
-	});
+	const { data: training, isLoading } = useGetSingleTrainingQuery(
+		{
+			id: trainingId,
+		},
+		{
+			refetchOnMountOrArgChange: 60,
+		},
+	);
 	const dispatch = useDispatch();
 	const cartItems = useSelector(selectCartItems);
 	const user = useSelector(selectCurrentUser);
@@ -67,7 +72,8 @@ const SingleTraining = () => {
 						// position: "absolute",
 						// top: 0,
 						// left: 0,
-						width: { xs: 30, md: 200 },
+						width: 300,
+						display: { xs: "none", md: "initial" },
 						color: theme.palette.secondary[200],
 					}}
 					variant="h6"
@@ -80,7 +86,7 @@ const SingleTraining = () => {
 						fontWeight="900"
 						color={theme.palette.secondary[400]}
 						fontSize={18}>
-						{training?.likes?.length}/
+						{training?.likes?.length} {` out of `}
 						{training?.likes?.length + training?.dislikes?.length}
 					</Typography>{" "}
 					people
@@ -110,6 +116,31 @@ const SingleTraining = () => {
 				gutterBottom>
 				{training?.title}
 			</Typography>
+			<Typography
+				sx={{
+					// position: "absolute",
+					// top: 0,
+					// left: 0,
+					width: 300,
+					display: { xs: "initial", md: "none" },
+					color: theme.palette.secondary[200],
+				}}
+				variant="h6"
+				fontWeight="600"
+				fontSize={18}>
+				Liked by{" "}
+				<Typography
+					component="span"
+					variant="h6"
+					fontWeight="900"
+					sx={{ mt: 1 }}
+					color={theme.palette.secondary[400]}
+					fontSize={15}>
+					{training?.likes?.length} {` out of `}
+					{training?.likes?.length + training?.dislikes?.length}
+				</Typography>{" "}
+				people
+			</Typography>
 			<Box
 				mt={4}
 				p={2}
@@ -134,9 +165,9 @@ const SingleTraining = () => {
 					<Typography
 						variant="h2"
 						color={theme.palette.secondary[400]}
-						fontWeight="600"
+						fontWeight="900"
 						textAlign="center"
-						gutterBottom>
+						sx={{ mb: 4 }}>
 						Exercises in the training
 					</Typography>
 					<Box p={2}>
@@ -185,6 +216,10 @@ const SingleTraining = () => {
 						sx={{
 							bgcolor: theme.palette.secondary[300],
 							color: theme.palette.background.alt,
+							"&:hover": {
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.primary.main,
+							},
 						}}
 						onClick={() => navigate("/cart")}>
 						Go to cart to finish the purchase!
@@ -196,6 +231,10 @@ const SingleTraining = () => {
 						sx={{
 							bgcolor: theme.palette.secondary[300],
 							color: theme.palette.background.alt,
+							"&:hover": {
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.primary.main,
+							},
 						}}
 						onClick={handleAddTocard}>
 						Buy to view more

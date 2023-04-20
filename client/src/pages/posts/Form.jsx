@@ -7,6 +7,7 @@ import {
 	FormControl,
 	Button,
 	Typography,
+	FormHelperText,
 } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 import { Formik } from "formik";
@@ -29,7 +30,7 @@ const postSchema = yup.object().shape({
 	tags: yup
 		.array()
 		.required("Please enter the tags")
-		.min(1, "Please enter the muscle groups targeted"),
+		.min(1, "Please enter the post tags"),
 	title: yup.string().required("Please enter the title"),
 	pictures: yup.array(),
 });
@@ -222,7 +223,9 @@ const Form = ({ post }) => {
 								helperText={touched.title && errors.title}
 								sx={{ gridColumn: "span 2" }}
 							/>
-							<FormControl sx={{ gridColumn: "span 2" }}>
+							<FormControl
+								sx={{ gridColumn: "span 2" }}
+								error={Boolean(touched.tags) && Boolean(errors.tags)}>
 								<InputLabel htmlFor="select">Tags</InputLabel>
 								<Select
 									label="Tags"
@@ -236,6 +239,19 @@ const Form = ({ post }) => {
 									helperText={touched.tags && errors.tags}
 									sx={{
 										gridColumn: "span 2",
+									}}
+									inputProps={{
+										MenuProps: {
+											MenuListProps: {
+												sx: {
+													color: theme.palette.secondary[300],
+													"& .Mui-selected": {
+														color: theme.palette.background.alt,
+														bgcolor: theme.palette.secondary[300],
+													},
+												},
+											},
+										},
 									}}>
 									{tags.map((tag) => (
 										<MenuItem key={tag} value={tag}>
@@ -243,6 +259,9 @@ const Form = ({ post }) => {
 										</MenuItem>
 									))}
 								</Select>
+								{Boolean(touched.tags) && Boolean(errors.tags) && (
+									<FormHelperText>{touched.tags && errors.tags}</FormHelperText>
+								)}
 							</FormControl>
 							<Box
 								gridColumn="span 4"

@@ -7,10 +7,11 @@ import {
 	Container,
 	Stack,
 	styled,
+	Tooltip,
 	Typography,
 	useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
 	useDeleteExerciseMutation,
@@ -23,9 +24,16 @@ import UserAgreement from "../../components/reusable/UserAgreement";
 
 const SingleExercise = ({ id = null }) => {
 	const { exerciseId } = useParams();
-	const { data: exercise, isLoading } = useGetExerciseByIdQuery({
-		id: exerciseId || id,
-	});
+	const {
+		data: exercise,
+		isLoading,
+		isError,
+	} = useGetExerciseByIdQuery(
+		{
+			id: exerciseId || id,
+		},
+		{ refetchOnReconnect: true },
+	);
 	const [deleteExercise] = useDeleteExerciseMutation();
 	const navigate = useNavigate();
 	const theme = useTheme();
@@ -43,7 +51,23 @@ const SingleExercise = ({ id = null }) => {
 		}
 	};
 
-	if (isLoading)
+	useEffect(() => {
+		if (user && exercise && user?.id !== exercise?.user) {
+			navigate("/", { replace: true });
+		}
+	}, [exercise, exercise?.user, navigate, user, user?.id]);
+
+	useEffect(() => {
+		if (isError) {
+			navigate("/", { replace: true });
+		}
+	}, [isError, navigate]);
+	const urls = useMemo(
+		() => exercise?.videos?.map(({ url }) => url),
+		[exercise?.videos],
+	);
+
+	if (isLoading || !urls)
 		return (
 			<CircularProgress
 				sx={{ position: "absolute", top: "50%", left: "50%" }}
@@ -51,8 +75,6 @@ const SingleExercise = ({ id = null }) => {
 				thickness={7}
 			/>
 		);
-
-	const urls = exercise?.videos?.map(({ url }) => url);
 
 	return (
 		<Box m="1.5rem 1rem">
@@ -98,17 +120,25 @@ const SingleExercise = ({ id = null }) => {
 							color: theme.palette.secondary[200],
 						},
 					}}>
-					<Button
-						variant="contained"
-						className="btnDel"
-						disabled={exercise?.occurrences > 0}
-						sx={{ color: theme.palette.secondary[200] }}
-						onClick={() => {
-							setDeleteId(exercise?.id);
-							setOpen(true);
-						}}>
-						Delete Exercise
-					</Button>
+					<Tooltip
+						title={exercise?.occurrences > 0 ? "Used" : ""}
+						placement="top"
+						arrow>
+						<Box>
+							<Button
+								variant="contained"
+								className="btnDel"
+								disabled={exercise?.occurrences > 0}
+								sx={{ color: theme.palette.secondary[200] }}
+								onClick={() => {
+									setDeleteId(exercise?.id);
+									setOpen(true);
+								}}>
+								Delete Exercise
+							</Button>
+						</Box>
+					</Tooltip>
+
 					<Button
 						variant="contained"
 						className="btnUpdate"

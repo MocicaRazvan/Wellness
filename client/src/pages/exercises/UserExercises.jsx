@@ -1,4 +1,4 @@
-import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
+import { Box, Button, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -22,6 +22,7 @@ const UserExercises = () => {
 	const [open, setOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
+	const { palette } = useTheme();
 	const { data, isLoading } = useGetUsersExercisesQuery(
 		{
 			id: user?.id,
@@ -71,6 +72,7 @@ const UserExercises = () => {
 			field: "occurrences",
 			headerName: "Times Used",
 			width: 110,
+			sortable: false,
 		},
 		{
 			field: "videos",
@@ -85,6 +87,7 @@ const UserExercises = () => {
 			headerName: "MuscleGroups",
 			// flex: 2,
 			width: 340,
+			sortable: false,
 			renderCell: ({ row: { muscleGroups } }) => (
 				<Box>
 					<div
@@ -121,14 +124,35 @@ const UserExercises = () => {
 						<Link
 							to={`/exercises/find/${params.row.id}`}
 							style={{ textDecoration: "none" }}>
-							<Button variant="contained" size="small" className="cellBtn">
+							<Button
+								variant="contained"
+								size="small"
+								sx={{
+									color: palette.secondary[300],
+									bgcolor: palette.background.default,
+
+									"&:hover": {
+										bgcolor: palette.secondary[300],
+										color: palette.background.default,
+									},
+								}}>
 								View
 							</Button>
 						</Link>
 						<Link
 							to={`/exercises/update/${params.row.id}`}
 							style={{ textDecoration: "none" }}>
-							<Button variant="contained" size="small" className="cellBtn">
+							<Button
+								variant="contained"
+								size="small"
+								sx={{
+									color: palette.secondary[300],
+									bgcolor: palette.success.dark,
+									"&:hover": {
+										bgcolor: palette.secondary[300],
+										color: palette.success.dark,
+									},
+								}}>
 								Update
 							</Button>
 						</Link>
@@ -138,7 +162,14 @@ const UserExercises = () => {
 							arrow>
 							<Box>
 								<Button
-									className="cellBtn"
+									sx={{
+										color: palette.secondary[300],
+										bgcolor: palette.error.dark,
+										"&:hover": {
+											bgcolor: palette.secondary[300],
+											color: palette.error.dark,
+										},
+									}}
 									variant="contained"
 									size="small"
 									disabled={params.row?.occurrences > 0}

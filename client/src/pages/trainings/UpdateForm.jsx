@@ -1,6 +1,11 @@
 import {
 	Box,
 	Button,
+	FormControl,
+	FormHelperText,
+	InputLabel,
+	MenuItem,
+	Select,
 	TextField,
 	Typography,
 	useMediaQuery,
@@ -17,9 +22,15 @@ import { Formik } from "formik";
 import TextEditor from "../../components/reusable/TextEditor";
 import Dropzone from "react-dropzone";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
+import tags from "../../utils/consts/tags";
+
 const trainingSchema = yup.object().shape({
 	price: yup.number().required("Please enter the price").min(1),
 	pictures: yup.array().required("Please enter pictures"),
+	tags: yup
+		.array()
+		.required("Please enter the tags")
+		.min(1, "Please enter at least one tag"),
 });
 const UpdateForm = ({ training }) => {
 	const [description, setDescription] = useState(training?.description || "");
@@ -43,6 +54,7 @@ const UpdateForm = ({ training }) => {
 	const initialValues = {
 		price: training?.price || null,
 		pictures: [],
+		tags: training?.tags,
 	};
 	const fileBase64 = (img) => {
 		return new Promise((resolve, reject) => {
@@ -68,7 +80,7 @@ const UpdateForm = ({ training }) => {
 				2000,
 			);
 		} else {
-			const { price, pictures } = values;
+			const { price, pictures, tags } = values;
 
 			try {
 				setLoading((prev) => ({ ...prev, show: true }));
@@ -77,6 +89,7 @@ const UpdateForm = ({ training }) => {
 					price,
 					description,
 					images: pictures,
+					tags,
 				});
 				setLoading((prev) => ({ ...prev, show: false }));
 				if (res?.error) {
@@ -131,22 +144,61 @@ const UpdateForm = ({ training }) => {
 							sx={{
 								"& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
 							}}>
-							<Box sx={{ gridColumn: "span 4", px: 5.5 }}>
-								<TextField
-									label="Price"
+							<TextField
+								label="Price"
+								onBlur={handleBlur}
+								onChange={handleChange}
+								value={values.price}
+								name="price"
+								type="number"
+								InputProps={{
+									inputProps: { min: 0, step: 1, type: "number" },
+								}}
+								error={Boolean(touched.price) && Boolean(errors.price)}
+								helperText={touched.price && errors.price}
+								sx={{ gridColumn: "span 2" }}
+							/>
+
+							<FormControl
+								sx={{ gridColumn: "span 2" }}
+								error={Boolean(touched.tags) && Boolean(errors.tags)}>
+								<InputLabel htmlFor="select">Tags</InputLabel>
+								<Select
+									label="Tags"
+									multiple={true}
+									id="select"
 									onBlur={handleBlur}
+									name="tags"
 									onChange={handleChange}
-									value={values.price}
-									name="price"
-									type="number"
-									InputProps={{
-										inputProps: { min: 0, step: 1, type: "number" },
+									value={values.tags}
+									error={Boolean(touched.tags) && Boolean(errors.tags)}
+									helperText={touched.tags && errors.tags}
+									sx={{
+										gridColumn: "span 2",
 									}}
-									error={Boolean(touched.price) && Boolean(errors.price)}
-									helperText={touched.price && errors.price}
-									sx={{ width: "100%" }}
-								/>
-							</Box>
+									inputProps={{
+										MenuProps: {
+											MenuListProps: {
+												sx: {
+													color: theme.palette.secondary[300],
+													"& .Mui-selected": {
+														color: theme.palette.background.alt,
+														bgcolor: theme.palette.secondary[300],
+													},
+												},
+											},
+										},
+									}}>
+									{tags.map((tag) => (
+										<MenuItem key={tag} value={tag}>
+											{tag}
+										</MenuItem>
+									))}
+								</Select>
+								{Boolean(touched.tags) && Boolean(errors.tags) && (
+									<FormHelperText>{touched.tags && errors.tags}</FormHelperText>
+								)}
+							</FormControl>
 							<Box
 								gridColumn="span 4"
 								mb={4}

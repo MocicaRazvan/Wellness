@@ -11,9 +11,13 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const SinglePost = () => {
 	const { postId } = useParams();
-	const { data, isLoading } = useGetPostByIdQuery({ id: postId });
-	const user = useSelector(selectCurrentUser);
-
+	const { data, isLoading } = useGetPostByIdQuery(
+		{ id: postId },
+		{
+			refetchOnMountOrArgChange: true,
+			refetchOnReconnect: true,
+		},
+	);
 	if (isLoading)
 		return (
 			<CircularProgress

@@ -132,10 +132,10 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 			],
 		}),
 		updateTraining: builder.mutation({
-			query: ({ id, price, images, description }) => ({
+			query: ({ id, price, images, description, tags }) => ({
 				url: `/trainings/${id}`,
 				method: "PUT",
-				body: { price, images, description },
+				body: { price, images, description, tags },
 			}),
 			invalidatesTags: (result, err, arg) => [
 				{ type: "Training", id: arg.id },

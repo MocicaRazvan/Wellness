@@ -28,53 +28,64 @@ const SinglePostCard = ({ post }) => {
 	return (
 		<Container sx={{ mt: 2 }}>
 			<Box position="relative">
-				{user && (
-					<Box
-						position={{ xs: "relative", md: "absolute" }}
-						top="0"
-						left="0"
-						display="flex"
-						alignItems="center"
-						justifyContent="start"
-						gap={0.5}>
-						<IconButton
-							onClick={async () => await handleAction(post?.id, "likes")}>
-							<ThumbUpIcon
-								sx={{
-									color: post?.likes.includes(user?.id)
-										? theme.palette.secondary[300]
-										: theme.palette.success.main,
-								}}
-							/>
-						</IconButton>
-						<Typography
-							sx={{ alignSelf: "end" }}
-							gutterBottom
-							variant="body2"
-							fontSize={15}
-							color={theme.palette.secondary[300]}>
-							{post?.likes?.length} likes
-						</Typography>
-						<IconButton
-							onClick={async () => await handleAction(post?.id, "dislikes")}>
-							<ThumbDownIcon
-								sx={{
-									color: post?.dislikes.includes(user?.id)
-										? theme.palette.secondary[300]
-										: theme.palette.error.main,
-								}}
-							/>
-						</IconButton>
-						<Typography
-							sx={{ alignSelf: "end" }}
-							gutterBottom
-							variant="body2"
-							fontSize={15}
-							color={theme.palette.secondary[300]}>
-							{post?.dislikes?.length} dislikes
-						</Typography>
-					</Box>
-				)}
+				<Box
+					position={{ xs: "relative", md: "absolute" }}
+					top="0"
+					left="0"
+					display="flex"
+					alignItems="center"
+					justifyContent="start"
+					gap={0.5}>
+					<IconButton
+						onClick={async () => {
+							if (!user) {
+								navigate("/login");
+							} else {
+								await handleAction(post?.id, "likes");
+							}
+						}}>
+						<ThumbUpIcon
+							sx={{
+								color: post?.likes.includes(user?.id)
+									? theme.palette.secondary[300]
+									: theme.palette.success.main,
+							}}
+						/>
+					</IconButton>
+					<Typography
+						sx={{ alignSelf: "end" }}
+						gutterBottom
+						variant="body2"
+						fontSize={15}
+						color={theme.palette.secondary[300]}>
+						{post?.likes?.length} likes
+					</Typography>
+					<IconButton
+						onClick={async () => {
+							if (!user) {
+								navigate("/login");
+							} else {
+								await handleAction(post?.id, "dislikes");
+							}
+						}}>
+						<ThumbDownIcon
+							sx={{
+								color: post?.dislikes.includes(user?.id)
+									? theme.palette.secondary[300]
+									: theme.palette.error.main,
+							}}
+						/>
+					</IconButton>
+					<Typography
+						sx={{ alignSelf: "end" }}
+						gutterBottom
+						variant="body2"
+						fontSize={15}
+						color={theme.palette.secondary[300]}>
+						{post?.dislikes?.length} dislikes
+					</Typography>
+				</Box>
+
 				<Typography
 					gutterBottom
 					variant="h2"

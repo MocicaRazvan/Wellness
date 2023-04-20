@@ -1,5 +1,5 @@
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import {
@@ -8,14 +8,14 @@ import {
 } from "../../redux/comments/commentsApi";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Actions = ({ comment }) => {
 	const [actionComment] = useCommentActionsMutation();
 
 	const user = useSelector(selectCurrentUser);
-	const isAuth = user.id === comment.user._id || user.role === "admin";
 	const { palette } = useTheme();
-
+	const navigate = useNavigate();
 	const handleActions = async (action) => {
 		try {
 			await actionComment({ id: comment.id, action }).unwrap();
@@ -24,46 +24,74 @@ const Actions = ({ comment }) => {
 		}
 	};
 
+
 	return (
 		<Box
 			sx={{
 				display: "flex",
 				alignItems: "center",
-				justifyContent: "space-between",
+				justifyContent: "space-around",
 				flexDirection: "column",
-				borderRadius: "5px",
+				height: "100%",
+				maxHeight: 100,
+				mr: { xs: 1, sm: 2 },
 			}}>
-			<IconButton
-				disableRipple
-				aria-label="like"
-				onClick={() => {
-					handleActions("likes");
-				}}>
-				<ThumbUpIcon
-					sx={{
-						color: comment?.likes.includes(user?.id)
-							? palette.secondary[300]
-							: palette.success.main,
-					}}
-				/>
-			</IconButton>
-			<Typography sx={{ color: palette.secondary[400], fontWeight: 500 }}>
-				{comment?.likes?.length - comment?.dislikes?.length}
-			</Typography>
-			<IconButton
-				disableRipple
-				aria-label="decrease score"
-				onClick={() => {
-					handleActions("dislikes");
-				}}>
-				<ThumbDownIcon
-					sx={{
-						color: comment?.dislikes.includes(user?.id)
-							? palette.secondary[300]
-							: palette.error.main,
-					}}
-				/>
-			</IconButton>
+			<Box
+				display="flex"
+				width="100%"
+				justifyContent="space-between"
+				alignItems="center">
+				<IconButton
+					disableRipple
+					aria-label="like"
+					onClick={() => {
+						if (!user) {
+							navigate("/login");
+						} else {
+							handleActions("likes");
+						}
+					}}>
+					<ThumbUpIcon
+						sx={{
+							color: comment?.likes.includes(user?.id)
+								? palette.secondary[300]
+								: palette.success.main,
+						}}
+					/>
+				</IconButton>
+				<Typography sx={{ color: palette.secondary[400], fontWeight: 600 }}>
+					{comment?.likes?.length}
+				</Typography>
+			</Box>
+
+			<Box
+				display="flex"
+				width="100%"
+				justifyContent="space-between"
+				alignItems="center">
+				<IconButton
+					disableRipple
+					aria-label="decrease score"
+					sx={{ mt: 0.4 }}
+					onClick={() => {
+						if (!user) {
+							navigate("/login");
+						} else {
+							handleActions("dislikes");
+						}
+					}}>
+					<ThumbDownIcon
+						sx={{
+							color: comment?.dislikes.includes(user?.id)
+								? palette.secondary[300]
+								: palette.error.main,
+						}}
+					/>
+				</IconButton>
+				<Typography sx={{ color: palette.secondary[400], fontWeight: 600 }}>
+					{comment?.dislikes?.length}
+				</Typography>
+			</Box>
 		</Box>
 	);
 };

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
 	Avatar,
 	Button,
@@ -24,6 +24,7 @@ import { format } from "timeago.js";
 import Perspective from "perspective-api-client";
 import Loading from "../reusable/Loading";
 import { useNavigate } from "react-router-dom";
+import UserAgreement from "../reusable/UserAgreement";
 
 const perspective = new Perspective({
 	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -42,7 +43,7 @@ const Comment = ({ comment }) => {
 
 	const [deleteComment] = useDeleteCommentMutation();
 	const [updateComment] = useUpdateCommentMutation();
-
+	const [open, setOpen] = useState(false);
 	const [editingComm, setEditingComm] = useState(false);
 	const [body, setBody] = useState(comment?.body || "");
 
@@ -58,14 +59,12 @@ const Comment = ({ comment }) => {
 		setBody(e.target.value);
 	};
 
-	// const handleUpdateComment = async () => {
-	// 	try {
-	// 		await updateComment({ id: comment.id, body }).unwrap();
-	// 		setEditingComm(false);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
+	useEffect(() => {
+		if (!user) {
+			setEditingComm(false);
+		}
+	}, [user]);
+
 	const handleUpdateComment = async () => {
 		try {
 			const result = await perspective.analyze({
@@ -90,7 +89,7 @@ const Comment = ({ comment }) => {
 			setLoading((prev) => ({
 				...prev,
 				show: true,
-				msg: "please write in english",
+				msg: "Please write in english",
 			}));
 
 			setTimeout(() => {
@@ -104,23 +103,39 @@ const Comment = ({ comment }) => {
 		}
 	};
 
+	console.log(comment?.createdAt !== comment?.updatedAt);
+	console.log({ comment });
+
 	return (
 		<Card sx={{ bgcolor: theme.palette.primary.main }}>
 			<Loading loading={loading} type="alert" />
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to delete this comment? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleDeleteComment()}
+			/>
 			<Box sx={{ p: "15px" }}>
 				<Stack spacing={2} direction="row">
-					{user && (
-						<Box>
-							<Actions comment={comment} />
-						</Box>
-					)}
+					<Box>
+						<Actions comment={comment} />
+					</Box>
+
 					<Box sx={{ width: "100%" }}>
 						<Stack
-							spacing={2}
-							direction="row"
+							spacing={{ xs: 0, sm: 2 }}
+							direction={{ xs: "column", sm: "row" }}
 							justifyContent="space-between"
 							alignItems="center">
-							<Stack spacing={2} direction="row" alignItems="center">
+							<Stack
+								spacing={{ xs: 1, sm: 2 }}
+								direction="row"
+								alignItems="center"
+								justifyContent={{ xs: "space-between", sm: "flex-start" }}
+								width="100%">
 								<Avatar src={comment?.user?.image?.url} />
 								<Typography
 									fontWeight="bold"
@@ -135,24 +150,15 @@ const Comment = ({ comment }) => {
 									}>
 									{comment?.user?.username}
 								</Typography>
-								<Typography sx={{ color: theme.palette.secondary[300] }}>
+								<Typography
+									textAlign="center"
+									sx={{ color: theme.palette.secondary[300] }}>
 									{format(comment?.createdAt)}
 								</Typography>
 							</Stack>
-							{isAuth ? (
-								<Stack direction="row" spacing={1}>
-									<Button
-										startIcon={<Delete />}
-										sx={{
-											color: theme.palette.secondary[300],
-											fontWeight: 500,
-											textTransform: "capitalize",
-										}}
-										onClick={() => {
-											handleDeleteComment();
-										}}>
-										Delete
-									</Button>
+							<Stack direction="row" spacing={1}>
+								{" "}
+								{user?.id === comment?.user?._id && (
 									<Button
 										variant="text"
 										disabled={editingComm}
@@ -165,8 +171,22 @@ const Comment = ({ comment }) => {
 										onClick={() => setEditingComm(!editingComm)}>
 										Edit
 									</Button>
-								</Stack>
-							) : null}
+								)}
+								{isAuth && (
+									<Button
+										startIcon={<Delete />}
+										sx={{
+											color: theme.palette.secondary[300],
+											fontWeight: 500,
+											textTransform: "capitalize",
+										}}
+										onClick={() => {
+											setOpen((prev) => !prev);
+										}}>
+										Delete
+									</Button>
+								)}
+							</Stack>
 						</Stack>
 						{editingComm ? (
 							<>

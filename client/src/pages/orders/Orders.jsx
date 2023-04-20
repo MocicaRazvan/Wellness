@@ -92,6 +92,15 @@ const Orders = () => {
 			renderCell: ({ row: { subTotal } }) => `$${subTotal / 100}`,
 		},
 		{
+			field: "trainings",
+			headerName: "Trainings",
+			// flex: 1,
+			width: 90,
+			sortable: false,
+			filterable: false,
+			renderCell: ({ row: { trainings } }) => trainings.length,
+		},
+		{
 			field: "deliveryStatus",
 			headerName: "Delivery Status",
 			// flex: 0.5,
@@ -125,8 +134,13 @@ const Orders = () => {
 						disableElevation
 						// className="btn"
 						sx={{
-							color: theme.palette.secondary[200],
-							bgcolor: theme.palette.background.alt,
+							color: theme.palette.secondary[300],
+							bgcolor: theme.palette.background.default,
+
+							"&:hover": {
+								bgcolor: theme.palette.secondary[300],
+								color: theme.palette.background.default,
+							},
 						}}
 						onClick={() => void navigate(`/orders/${id}`)}>
 						View
@@ -137,6 +151,14 @@ const Orders = () => {
 							size="small"
 							disableElevation
 							color="success"
+							sx={{
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.success.dark,
+								"&:hover": {
+									bgcolor: theme.palette.secondary[300],
+									color: theme.palette.success.dark,
+								},
+							}}
 							onClick={async () =>
 								await handleOrderStatusChange({
 									id,
@@ -160,7 +182,7 @@ const Orders = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isNonMobileScreens ? 0.83 : 1} maxWidth={1200}>
+				<Box flex={isNonMobileScreens ? 0.9 : 1} maxWidth={1270}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.orders || []}

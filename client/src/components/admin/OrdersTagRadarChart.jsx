@@ -12,7 +12,10 @@ import { useGetTagStatsQuery } from "../../redux/orders/orderApi";
 import Header from "../reusable/Header";
 
 const OrdersTagRadarChart = () => {
-	const { data, isLoading } = useGetTagStatsQuery();
+	const { data, isLoading } = useGetTagStatsQuery(null, {
+		refetchOnMountOrArgChange: true,
+		refetchOnReconnect: true,
+	});
 	const theme = useTheme();
 	const max = useMemo(
 		() =>

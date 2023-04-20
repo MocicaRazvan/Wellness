@@ -2,6 +2,7 @@ import {
 	Box,
 	Button,
 	FormControl,
+	FormHelperText,
 	InputLabel,
 	MenuItem,
 	Select,
@@ -34,7 +35,7 @@ const trainingSchema = yup.object().shape({
 		.array()
 		.required("Please enter the exercises")
 		.min(1, "Please enter at least one exercise"),
-	price: yup.number().required("Please enter the price").min(0),
+	price: yup.number().required("Please enter the price").min(1),
 	pictures: yup.array().required("Please enter pictures"),
 });
 
@@ -71,7 +72,7 @@ const Form = ({ training }) => {
 		title: training?.title || "",
 		tags: training?.tags || [],
 		exercises: training?.exercises || [],
-		price: training?.price || null,
+		price: training?.price || 0,
 		pictures: training?.images || [],
 	};
 
@@ -203,7 +204,9 @@ const Form = ({ training }) => {
 								helperText={touched.price && errors.price}
 								sx={{ gridColumn: "span 2" }}
 							/>
-							<FormControl sx={{ gridColumn: "span 2" }}>
+							<FormControl
+								sx={{ gridColumn: "span 2" }}
+								error={Boolean(touched.tags) && Boolean(errors.tags)}>
 								<InputLabel htmlFor="select">Tags</InputLabel>
 								<Select
 									label="Tags"
@@ -217,6 +220,19 @@ const Form = ({ training }) => {
 									helperText={touched.tags && errors.tags}
 									sx={{
 										gridColumn: "span 2",
+									}}
+									inputProps={{
+										MenuProps: {
+											MenuListProps: {
+												sx: {
+													color: theme.palette.secondary[300],
+													"& .Mui-selected": {
+														color: theme.palette.background.alt,
+														bgcolor: theme.palette.secondary[300],
+													},
+												},
+											},
+										},
 									}}>
 									{tags.map((tag) => (
 										<MenuItem key={tag} value={tag}>
@@ -224,10 +240,16 @@ const Form = ({ training }) => {
 										</MenuItem>
 									))}
 								</Select>
+								{Boolean(touched.tags) && Boolean(errors.tags) && (
+									<FormHelperText>{touched.tags && errors.tags}</FormHelperText>
+								)}
 							</FormControl>
-							<FormControl sx={{ gridColumn: "span 2" }}>
+							<FormControl
+								sx={{ gridColumn: "span 2" }}
+								error={Boolean(touched.exercises) && Boolean(errors.exercises)}>
 								<InputLabel htmlFor="selectEx">Exercises</InputLabel>
 								<Select
+									label="Exercises"
 									multiple={true}
 									id="selectEx"
 									onBlur={handleBlur}
@@ -240,6 +262,19 @@ const Form = ({ training }) => {
 									helperText={touched.exercises && errors.exercises}
 									sx={{
 										gridColumn: "span 2",
+									}}
+									inputProps={{
+										MenuProps: {
+											MenuListProps: {
+												sx: {
+													color: theme.palette.secondary[300],
+													"& .Mui-selected": {
+														color: theme.palette.background.alt,
+														bgcolor: theme.palette.secondary[300],
+													},
+												},
+											},
+										},
 									}}>
 									{ids.map((tag) => (
 										<MenuItem key={tag.id} value={tag.id}>
@@ -247,6 +282,11 @@ const Form = ({ training }) => {
 										</MenuItem>
 									))}
 								</Select>
+								{Boolean(touched.exercises) && Boolean(errors.exercises) && (
+									<FormHelperText>
+										{touched.exercises && errors.exercises}
+									</FormHelperText>
+								)}
 							</FormControl>
 							<Box
 								gridColumn="span 4"

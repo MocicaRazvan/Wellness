@@ -195,6 +195,7 @@ export default function PopUp({
 	return (
 		<Box sx={{ zIndex: "100" }}>
 			<Popper
+				disablePortal={true}
 				open={open}
 				anchorEl={ref?.current}
 				placement={"bottom"}

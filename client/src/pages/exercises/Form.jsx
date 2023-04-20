@@ -2,6 +2,7 @@ import {
 	Box,
 	Button,
 	FormControl,
+	FormHelperText,
 	InputLabel,
 	MenuItem,
 	Select,
@@ -223,7 +224,11 @@ const Form = ({ exercise }) => {
 								helperText={touched.title && errors.title}
 								sx={{ gridColumn: "span 2" }}
 							/>
-							<FormControl sx={{ gridColumn: "span 2" }}>
+							<FormControl
+								sx={{ gridColumn: "span 2" }}
+								error={
+									Boolean(touched.muscleGroups) && Boolean(errors.muscleGroups)
+								}>
 								<InputLabel htmlFor="select">MuscleGroups</InputLabel>
 								<Select
 									label="MuscleGroups"
@@ -240,6 +245,19 @@ const Form = ({ exercise }) => {
 									helperText={touched.muscleGroups && errors.muscleGroups}
 									sx={{
 										gridColumn: "span 2",
+									}}
+									inputProps={{
+										MenuProps: {
+											MenuListProps: {
+												sx: {
+													color: theme.palette.secondary[300],
+													"& .Mui-selected": {
+														color: theme.palette.background.alt,
+														bgcolor: theme.palette.secondary[300],
+													},
+												},
+											},
+										},
 									}}>
 									{muscleGroups.map((tag) => (
 										<MenuItem key={tag} value={tag}>
@@ -247,6 +265,12 @@ const Form = ({ exercise }) => {
 										</MenuItem>
 									))}
 								</Select>
+								{Boolean(touched.muscleGroups) &&
+									Boolean(errors.muscleGroups) && (
+										<FormHelperText>
+											{touched.muscleGroups && errors.muscleGroups}
+										</FormHelperText>
+									)}
 							</FormControl>
 							<Box
 								gridColumn="span 4"

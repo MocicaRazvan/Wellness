@@ -202,10 +202,13 @@ const Home = () => {
 											variant="contained"
 											size="large"
 											component="a"
+											disableRipple
 											sx={{
 												cursor: "default",
 												minWidth: 100,
+												bgcolor: palette.secondary[300],
 												mt: { xs: 2, md: 0 },
+												"&:hover": { bgcolor: palette.secondary[300] },
 											}}>
 											Welcome!
 										</Button>
@@ -218,6 +221,7 @@ const Home = () => {
 											sx={{
 												minWidth: 100,
 												mt: { xs: 2, md: 0 },
+												bgcolor: palette.secondary[300],
 											}}
 											onClick={() => void navigate("/register")}>
 											Register
