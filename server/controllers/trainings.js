@@ -437,7 +437,9 @@ exports.getBoughtUserTrainings = async (req, res) => {
 	})
 		.sort(sortFormatted)
 		.skip(page * pageSize)
-		.limit(pageSize);
+		.limit(pageSize)
+		.populate("user", "username")
+		.lean();
 	const total = await Trainings.countDocuments({
 		title: { $regex: search, $options: "i" },
 		_id: { $in: subscriptions },

@@ -106,6 +106,12 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
 				{ type: "Order", id: arg.id },
 			],
 		}),
+		updateOrderSession: builder.query({
+			query: ({ session }) => ({
+				url: `/orders/session/${session}`,
+				method: "GET",
+			}),
+		}),
 		deleteOrder: builder.mutation({
 			query: ({ id }) => ({
 				url: `/orders/admin/${id}`,
@@ -179,4 +185,5 @@ export const {
 	useGetAllOrdersAdminQuery,
 	useGetOrdersLocationQuery,
 	useGetdDailyEarningsQuery,
+	useUpdateOrderSessionQuery,
 } = ordersApiSlice;

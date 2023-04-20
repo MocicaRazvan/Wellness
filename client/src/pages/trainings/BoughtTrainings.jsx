@@ -49,7 +49,7 @@ const BoughtTrainings = () => {
 			console.log(error);
 		}
 	};
-
+	console.log({ data });
 	if (!user?.id)
 		return (
 			<CircularProgress
@@ -64,7 +64,7 @@ const BoughtTrainings = () => {
 			field: "id",
 			headerName: "ID",
 			// flex: 1,
-			width: 220,
+			width: 215,
 		},
 		{
 			field: "title",
@@ -73,19 +73,33 @@ const BoughtTrainings = () => {
 			width: 150,
 		},
 		{
-			field: "user",
-			headerName: "user ID",
+			field: "author",
+			headerName: "Author",
 			// flex: 1,
-			width: 220,
+			width: 175,
+			renderCell: ({
+				row: {
+					user: { username },
+				},
+			}) => username,
 		},
 		{
 			field: "createdAt",
 			headerName: "CreatedAt",
 			// flex: 1,
-			width: 120,
+			width: 110,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
+		},
+		{
+			field: "updatedAt",
+			headerName: "UpdatedAt",
+			// flex: 1,
+			width: 110,
+			sortable: false,
+			renderCell: ({ row: { updatedAt } }) =>
+				format(new Date(updatedAt), "dd/MM/yyyy"),
 		},
 		{
 			field: "tags",
@@ -97,7 +111,7 @@ const BoughtTrainings = () => {
 			field: "action",
 			headerName: "Actions",
 			// flex: 2,
-			width: 210,
+			width:170,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {

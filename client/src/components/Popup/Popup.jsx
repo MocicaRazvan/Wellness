@@ -208,6 +208,24 @@ export default function PopUp({
 								maxHeight: "80vh",
 							}}>
 							{/* {content} */}
+							{badgeContent === 0 && (
+								<Box
+									width="100%"
+									display="flex"
+									justifyContent="center"
+									flexDirection="column"
+									alignItems="center"
+									mt={0.5}
+									px={2}
+									pt={2}>
+									<Typography
+										color={theme.palette.secondary[200]}
+										fontWeight={800}
+										fontSize={16}>
+										No notifications
+									</Typography>
+								</Box>
+							)}
 							{cont}
 							<Box
 								width="100%"

@@ -3,22 +3,38 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import { updateUser } from "../../redux/auth/authSlice";
 import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { useGetSingleUserQuery } from "../../redux/user/userApi";
 import checkout from "../../utils/lottie/checkout.json";
 import { selectSocket } from "../../redux/socket/socketSlice";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
+import { useUpdateOrderSessionQuery } from "../../redux/orders/orderApi";
 const CheckoutSuccess = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();
 	const cartItems = useSelector(selectCartItems);
-	const { data: user, isLoading } = useGetSingleUserQuery();
+	const {
+		data: user,
+		isLoading,
+		isError: isUserError,
+	} = useGetSingleUserQuery();
 	const dispatch = useDispatch();
 	const socketRedux = useSelector(selectSocket);
 	const [createNotification] = useCreateNotificationMutation();
 	const [items, setItems] = useState([]);
+	const [searchParams] = useSearchParams();
+
+	const { data, isError } = useUpdateOrderSessionQuery(
+		{ session: searchParams.get("session") },
+		{ skip: !searchParams.get("session") },
+	);
 
 	useEffect(() => {
 		if (user && !isLoading) {
@@ -33,7 +49,7 @@ const CheckoutSuccess = () => {
 		}
 	}, [cartItems, cartItems.length, dispatch, user?._id]);
 	useEffect(() => {
-		if (items?.length > 0 && user?._id && socketRedux) {
+		if (items?.length > 0 && user?._id && socketRedux && data?.updated) {
 			(async () => {
 				try {
 					await Promise.all(
@@ -64,7 +80,11 @@ const CheckoutSuccess = () => {
 		dispatch,
 		socketRedux,
 		user?._id,
+		data?.updated,
 	]);
+
+	if (isError || isUserError || !searchParams.get("session"))
+		navigate("/", { replace: true });
 
 	return (
 		<Box

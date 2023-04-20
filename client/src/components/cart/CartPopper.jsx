@@ -47,7 +47,8 @@ const CartPopper = ({ setAnchorEl, anchorEl }) => {
 						{cartItems?.map(({ id, title, price }, i) => (
 							<Box key={id}>
 								<Box
-									p={1}
+									pl={1}
+									py={1}
 									width={200}
 									gap={1}
 									display="flex"

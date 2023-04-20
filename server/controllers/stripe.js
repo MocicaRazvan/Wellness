@@ -5,6 +5,7 @@ const Training = require("../models/Training");
 const { countrys } = require("../utils/shippingCountries");
 const makeReceipt = require("../utils/email/receipt");
 const sendEmail = require("../utils/email/sendEmail");
+const crypto = require("crypto");
 
 //stripe listen --forward-to localhost:5000/stripe/webhook
 
@@ -22,7 +23,10 @@ const createOrder = async (customer, data, lineItems) => {
 		total: data.amount_total,
 		shipping: data.customer_details,
 		paymentStatus: data.payment_status,
+		session: customer.metadata.session,
 	});
+
+	console.log({ customer });
 	try {
 		const savedOrder = await newOrder.save();
 		const user = await User.findByIdAndUpdate(customer.metadata.userId, {
@@ -61,6 +65,7 @@ exports.stripeCheckout = async (req, res) => {
 		metadata: {
 			userId: req.body.userId,
 			cart: JSON.stringify(req.body.cartItems.map((item) => item.id)),
+			session: crypto.randomBytes(16).toString("hex"),
 		},
 		email: user.email,
 	});
@@ -137,7 +142,7 @@ exports.stripeCheckout = async (req, res) => {
 		customer: customer.id,
 		line_items,
 		mode: "payment",
-		success_url: `http://localhost:3000/checkout-success`,
+		success_url: `http://localhost:3000/checkout-success?session=${customer.metadata.session}`,
 		cancel_url: `http://localhost:3000/cart`,
 	});
 	const invoice = await stripe.invoices.create({

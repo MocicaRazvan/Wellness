@@ -41,7 +41,7 @@ const SingleTraining = () => {
 				thickness={7}
 			/>
 		);
-	if (notShow && user?.id !== training?.user && user?.role !== "admin") {
+	if (notShow && !isAllowed) {
 		navigate("/", { replace: true });
 	}
 

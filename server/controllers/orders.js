@@ -347,3 +347,18 @@ exports.getOrdersCountry = async (req, res) => {
 
 	return res.status(200).json({ message: "Locations returned", locations });
 };
+
+//put: /orders/session/:session
+exports.updateSession = async (req, res) => {
+	const { session } = req.params;
+	const order = await Orders.findOne({ session }).select("session user");
+
+	if (!order || order.user.toString() !== req.user._id.toString()) {
+		return res.status(401).json({ message: "You are not authorized" });
+	}
+	order.session = "";
+	await order.save();
+	return res
+		.status(201)
+		.json({ updated: true, message: "Order session updated" });
+};

@@ -28,5 +28,8 @@ router
 router
 	.route("/admin/get/tagsStats")
 	.get(verifyJwt, ordersController.getTagsStats);
+router
+	.route("/session/:session")
+	.get(verifyJwt, ordersController.updateSession);
 
 module.exports = router;
