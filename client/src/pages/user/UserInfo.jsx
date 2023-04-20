@@ -29,6 +29,7 @@ const UserInfo = ({ user, width = "50%", own = "false" }) => {
 		{ id: user?.id },
 		{
 			refetchOnMountOrArgChange: true,
+			refetchOnReconnect: true,
 		},
 	);
 	const navigate = useNavigate();

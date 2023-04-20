@@ -9,6 +9,23 @@ const makeAuth = require("../utils/email/auth");
 exports.register = async (req, res) => {
 	const { image, ...rest } = req.body;
 
+	const emailCount = await User.countDocuments({ email: rest.email });
+	if (emailCount > 0) {
+		return res.status(500).json({
+			message: "Email already exists",
+			error: "email",
+			isError: true,
+		});
+	}
+	const userCount = await User.countDocuments({ username: rest.username });
+	if (userCount > 0) {
+		return res.status(500).json({
+			message: "Username already exists",
+			error: "username",
+			isError: true,
+		});
+	}
+
 	if (image) {
 		const uplodRes = await cloudinary.uploader.upload(image, {
 			upload_preset: "wellnessUser",

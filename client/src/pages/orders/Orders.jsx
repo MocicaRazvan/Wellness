@@ -80,7 +80,7 @@ const Orders = () => {
 			headerName: "Payment Status",
 			// flex: 1,
 			width: 170,
-			sortable: false,
+			// sortable: false,
 			renderCell: ({ row: { paymentStatus } }) => <Paid>{paymentStatus}</Paid>,
 		},
 		{
@@ -88,6 +88,7 @@ const Orders = () => {
 			headerName: "Sub Total",
 			// flex: 1,
 			width: 170,
+			sortable: false,
 			renderCell: ({ row: { subTotal } }) => `$${subTotal / 100}`,
 		},
 		{
@@ -95,7 +96,6 @@ const Orders = () => {
 			headerName: "Delivery Status",
 			// flex: 0.5,
 			width: 200,
-			sortable: false,
 			renderCell: ({ row: { deliveryStatus: dS } }) => (
 				<div>
 					{dS === "pending" ? (
@@ -150,7 +150,6 @@ const Orders = () => {
 			),
 		},
 	];
-
 
 	return (
 		<Box m="1.5rem 2.5rem">

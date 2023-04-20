@@ -99,7 +99,7 @@ const AllOrders = () => {
 			headerName: "PaymentStatus",
 			// flex: 0.4,
 			width: 110,
-			sortable: false,
+			// sortable: false,
 			renderCell: ({ row: { paymentStatus } }) => <Paid>{paymentStatus}</Paid>,
 		},
 		{
@@ -107,6 +107,7 @@ const AllOrders = () => {
 			headerName: "Total",
 			// flex: 0.5,
 			width: 110,
+			sortable: false,
 			renderCell: ({ row: { total } }) => `$${total / 100}`,
 		},
 		{
@@ -155,7 +156,7 @@ const AllOrders = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isSmall ? 0.85 : 1} maxWidth={1300}>
+				<Box flex={isSmall ? 0.9 : 1} maxWidth={1300}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.orders || []}

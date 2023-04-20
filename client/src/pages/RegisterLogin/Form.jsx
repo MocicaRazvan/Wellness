@@ -22,7 +22,7 @@ import Loading from "../../components/reusable/Loading";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 
 const registerSchema = yup.object().shape({
-	firstName: yup.string().required("Please enter first name "),
+	firstName: yup.string().required("Please enter first name"),
 	lastName: yup.string().required("Please enter last name"),
 	email: yup.string().email("invalid email").required("Please enter the email"),
 	password: yup.string().required("Please enter the password"),
@@ -145,30 +145,98 @@ const Form = ({ user = null }) => {
 			let res1, res2;
 			if (user) {
 				// setLoading((prev) => ({ ...prev, show: true }));
-				res2 = await updateUser(values).unwrap();
+				res2 = await updateUser(values);
 				console.log({ res2 });
 				// setLoading((prev) => ({ ...prev, show: false }));
-				navigate("/");
+				if (res2?.error?.data?.isError) {
+					if (res2?.error?.data?.error === "credentials") {
+						setCredentials((prev) => ({
+							...prev,
+							show: true,
+							msg: "Password is incorect!",
+						}));
+
+						onSubmitProps.setFieldError("password", "Password is incorect!");
+						onSubmitProps.setFieldError(
+							"retypePassword",
+							"Password is incorect!",
+						);
+
+						setTimeout(
+							() =>
+								setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+							1200,
+						);
+					} else if (res2?.error?.data?.error === "username") {
+						setCredentials((prev) => ({
+							...prev,
+							show: true,
+							msg: "User with this combinations of names already exists!",
+						}));
+						onSubmitProps.setFieldError(
+							"firstName",
+							"User with this combinations of names already exists!",
+						);
+						onSubmitProps.setFieldError(
+							"lastName",
+							"User with this combinations of names already exists!",
+						);
+
+						setTimeout(
+							() =>
+								setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+							1800,
+						);
+					}
+				} else {
+					navigate("/user/profile");
+				}
 			} else {
 				setLoading((prev) => ({ ...prev, show: true }));
-				res1 = await registerUser(values).unwrap();
-				console.log({ res1 });
+				res1 = await registerUser(values);
+
 				setLoading((prev) => ({ ...prev, show: false }));
-			}
-			if (res1?.message && res1?.isError) {
-				// setLoading((prev) => ({ ...prev, show: false }));
+				if (res1?.error?.data?.isError) {
+					if (res1?.error?.data?.error === "email") {
+						setCredentials((prev) => ({
+							...prev,
+							show: true,
+							msg: "Email is taken!",
+						}));
+						onSubmitProps.setFieldError(
+							"email",
+							"User with this email already exists!",
+						);
 
-				setMessage("User with this email already exists!");
-				setCredentials((prev) => ({
-					...prev,
-					show: true,
-					msg: "Email is taken!",
-				}));
+						setTimeout(
+							() =>
+								setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+							1200,
+						);
+					} else if (res1?.error?.data?.error === "username") {
+						setCredentials((prev) => ({
+							...prev,
+							show: true,
+							msg: "User with this combinations of names already exists!",
+						}));
+						onSubmitProps.setFieldError(
+							"firstName",
+							"User with this combinations of names already exists!",
+						);
+						onSubmitProps.setFieldError(
+							"lastName",
+							"User with this combinations of names already exists!",
+						);
 
-				setTimeout(
-					() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
-					800,
-				);
+						setTimeout(
+							() =>
+								setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
+							1800,
+						);
+					}
+				} else {
+					navigate("/");
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -393,10 +461,7 @@ const Form = ({ user = null }) => {
 								value={values.email}
 								name="email"
 								disabled={isUpdate}
-								error={
-									(Boolean(touched.email) && Boolean(errors.email)) ||
-									message !== ""
-								}
+								error={Boolean(touched.email) && Boolean(errors.email)}
 								helperText={touched.email && errors.email}
 								sx={{ gridColumn: "span 4" }}
 							/>

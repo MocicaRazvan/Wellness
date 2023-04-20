@@ -55,9 +55,25 @@ exports.updateUser = async (req, res) => {
 	const isMatch = await user.mathcPasswords(password);
 
 	if (!isMatch || rest.email !== user.email) {
-		return res
-			.status(401)
-			.json({ message: "Credentials are not valid", update: true });
+		return res.status(401).json({
+			message: "Credentials are not valid",
+			update: true,
+			isError: true,
+			error: "credentials",
+		});
+	}
+	const userCount = await User.countDocuments({
+		username: rest.username,
+		_id: { $ne: mongoose.Types.ObjectId(req.user._id) },
+	});
+	console.log({ userCount });
+	if (userCount > 0) {
+		return res.status(500).json({
+			message: "User with this name combinations already exists!",
+			update: true,
+			isError: true,
+			error: "username",
+		});
 	}
 
 	if (image) {

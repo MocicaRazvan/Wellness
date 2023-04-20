@@ -73,6 +73,8 @@ const BoughtTrainings = () => {
 			headerName: "Author",
 			// flex: 1,
 			width: 175,
+			sortable: false,
+			filterable: false,
 			renderCell: ({
 				row: {
 					user: { username, _id },
