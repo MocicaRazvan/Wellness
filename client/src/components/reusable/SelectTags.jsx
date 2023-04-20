@@ -8,6 +8,7 @@ import {
 	OutlinedInput,
 	Select,
 	styled,
+	useTheme,
 } from "@mui/material";
 import React, { useMemo, useRef } from "react";
 import tagValues from "../../utils/consts/tags";
@@ -27,6 +28,7 @@ const MenuProps = {
 };
 
 const SelectTags = ({ tags, setTags, error, type = "Post" }) => {
+	const theme = useTheme();
 	const handleChange = (event) => {
 		const {
 			target: { value },
@@ -71,7 +73,19 @@ const SelectTags = ({ tags, setTags, error, type = "Post" }) => {
 					onChange={handleChange}
 					input={<OutlinedInput sx={{ p: 0, m: 0 }} label="Tag" />}
 					renderValue={(selected) => selected.join(", ")}
-					MenuProps={MenuProps}>
+					MenuProps={MenuProps}
+					inputProps={{
+						MenuProps: {
+							MenuListProps: {
+								sx: {
+									color: theme.palette.secondary[300],
+									"& .Mui-checked": {
+										color: theme.palette.secondary[300],
+									},
+								},
+							},
+						},
+					}}>
 					{type === "Post" &&
 						tagValues.map((tag) => (
 							<MenuItemSelect key={tag} value={tag}>
