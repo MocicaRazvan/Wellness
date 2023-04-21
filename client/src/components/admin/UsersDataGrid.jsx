@@ -79,6 +79,7 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 			headerName: "Email",
 			// flex: 0.9,
 			width: 220,
+			sortable: false,
 		},
 		{
 			field: "phoneNumber",

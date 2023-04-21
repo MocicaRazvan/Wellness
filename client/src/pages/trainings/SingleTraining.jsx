@@ -2,18 +2,21 @@ import {
 	Box,
 	Button,
 	CircularProgress,
+	Fab,
+	Fade,
+	MobileStepper,
 	Typography,
 	useTheme,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
-import Carousel from "react-material-ui-carousel";
 import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
-import trainingsSlice from "../../redux/trainings/trainingsSlice";
+import { useState } from "react";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 
 const SingleTraining = () => {
 	const { trainingId } = useParams();
@@ -38,6 +41,7 @@ const SingleTraining = () => {
 		user?.role === "admin";
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
 	const notShow = !training?.approved || !training?.display;
+	const [index, setIndex] = useState(0);
 
 	if (isLoading || !training)
 		return (
@@ -59,6 +63,22 @@ const SingleTraining = () => {
 	};
 
 	const images = training?.images?.map(({ url }) => url);
+	const handleIndex = (val) => {
+		if (training?.exercises) {
+			const len = training?.exercises.length;
+			if (val) {
+				setIndex((prev) => (prev + 1) % len);
+			} else {
+				setIndex((prev) => {
+					if (prev === 0) {
+						return len - 1;
+					} else {
+						return prev - 1;
+					}
+				});
+			}
+		}
+	};
 
 	return (
 		<Box m="1.5rem 1rem" position="relative">
@@ -70,9 +90,6 @@ const SingleTraining = () => {
 				}}>
 				<Typography
 					sx={{
-						// position: "absolute",
-						// top: 0,
-						// left: 0,
 						width: 300,
 						display: { xs: "none", md: "initial" },
 						color: theme.palette.secondary[200],
@@ -119,9 +136,6 @@ const SingleTraining = () => {
 			</Typography>
 			<Typography
 				sx={{
-					// position: "absolute",
-					// top: 0,
-					// left: 0,
 					width: 300,
 					display: { xs: "initial", md: "none" },
 					color: theme.palette.secondary[200],
@@ -171,60 +185,98 @@ const SingleTraining = () => {
 						sx={{ mb: 4 }}>
 						Exercises in the training
 					</Typography>
-					<Box className="parentBox">
-						<Carousel
-							fullHeightHover={false}
-							indicators={false}
-							sx={{ pb: 5 }}
-							navButtonsWrapperProps={{
-								style: {
-									bottom: "unset",
-									top: "700px",
-								},
+					<Box>
+						<Box
+							sx={{
+								position: "sticky",
+								top: "300px",
+								right: "40px",
+								zIndex: 100,
+								display: training?.exercises?.length === 1 ? "none" : "flex",
 							}}
-							animation="fade"
-							autoPlay={false}
-							navButtonsAlwaysVisible={true}
-							navButtonsAlwaysInvisible={
-								training?.exercises?.length === 1 ? true : false
-							}
-							index={0}
-							swipe={false}
-							interval={6000}>
-							{training?.exercises?.map((exercise) => {
+							justifyContent="space-between"
+							width="100">
+							{" "}
+							<Fab
+								size="small"
+								onClick={() => handleIndex(false)}
+								sx={{
+									bgcolor: "#494949",
+									"&:hover": {
+										bgcolor: "rgba(0,0,0,0.4)",
+										color: "rgba(255,255,255,0.4)",
+									},
+								}}>
+								<KeyboardArrowLeft sx={{ color: "white" }} />
+							</Fab>
+							<Fab
+								size="small"
+								onClick={() => handleIndex(true)}
+								sx={{
+									bgcolor: "#494949",
+									"&:hover": {
+										bgcolor: "rgba(0,0,0,0.4)",
+										color: "rgba(255,255,255,0.4)",
+									},
+								}}>
+								<KeyboardArrowRight sx={{ color: "white" }} />
+							</Fab>
+						</Box>
+						<Box>
+							{training?.exercises?.map((exercise, i) => {
 								const urls = exercise?.videos?.map(({ url }) => url);
 								return (
-									<Box p={2}>
-										<Typography
-											variant="h2"
-											color={theme.palette.secondary[200]}
-											fontWeight="600"
-											textAlign="center"
-											gutterBottom>
-											{exercise?.title}
-										</Typography>
-										<Box mb={4}>
-											<CustomVideoCarousel
-												videos={urls}
-												height={"fit-content"}
-											/>
-										</Box>
-										<Box p="1rem" display="flex" justifyContent="center" mb={2}>
+									<Fade in={i === index}>
+										<Box p={2} display={i === index ? "block" : "none"}>
 											<Typography
-												variant="h4"
-												lineHeight={1.5}
-												component="div"
-												sx={{ minHeight: "fit-content", p: 1 }}
-												color={theme.palette.secondary[100]}
-												width={{ xs: "100%", md: "50%" }}
+												variant="h2"
+												color={theme.palette.secondary[200]}
+												fontWeight="600"
 												textAlign="center"
-												dangerouslySetInnerHTML={{ __html: exercise?.body }}
-											/>
+												mb={3}
+												gutterBottom>
+												{exercise?.title}
+											</Typography>
+											<Box mb={4}>
+												<CustomVideoCarousel
+													videos={urls}
+													height={"fit-content"}
+												/>
+											</Box>
+											<Box
+												p="1rem"
+												display="flex"
+												justifyContent="center"
+												mb={2}>
+												<Typography
+													variant="h4"
+													lineHeight={1.5}
+													component="div"
+													sx={{ minHeight: "fit-content", p: 1 }}
+													color={theme.palette.secondary[100]}
+													width={{ xs: "100%", md: "50%" }}
+													textAlign="center"
+													dangerouslySetInnerHTML={{ __html: exercise?.body }}
+												/>
+											</Box>
+											{training?.exercises?.length > 1 && (
+												<Box
+													display="flex"
+													justifyContent="center"
+													width="100%">
+													<MobileStepper
+														variant="dots"
+														steps={training?.exercises?.length}
+														position="static"
+														activeStep={index}
+													/>
+												</Box>
+											)}
 										</Box>
-									</Box>
+									</Fade>
 								);
 							})}
-						</Carousel>
+						</Box>
 					</Box>
 				</Box>
 			) : isInCart ? (
