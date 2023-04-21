@@ -363,10 +363,9 @@ const Form = ({ exercise }) => {
 										{openCarousel ? "Hide" : "See"} your videos
 									</Button>
 									{openCarousel && (
-										<CustomVideoCarousel
-											videos={values.clips}
-											height={250}
-										/>
+										<Box width="100%" p={0.5}>
+											<CustomVideoCarousel videos={values.clips} height={250} />
+										</Box>
 									)}
 								</Box>
 							)}
