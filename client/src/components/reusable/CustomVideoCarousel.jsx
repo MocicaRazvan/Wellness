@@ -3,13 +3,16 @@ import { Box, Container } from "@mui/system";
 import Carousel from "react-material-ui-carousel";
 
 const CustomCarousel = ({ videos, height }) => {
+	console.log({ videos });
 	return (
 		<Container sx={{ mt: 2, width: "80%", height }}>
 			<Carousel
-				sx={{ height }}
+				sx={{ height, minHeight: "fit-content" }}
 				animation="fade"
-				navButtonsAlwaysVisible
+				navButtonsAlwaysVisible={true}
+				navButtonsAlwaysInvisible={videos?.length === 1 ? true : false}
 				autoPlay={false}
+				swipe={false}
 				interval={6000}>
 				{videos.map((item, i) => (
 					<Paper

@@ -25,6 +25,7 @@ import {
 	useUpdateExerciseMutation,
 } from "../../redux/exercises/exercisesApi";
 import muscleGroups from "../../utils/consts/muscleGorups";
+import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 
 const exerciseSchema = yup.object().shape({
 	clips: yup.array(),
@@ -45,6 +46,7 @@ const Form = ({ exercise }) => {
 		msg: "Creating the exercise...",
 		show: false,
 	});
+	const [openCarousel, setOpenCarousel] = useState(false);
 
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
@@ -348,6 +350,26 @@ const Form = ({ exercise }) => {
 									</Box>
 								)}
 							</Dropzone>
+							{values.clips.length > 0 && (
+								<Box
+									gridColumn="span 4"
+									display="flex"
+									flexDirection="column"
+									alignItems="center">
+									<Button
+										variant="outlined"
+										onClick={() => setOpenCarousel((prev) => !prev)}
+										sx={{ color: theme.palette.secondary[200], width: "50%" }}>
+										{openCarousel ? "Hide" : "See"} your videos
+									</Button>
+									{openCarousel && (
+										<CustomVideoCarousel
+											videos={values.clips}
+											height={250}
+										/>
+									)}
+								</Box>
+							)}
 						</Box>
 
 						<Button

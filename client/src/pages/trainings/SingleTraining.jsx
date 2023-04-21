@@ -13,6 +13,7 @@ import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
+import trainingsSlice from "../../redux/trainings/trainingsSlice";
 
 const SingleTraining = () => {
 	const { trainingId } = useParams();
@@ -180,8 +181,11 @@ const SingleTraining = () => {
 								},
 							}}
 							animation="fade"
-							navButtonsAlwaysVisible
 							autoPlay={false}
+							navButtonsAlwaysVisible={true}
+							navButtonsAlwaysInvisible={
+								training?.exercises?.length === 1 ? true : false
+							}
 							index={0}
 							swipe={false}
 							interval={6000}>
@@ -198,7 +202,10 @@ const SingleTraining = () => {
 											{exercise?.title}
 										</Typography>
 										<Box mb={4}>
-											<CustomVideoCarousel videos={urls} height={500} />
+											<CustomVideoCarousel
+												videos={urls}
+												height={"fit-content"}
+											/>
 										</Box>
 										<Box p="1rem" display="flex" justifyContent="center">
 											<Typography

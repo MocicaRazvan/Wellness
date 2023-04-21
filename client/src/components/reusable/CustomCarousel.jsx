@@ -7,8 +7,10 @@ const CustomCarousel = ({ images, height, type = "image" }) => {
 		<Container sx={{ mt: 2, width: "80%" }}>
 			<Carousel
 				animation="fade"
-				navButtonsAlwaysVisible={images?.length > 1 ? true : false}
+				navButtonsAlwaysVisible={true}
+				navButtonsAlwaysInvisible={images?.length === 1 ? true : false}
 				autoPlay={false}
+				swipe={false}
 				interval={6000}>
 				{images.map((item, i) => (
 					<Paper
