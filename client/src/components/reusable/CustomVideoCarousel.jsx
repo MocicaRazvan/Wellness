@@ -7,7 +7,7 @@ const CustomCarousel = ({ videos, height }) => {
 	return (
 		<Container sx={{ mt: 2, width: "80%", height }}>
 			<Carousel
-				sx={{ height, minHeight: "fit-content" }}
+				sx={{ height }}
 				animation="fade"
 				navButtonsAlwaysVisible={true}
 				navButtonsAlwaysInvisible={videos?.length === 1 ? true : false}
