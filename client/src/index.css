@@ -21,3 +21,20 @@ a {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* #root>div>div>div.MuiBox-root.css-ib9iq6>div>div.parentBox.MuiBox-root.css-0>div>div.css-1abc02a {
+  position: fixed;
+}
+
+#root>div>div>div.MuiBox-root.css-ib9iq6>div>div.parentBox.MuiBox-root.css-0>div>div.css-hn784z {
+  position: fixed;
+}
+
+
+#root>div>div>div.MuiBox-root.css-ib9iq6>div>div.parentBox.MuiBox-root.css-ga8bvj>div>div.css-hn784z>button {
+  top: 800px !important
+}
+
+#root>div>div>div.MuiBox-root.css-ib9iq6>div>div.parentBox.MuiBox-root.css-ga8bvj>div>div.css-1abc02a>button {
+  top: 800px !important
+} */

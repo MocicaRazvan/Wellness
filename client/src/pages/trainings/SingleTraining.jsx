@@ -170,17 +170,25 @@ const SingleTraining = () => {
 						sx={{ mb: 4 }}>
 						Exercises in the training
 					</Typography>
-					<Box p={2}>
+					<Box className="parentBox">
 						<Carousel
+							fullHeightHover={false}
+							navButtonsWrapperProps={{
+								style: {
+									bottom: "unset",
+									top: "700px",
+								},
+							}}
 							animation="fade"
 							navButtonsAlwaysVisible
 							autoPlay={false}
-							index={1}
+							index={0}
+							swipe={false}
 							interval={6000}>
 							{training?.exercises?.map((exercise) => {
 								const urls = exercise?.videos?.map(({ url }) => url);
 								return (
-									<Box>
+									<Box p={2}>
 										<Typography
 											variant="h2"
 											color={theme.palette.secondary[200]}
@@ -197,7 +205,7 @@ const SingleTraining = () => {
 												variant="h4"
 												lineHeight={1.5}
 												component="div"
-												sx={{ minHeight: "fit-content" }}
+												sx={{ minHeight: "fit-content", p: 1 }}
 												color={theme.palette.secondary[100]}
 												width={{ xs: "100%", md: "50%" }}
 												textAlign="center"

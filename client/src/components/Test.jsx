@@ -1,22 +1,9 @@
-import React, { useState } from "react";
-import TextEditor from "./reusable/TextEditor";
-import { Button } from "@mui/material";
+import React from 'react'
 
 const Test = () => {
-	const [body, setBody] = useState("");
+  return (
+	<div>Test</div>
+  )
+}
 
-	return (
-		<div style={{ padding: 50 }}>
-			<TextEditor setValue={setBody} />
-			<Button
-				sx={{ mt: 10 }}
-				onClick={() => {
-					console.log({ body });
-				}}>
-				CLIKC
-			</Button>
-		</div>
-	);
-};
-
-export default Test;
+export default Test

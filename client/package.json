@@ -3,8 +3,6 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@cloudinary/react": "^1.7.0",
-		"@cloudinary/url-gen": "^1.8.7",
 		"@emotion/react": "^11.10.5",
 		"@emotion/styled": "^11.10.5",
 		"@mui/icons-material": "^5.11.0",
@@ -57,7 +55,6 @@
 		"timeago.js": "^4.0.2",
 		"trunc-html": "^1.1.2",
 		"web-vitals": "^2.1.4",
-		"web3": "^1.8.2",
 		"yup": "^0.32.11"
 	},
 	"scripts": {

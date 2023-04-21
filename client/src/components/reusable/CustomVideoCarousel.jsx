@@ -4,8 +4,9 @@ import Carousel from "react-material-ui-carousel";
 
 const CustomCarousel = ({ videos, height }) => {
 	return (
-		<Container sx={{ mt: 2, width: "80%" }}>
+		<Container sx={{ mt: 2, width: "80%", height }}>
 			<Carousel
+				sx={{ height }}
 				animation="fade"
 				navButtonsAlwaysVisible
 				autoPlay={false}
