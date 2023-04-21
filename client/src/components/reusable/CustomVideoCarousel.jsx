@@ -90,6 +90,7 @@ const CustomCarousel = ({ videos, height }) => {
 							{videos.length > 1 && (
 								<Box display="flex" justifyContent="center" width="100%">
 									<MobileStepper
+										sx={{ bgcolor: "transparent" }}
 										variant="dots"
 										steps={videos.length}
 										position="static"

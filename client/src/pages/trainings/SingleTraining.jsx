@@ -265,6 +265,7 @@ const SingleTraining = () => {
 													justifyContent="center"
 													width="100%">
 													<MobileStepper
+														sx={{ bgcolor: "transparent" }}
 														variant="dots"
 														steps={training?.exercises?.length}
 														position="static"
