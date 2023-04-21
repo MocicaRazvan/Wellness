@@ -8,6 +8,7 @@ const CustomCarousel = ({ images, height, type = "image" }) => {
 			<Carousel
 				animation="fade"
 				navButtonsAlwaysVisible={true}
+				indicators={images?.length === 1 ? false : true}
 				navButtonsAlwaysInvisible={images?.length === 1 ? true : false}
 				autoPlay={false}
 				swipe={false}

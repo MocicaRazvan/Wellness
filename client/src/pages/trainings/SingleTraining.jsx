@@ -162,7 +162,7 @@ const SingleTraining = () => {
 				/>
 			</Box>
 			{isAllowed ? (
-				<>
+				<Box p={1}>
 					<Typography
 						variant="h2"
 						color={theme.palette.secondary[400]}
@@ -174,6 +174,8 @@ const SingleTraining = () => {
 					<Box className="parentBox">
 						<Carousel
 							fullHeightHover={false}
+							indicators={false}
+							sx={{ pb: 5 }}
 							navButtonsWrapperProps={{
 								style: {
 									bottom: "unset",
@@ -207,7 +209,7 @@ const SingleTraining = () => {
 												height={"fit-content"}
 											/>
 										</Box>
-										<Box p="1rem" display="flex" justifyContent="center">
+										<Box p="1rem" display="flex" justifyContent="center" mb={2}>
 											<Typography
 												variant="h4"
 												lineHeight={1.5}
@@ -224,7 +226,7 @@ const SingleTraining = () => {
 							})}
 						</Carousel>
 					</Box>
-				</>
+				</Box>
 			) : isInCart ? (
 				<Box display="flex" justifyContent="center" width="100%" mt={2}>
 					<Button

@@ -9,6 +9,7 @@ const CustomCarousel = ({ videos, height }) => {
 			<Carousel
 				sx={{ height }}
 				animation="fade"
+				indicators={false}
 				navButtonsAlwaysVisible={true}
 				navButtonsAlwaysInvisible={videos?.length === 1 ? true : false}
 				autoPlay={false}
