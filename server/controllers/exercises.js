@@ -272,11 +272,11 @@ exports.updateExercise = async (req, res) => {
 			},
 			{ new: true },
 		);
-		 await Trainings.updateMany(
+		await Trainings.updateMany(
 			{ exercises: mongoose.Types.ObjectId(exerciseId) },
 			{ approved: admin, display: false },
 		);
-		
+
 		return res.status(200).json({
 			message: `Post with id ${exerciseId} was updated succesfully`,
 			updatedExercise,

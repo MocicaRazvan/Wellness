@@ -47,7 +47,7 @@ const Form = ({ exercise }) => {
 		show: false,
 	});
 	const [openCarousel, setOpenCarousel] = useState(false);
-
+	const [changed, setChanged] = useState(false);
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
 	const navigate = useNavigate();
@@ -61,7 +61,7 @@ const Form = ({ exercise }) => {
 	const [updateExercise] = useUpdateExerciseMutation();
 
 	const initialValues = {
-		clips: [],
+		clips: exercise?.videos?.map(({ url }) => url) || [],
 		title: exercise?.title || "",
 		// body: exercise?.body || "",
 		muscleGroups: exercise?.muscleGroups || [],
@@ -158,7 +158,7 @@ const Form = ({ exercise }) => {
 					const res = await updateExercise({
 						id: exercise?.id,
 						body,
-						videos: values.clips,
+						videos: changed ? values.clips : [],
 						title: values.title,
 						muscleGroups: values.muscleGroups,
 					});
@@ -304,6 +304,7 @@ const Form = ({ exercise }) => {
 										.then((urls) => {
 											// setVideos(urls);
 											setFieldValue("clips", urls);
+											setChanged(true);
 										})
 										.catch((error) => {
 											console.error(error);

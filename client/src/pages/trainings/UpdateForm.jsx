@@ -51,9 +51,10 @@ const UpdateForm = ({ training }) => {
 	const user = useSelector(selectCurrentUser);
 	const navigate = useNavigate();
 	const [updateTraining] = useUpdateTrainingMutation();
+	const [changed, setChanged] = useState(false);
 	const initialValues = {
 		price: training?.price || null,
-		pictures: [],
+		pictures: training?.images.map(({ url }) => url) || [],
 		tags: training?.tags,
 	};
 	const fileBase64 = (img) => {
@@ -88,7 +89,7 @@ const UpdateForm = ({ training }) => {
 					id: training?.id,
 					price,
 					description,
-					images: pictures,
+					images: changed ? pictures : [],
 					tags,
 				});
 				setLoading((prev) => ({ ...prev, show: false }));
@@ -229,6 +230,7 @@ const UpdateForm = ({ training }) => {
 										)
 											.then((urls) => {
 												setFieldValue("pictures", urls);
+												setChanged(true);
 											})
 											.catch((error) => {
 												console.error(error);

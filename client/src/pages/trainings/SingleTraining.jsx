@@ -191,7 +191,7 @@ const SingleTraining = () => {
 								position: "sticky",
 								top: "300px",
 								right: "40px",
-								zIndex: 100,
+								zIndex: 10,
 								display: training?.exercises?.length === 1 ? "none" : "flex",
 							}}
 							justifyContent="space-between"
@@ -265,7 +265,12 @@ const SingleTraining = () => {
 													justifyContent="center"
 													width="100%">
 													<MobileStepper
-														sx={{ bgcolor: "transparent" }}
+														sx={{
+															bgcolor: "transparent",
+															"& .MuiMobileStepper-dotActive": {
+																bgcolor: "rgba(70, 70, 70, 0.163)",
+															},
+														}}
 														variant="dots"
 														steps={training?.exercises?.length}
 														position="static"

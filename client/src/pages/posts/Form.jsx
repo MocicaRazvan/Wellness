@@ -49,16 +49,16 @@ const Form = ({ post }) => {
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const [changed, setChanged] = useState(false);
 	const [credentials, setCredentials] = useState({
 		show: false,
 		msg: "",
 		color: "red",
 	});
-
 	const initalValues = {
 		tags: post?.tags || [],
 		title: post?.title || "",
-		pictures: [],
+		pictures: post?.images?.map(({ url }) => url) || [],
 	};
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
@@ -136,12 +136,13 @@ const Form = ({ post }) => {
 						show: true,
 						msg: "Updating the post...",
 					}));
+					//!!!
 					const res = await updatePost({
 						id: post.id,
 						body,
 						title,
 						tags,
-						images: pictures,
+						images: changed ? pictures : [],
 					});
 					setLoading((prev) => ({
 						...prev,
@@ -293,6 +294,7 @@ const Form = ({ post }) => {
 										)
 											.then((urls) => {
 												setFieldValue("pictures", urls);
+												setChanged(true);
 											})
 											.catch((error) => {
 												console.error(error);

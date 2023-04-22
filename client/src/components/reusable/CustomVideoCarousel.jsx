@@ -90,7 +90,12 @@ const CustomCarousel = ({ videos, height }) => {
 							{videos.length > 1 && (
 								<Box display="flex" justifyContent="center" width="100%">
 									<MobileStepper
-										sx={{ bgcolor: "transparent" }}
+										sx={{
+											bgcolor: "transparent",
+											"& .MuiMobileStepper-dotActive": {
+												bgcolor: "rgba(70, 70, 70, 0.163)",
+											},
+										}}
 										variant="dots"
 										steps={videos.length}
 										position="static"
