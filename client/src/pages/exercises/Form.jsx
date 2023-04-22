@@ -40,7 +40,7 @@ const exerciseSchema = yup.object().shape({
 	muscleGroups: yup
 		.array()
 		.required("Please enter the muscle groups targeted")
-		.min(1, "Please enter the muscle groups targeted"),
+		.min(1, "Please enter the muscle groups targeted by the exercise"),
 });
 
 const Form = ({ exercise }) => {

@@ -52,7 +52,7 @@ const AddComment = ({ type, id }) => {
 			setLoading((prev) => ({
 				...prev,
 				show: true,
-				msg: "Please write in english",
+				msg: "Please write in english!",
 			}));
 			setBody("");
 			setTimeout(() => {

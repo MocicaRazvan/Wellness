@@ -11,7 +11,7 @@ exports.createPost = async (req, res) => {
 	if (count > 0)
 		return res
 			.status(400)
-			.json({ message: "Please enter a title that havent been used!" });
+			.json({ message: "Please enter a title that haven't been used" });
 	// image upload to cloudinary
 	try {
 		if (images && images.length > 0) {
@@ -47,7 +47,7 @@ exports.createPost = async (req, res) => {
 		if (error.code === "11000")
 			return res
 				.status(400)
-				.json({ message: "Please enter a title that havent been used!" });
+				.json({ message: "Please enter a title that haven't been used" });
 		throw error;
 	}
 };
@@ -160,7 +160,7 @@ exports.updatePost = async (req, res) => {
 	if (count > 0)
 		return res
 			.status(400)
-			.json({ message: "Please enter a title that havent been used!" });
+			.json({ message: "Please enter a title that haven't been used" });
 
 	if (images && images.length > 0) {
 		const post = await Posts.findById(postId).lean();

@@ -77,7 +77,43 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	}, [conversations, query]);
 
 	useEffect(() => {
-		if (currentChat && user?.id && user?.role === "admin") {
+		if (
+			user?.id &&
+			user?.role !== "admin" &&
+			socket?.current !== undefined &&
+			currentChat
+		) {
+			if (currentChat) {
+				const senderId = currentChat?.members.find(
+					({ _id }) => _id !== user?.id,
+				)?._id;
+
+				(async () => {
+					try {
+						senderId && (await deleteBySender({ senderId }).unwrap());
+
+						dispatch(addSenderId(senderId));
+					} catch (error) {
+						console.log(error);
+					}
+				})();
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		currentChat,
+		deleteBySender,
+		dispatch,
+		user?.id,
+		user?.role,
+		socket?.current,
+	]);
+
+	useEffect(() => {
+		console.log({
+			c: user?.id && user?.role === "admin" && socket?.current !== undefined,
+		});
+		if (user?.id && user?.role === "admin" && socket?.current !== undefined) {
 			if (currentChat) {
 				socket.current.emit("mountUserConv", {
 					convId: currentChat?.id,
@@ -97,15 +133,30 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 						console.log(error);
 					}
 				})();
+			} else {
+				socket.current.emit("mountUserConv", {
+					convId: "conversatieInexistenta",
+					userId: user?.id,
+					role: user?.role,
+				});
 			}
 		}
-		return () => {
-			if (user?.role === "admin")
-				socket.current.emit("deleteUserConv", {
-					userId: user?.id,
-				});
-		};
-	}, [currentChat, deleteBySender, dispatch, query, user?.id, user?.role]);
+		// return () => {
+		// 	if (user?.role === "admin" && socket?.current !== undefined) {
+		// 		socket.current.emit("deleteUserConv", {
+		// 			userId: user?.id,
+		// 		});
+		// 	}
+		// };
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		currentChat,
+		deleteBySender,
+		dispatch,
+		user?.id,
+		user?.role,
+		socket?.current,
+	]);
 
 	useEffect(() => {
 		if (user?.role !== "admin") {
@@ -208,6 +259,15 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			// console.log({
 			// 	user: data?.user,
 			// });
+			// console.log({ m: data?.curConv?.convId, c: currentChat.id });
+
+			console.log({
+				c: data?.curConv,
+				e: data?.curConv?.convId !== currentChat.id,
+				a: data?.curConv?.role === "admin",
+				isAdminNotMounted,
+				isAdminConv,
+			});
 			if (!data?.user?.mounted || isAdminConv || isAdminNotMounted) {
 				(async () => {
 					await createNotification({
@@ -235,6 +295,8 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			console.log(error);
 		}
 	};
+
+	if (!socket?.current) return;
 
 	return (
 		<MessengerContainer>

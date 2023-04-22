@@ -89,7 +89,7 @@ const Comment = ({ comment }) => {
 			setLoading((prev) => ({
 				...prev,
 				show: true,
-				msg: "Please write in english",
+				msg: "Please write in english!",
 			}));
 
 			setTimeout(() => {

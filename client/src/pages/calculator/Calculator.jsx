@@ -42,12 +42,12 @@ const intakeValues = [
 const calcutlatorSchema = yup.object().shape({
 	age: yup
 		.number()
-		.required("required to be between 15 and 18 years")
+		.required("Please enter a value between 15 and 85 years")
 		.min(15)
 		.max(80),
 	gender: yup.string().required("required").oneOf(genders),
-	height: yup.number().required("required to be gratet then 0").min(0.01),
-	weight: yup.number().required("required to be gratet then 0").min(0.01),
+	height: yup.number().required("Please enter a value grater then 0").min(0.01),
+	weight: yup.number().required("Please enter a value grater then 0").min(0.01),
 	activity: yup.string().required("required").oneOf(Object.keys(activity)),
 });
 

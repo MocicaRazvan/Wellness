@@ -2,13 +2,18 @@ import * as yup from "yup";
 import { Formik } from "formik";
 import { useState } from "react";
 import { useResetPasswordMutation } from "../../redux/auth/authApiSlice";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@emotion/react";
-import { Button, TextField, Typography, useMediaQuery } from "@mui/material";
+import {
+	Button,
+	InputAdornment,
+	TextField,
+	Typography,
+	useMediaQuery,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import Loading from "../../components/reusable/Loading";
+import { Visibility } from "@mui/icons-material";
 
 const schema = yup.object().shape({
 	password: yup.string().min(6).max(25).required("Please enter the password"),
@@ -22,7 +27,6 @@ const initialValues = { password: "", retypePassword: "" };
 const ResetPassword = () => {
 	const [message, setMessage] = useState("");
 	const [resetPassword] = useResetPasswordMutation();
-	const user = useSelector(selectCurrentUser);
 	const navigate = useNavigate();
 	const theme = useTheme();
 	const { resetToken } = useParams();
@@ -33,8 +37,7 @@ const ResetPassword = () => {
 		color: "red",
 	});
 	const [err, setErr] = useState(false);
-
-	if (user) navigate("/");
+	const [show, setShow] = useState({ password: false, retype: false });
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		try {
@@ -103,7 +106,7 @@ const ResetPassword = () => {
 								</Typography>
 								<TextField
 									label="Password"
-									type="password"
+									type={!show.password ? "password" : "text"}
 									onBlur={handleBlur}
 									onChange={handleChange}
 									value={values.password}
@@ -111,10 +114,33 @@ const ResetPassword = () => {
 									error={Boolean(touched.password) && Boolean(errors.password)}
 									helperText={touched.password && errors.password}
 									sx={{ width: "80%" }}
+									InputProps={{
+										endAdornment: (
+											<InputAdornment
+												position="end"
+												sx={{
+													cursor: "pointer",
+												}}
+												onClick={() =>
+													setShow((prev) => ({
+														...prev,
+														password: !prev.password,
+													}))
+												}>
+												<Visibility
+													sx={{
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
+													}}
+												/>
+											</InputAdornment>
+										),
+									}}
 								/>
 								<TextField
 									label="Retype Password"
-									type="password"
+									type={!show.retype ? "password" : "text"}
 									onBlur={handleBlur}
 									onChange={handleChange}
 									value={values.retypePassword}
@@ -125,6 +151,29 @@ const ResetPassword = () => {
 									}
 									helperText={touched.retypePassword && errors.retypePassword}
 									sx={{ width: "80%" }}
+									InputProps={{
+										endAdornment: (
+											<InputAdornment
+												position="end"
+												sx={{
+													cursor: "pointer",
+												}}
+												onClick={() =>
+													setShow((prev) => ({
+														...prev,
+														retype: !prev.retype,
+													}))
+												}>
+												<Visibility
+													sx={{
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
+													}}
+												/>
+											</InputAdornment>
+										),
+									}}
 								/>
 								<Button
 									type="submit"

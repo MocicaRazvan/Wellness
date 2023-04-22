@@ -38,7 +38,7 @@ const postSchema = yup.object().shape({
 	pictures: yup
 		.array()
 		.required("Please enter the post's title")
-		.min(1, "Please enter at least one pciture"),
+		.min(1, "Please enter at least one picture"),
 });
 
 const Form = ({ post }) => {
@@ -112,6 +112,7 @@ const Form = ({ post }) => {
 							images: pictures,
 						});
 						setLoading((prev) => ({ ...prev, show: false }));
+						console.log({ res });
 						if (res?.error) {
 							setCredentials((prev) => ({
 								...prev,

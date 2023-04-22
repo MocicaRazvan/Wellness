@@ -108,6 +108,7 @@ const FrogotPassword = () => {
 								/>
 								<Button
 									type="submit"
+									disabled={message ? true : false}
 									sx={{
 										mt: 2,
 										width: "50%",

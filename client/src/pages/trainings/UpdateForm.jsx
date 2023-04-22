@@ -32,7 +32,7 @@ const trainingSchema = yup.object().shape({
 	pictures: yup
 		.array()
 		.required("Please enter the trining's pcitures")
-		.min(1, "Please enter at least one pciture"),
+		.min(1, "Please enter at least one picture"),
 	tags: yup
 		.array()
 		.required("Please enter at least one tag")

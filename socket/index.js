@@ -13,9 +13,9 @@ const addUser = (userId, socketId, mounted, role) =>
 
 const removeUser = (socketId) => {
 	users = users.filter((user) => user?.socketId !== socketId);
-	users.forEach((user) => {
-		delete mountConv[user.userId];
-	});
+	// users.forEach((user) => {
+	// 	delete mountConv[user.userId];
+	// });
 };
 
 const getUser = (userId) => users?.find((user) => user?.userId === userId);
@@ -34,10 +34,12 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("mountUserConv", ({ convId, userId, role }) => {
+		console.log({ userIdMount: userId });
 		mountConv[userId] = { convId, role };
 	});
-	socket.on("deleteUserConv", (userId) => {
-		delete mountConv[userId];
+	socket.on("deleteUserConv", ({ userId }) => {
+		console.log({ userIdDelete: userId });
+		mountConv[userId] = {};
 	});
 
 	socket.on("unMountUser", (userId) => {
@@ -49,7 +51,7 @@ io.on("connection", (socket) => {
 
 	socket.on("notifiUnmounted", ({ receiverId, type, sender, ref }) => {
 		const user = getUser(receiverId);
-		console.log({ user });
+		console.log({ user, ref, m: mountConv[receiverId], mountConv, receiverId });
 		if (!user?.mounted) {
 			console.log("notification");
 			io.to(user?.socketId).emit("getNotification", {
@@ -58,7 +60,8 @@ io.on("connection", (socket) => {
 				ref,
 			});
 		} else {
-			if (mountConv[receiverId] && mountConv[receiverId] !== ref) {
+			if (mountConv[receiverId] && mountConv[receiverId].curConv !== ref) {
+				console.log("mounted");
 				console.log("mountNotif");
 				io.to(user?.socketId).emit("getNotification", {
 					type,
@@ -66,6 +69,7 @@ io.on("connection", (socket) => {
 					ref,
 				});
 			} else if (user?.role === "admin") {
+				console.log("not mounted");
 				io.to(user?.socketId).emit("getNotification", {
 					type,
 					sender,
@@ -80,7 +84,8 @@ io.on("connection", (socket) => {
 		const user = getUser(receiverId);
 		const sender = getUser(senderId);
 		// console.log(user);
-		console.log({ sender });
+		// console.log({ sender });
+		// console.log({ mountConv });
 		io.to(sender.socketId).emit("getPartener", {
 			user,
 			curConv: mountConv[receiverId],
@@ -88,6 +93,7 @@ io.on("connection", (socket) => {
 		socket.broadcast;
 
 		if (user) {
+			console.log("sending mess");
 			io.to(user.socketId).emit("getMessage", {
 				senderId,
 				text,

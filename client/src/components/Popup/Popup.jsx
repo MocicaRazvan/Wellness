@@ -22,6 +22,8 @@ export default function PopUp({
 	setNotifications,
 	approved,
 	setApproved,
+	portal,
+	left,
 }) {
 	const [open, setOpen] = useState(false);
 	const ref = useRef(null);
@@ -95,6 +97,7 @@ export default function PopUp({
 					width="100%"
 					display="flex"
 					justifyContent="space-between"
+					zIndex={100}
 					alignItems="center"
 					onClick={(e) => {
 						handleItemClick(e, { _id: key });
@@ -193,12 +196,13 @@ export default function PopUp({
 	// ));
 
 	return (
-		<Box sx={{ zIndex: "100" }}>
+		<Box>
 			<Popper
-				disablePortal={true}
+				disablePortal={portal}
 				open={open}
 				anchorEl={ref?.current}
-				placement={"bottom"}
+				placement={left ? "left" : "bottom"}
+				sx={{ p: left ? 2 : 0 }}
 				transition>
 				{({ TransitionProps }) => (
 					<Fade {...TransitionProps} timeout={350}>
@@ -444,12 +448,12 @@ export default function PopUp({
 			</Popper>
 
 			<Box
-				component={"span"}
 				ref={ref}
 				sx={{
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
+					zIndex: 102,
 				}}>
 				<IconBtn
 					badgeContent={badgeContent || 0}

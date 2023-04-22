@@ -6,6 +6,7 @@ import {
 	useMediaQuery,
 	Typography,
 	useTheme,
+	InputAdornment,
 } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
@@ -20,6 +21,7 @@ import {
 import { useUpdateUserMutation } from "../../redux/user/userApi";
 import Loading from "../../components/reusable/Loading";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
+import { Visibility } from "@mui/icons-material";
 
 const registerSchema = yup.object().shape({
 	firstName: yup
@@ -98,6 +100,7 @@ const Form = ({ user = null }) => {
 	const [loginUser] = useLoginMutation();
 	const [registerUser] = useRegisterMutation();
 	const [updateUser] = useUpdateUserMutation();
+	const [show, setShow] = useState({ password: false, retype: false });
 	useEffect(() => {
 		setPageType(pathname.slice(1));
 	}, [pathname]);
@@ -503,7 +506,7 @@ const Form = ({ user = null }) => {
 							/>
 							<TextField
 								label="Password"
-								type="password"
+								type={!show.password ? "password" : "text"}
 								onBlur={handleBlur}
 								onChange={handleChange}
 								value={values.password}
@@ -514,11 +517,34 @@ const Form = ({ user = null }) => {
 								}
 								helperText={touched.password && errors.password}
 								sx={{ gridColumn: "span 4" }}
+								InputProps={{
+									endAdornment: (
+										<InputAdornment
+											position="end"
+											sx={{
+												cursor: "pointer",
+											}}
+											onClick={() =>
+												setShow((prev) => ({
+													...prev,
+													password: !prev.password,
+												}))
+											}>
+											<Visibility
+												sx={{
+													"&:hover": {
+														color: palette.secondary[300],
+													},
+												}}
+											/>
+										</InputAdornment>
+									),
+								}}
 							/>
 							{!isLogin && (
 								<TextField
 									label="Retype Password"
-									type="password"
+									type={!show.retype ? "password" : "text"}
 									onBlur={handleBlur}
 									onChange={handleChange}
 									value={values.retypePassword}
@@ -530,6 +556,29 @@ const Form = ({ user = null }) => {
 									}
 									helperText={touched.retypePassword && errors.retypePassword}
 									sx={{ gridColumn: "span 4" }}
+									InputProps={{
+										endAdornment: (
+											<InputAdornment
+												position="end"
+												sx={{
+													cursor: "pointer",
+												}}
+												onClick={() =>
+													setShow((prev) => ({
+														...prev,
+														retype: !prev.retype,
+													}))
+												}>
+												<Visibility
+													sx={{
+														"&:hover": {
+															color: palette.secondary[300],
+														},
+													}}
+												/>
+											</InputAdornment>
+										),
+									}}
 								/>
 							)}
 						</Box>

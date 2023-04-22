@@ -14,7 +14,7 @@ import {
 } from "../../redux/notifications/notificationsSlice";
 import { useLocation } from "react-router-dom";
 
-const PopupWrapper = () => {
+const PopupWrapper = ({ portal = false, left = false }) => {
 	const socketRedux = useSelector(selectSocket);
 	const [skip, setSkip] = useState(true);
 	const user = useSelector(selectCurrentUser);
@@ -220,6 +220,8 @@ const PopupWrapper = () => {
 			setNotifications={setNotifications}
 			approved={approved}
 			setApproved={setApproved}
+			portal={portal}
+			left={left}
 		/>
 	);
 };

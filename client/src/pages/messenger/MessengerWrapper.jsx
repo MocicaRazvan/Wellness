@@ -29,10 +29,21 @@ const MessengerWrapper = ({ admin = false }) => {
 		}
 		return () => {
 			if (socketRedux && user?.id) {
+				console.log("unmount");
 				socketRedux.emit("unMountUser", user?.id);
 			}
 		};
 	}, [notReload, socketRedux, user?.id]);
+
+	// useEffect(() => {
+	// 	return () => {
+	// 		if (user?.role === "admin" && socketRedux !== undefined) {
+	// 			socketRedux.emit("deleteUserConv", {
+	// 				userId: user?.id,
+	// 			});
+	// 		}
+	// 	};
+	// }, [socketRedux, user?.id, user?.role]);
 
 	if (!socketRedux || !user?.id)
 		return (

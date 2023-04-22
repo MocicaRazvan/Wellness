@@ -13,7 +13,7 @@ exports.createExercise = async (req, res) => {
 	if (count > 0)
 		return res
 			.status(400)
-			.json({ message: "Please enter a title that you havent used!" });
+			.json({ message: "Please enter a title that you haven't used" });
 	// video upload to cloudinary
 	try {
 		if (videos && videos.length > 0) {
@@ -217,7 +217,7 @@ exports.updateExercise = async (req, res) => {
 	if (count > 0)
 		return res
 			.status(400)
-			.json({ message: "Please enter a title that you havent used!" });
+			.json({ message: "Please enter a title that you haven't used" });
 
 	if (videos && videos.length > 0) {
 		const exercise = await Exercises.findById(exerciseId).lean();

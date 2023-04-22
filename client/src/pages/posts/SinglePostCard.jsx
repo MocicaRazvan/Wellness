@@ -110,7 +110,7 @@ const SinglePostCard = ({ post }) => {
 					height={600}
 				/>
 			</Box>
-			<Container sx={{ mt: 5 }}>
+			<Container sx={{ mt: 8 }}>
 				<Typography
 					varint="body1"
 					gutterBottom

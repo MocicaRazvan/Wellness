@@ -71,7 +71,7 @@ const makeReset = (resetUrl) => `<!DOCTYPE html
                                                 style="border-spacing:0;font-size:15px;line-height:20px;padding:0 5px;">
                                                 <tr>
                                                     <td style="padding:0;">
-                                                        <h1>You have requested a password reset </h1>
+                                                        <h1 style="line-height:1.2" >You have requested a password reset</h1>
                                                         <p style="margin-top: 20px;">Please go to this link to reset
                                                             your passowrd </p>
                                                         <a href=${resetUrl} clicktracking=off target="_blank"  > ${resetUrl}</a>

@@ -14,7 +14,7 @@ exports.createTraining = async (req, res) => {
 	if (count > 0)
 		return res
 			.status(400)
-			.json({ message: "Please enter a title that havent been used!" });
+			.json({ message: "Please enter a title that haven't been used" });
 	try {
 		if (images && images.length > 0) {
 			const uplodRes = await Promise.all(

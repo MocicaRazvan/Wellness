@@ -521,7 +521,7 @@ const Navigation = () => {
 			</MenuItem>
 			<MenuItem onClick={handleMenuClose}>
 				<Box>
-					<PopupWrapper />
+					<PopupWrapper left={true} />
 				</Box>
 			</MenuItem>
 			<MenuItem onClick={handleMenuClose}>
@@ -756,7 +756,7 @@ const Navigation = () => {
 									<Calculate sx={{ fontSize: "25px" }} />
 								</IconButton>
 
-								<PopupWrapper />
+								<PopupWrapper portal={true} />
 								<IconButton
 									size="large"
 									edge="end"

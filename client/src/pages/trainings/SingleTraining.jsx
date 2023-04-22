@@ -166,7 +166,7 @@ const SingleTraining = () => {
 				flexDirection="column"
 				gap={2}>
 				{/* <CustomCarousel images={images} height={{ xs: 300, md: 500 }} /> */}
-				<Box width={"100%"}>
+				<Box width={"100%"} mb={4}>
 					<CustomCarousel images={images} height={600} />
 				</Box>
 				<Typography
