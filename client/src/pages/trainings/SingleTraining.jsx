@@ -253,10 +253,7 @@ const SingleTraining = () => {
 												{exercise?.title}
 											</Typography>
 											<Box mb={4}>
-												<CustomVideoCarousel
-													videos={urls}
-													height={"fit-content"}
-												/>
+												<CustomVideoCarousel videos={urls} height={600} />
 											</Box>
 											<Box
 												p="1rem"

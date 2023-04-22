@@ -96,7 +96,7 @@ const SingleExercise = ({ id = null }) => {
 				{exercise?.title}
 			</Typography>
 			<Box mb={4}>
-				<CustomVideoCarousel videos={urls} height={500} />
+				<CustomVideoCarousel videos={urls} height={600} />
 			</Box>
 			<Box p="1rem" display="flex" justifyContent="center">
 				<Typography

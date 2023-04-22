@@ -36,6 +36,7 @@ const CustomCarousel = ({ videos, height }) => {
 			<Box
 				justifyContent="space-between"
 				sx={{
+					px: 2,
 					zIndex: 100,
 					position: "absolute",
 					top: "50%",
@@ -97,6 +98,7 @@ const CustomCarousel = ({ videos, height }) => {
 									width: "100%",
 									height: "100%",
 									objectFit: "cover",
+									borderRadius: 5,
 								}}
 							/>
 							{videos.length > 1 && (

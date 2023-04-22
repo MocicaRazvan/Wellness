@@ -26,17 +26,26 @@ import { useCreateTriningMutation } from "../../redux/trainings/trainingsApi";
 import tags from "../../utils/consts/tags";
 
 const trainingSchema = yup.object().shape({
-	title: yup.string().required("Please enter the title"),
+	title: yup
+		.string()
+		.required("Please enter the training's title")
+		.transform((_, v) => v.trim()),
 	tags: yup
 		.array()
-		.required("Please enter the tags")
+		.required("Please enter at least one tag")
 		.min(1, "Please enter at least one tag"),
 	exercises: yup
 		.array()
-		.required("Please enter the exercises")
+		.required("Please enter the trining's exercises")
 		.min(1, "Please enter at least one exercise"),
-	price: yup.number().required("Please enter the price").min(1),
-	pictures: yup.array().required("Please enter pictures"),
+	price: yup
+		.number()
+		.required("Please enter the trining's price")
+		.min(1, "Please enter a positive price"),
+	pictures: yup
+		.array()
+		.required("Please enter the trining's pcitures")
+		.min(1, "Please enter at least one pciture"),
 });
 
 const Form = ({ training }) => {
@@ -56,6 +65,7 @@ const Form = ({ training }) => {
 	const theme = useTheme();
 	const user = useSelector(selectCurrentUser);
 	const navigate = useNavigate();
+	const [err, setErr] = useState(false);
 
 	const [createTraining] = useCreateTriningMutation();
 	const { data: ids } = useGetAllExercisesIdsByUserQuery(
@@ -95,7 +105,7 @@ const Form = ({ training }) => {
 				show: true,
 				msg: "Please provide a description",
 			}));
-
+			setErr(true);
 			setTimeout(
 				() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
 				2000,
@@ -109,7 +119,10 @@ const Form = ({ training }) => {
 						show: true,
 						msg: "Please enter at least 1 picture!",
 					}));
-
+					onSubmitProps.setFieldError(
+						"pictures",
+						"Please enter at least one picture!",
+					);
 					setTimeout(
 						() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
 						2000,
@@ -118,7 +131,7 @@ const Form = ({ training }) => {
 					try {
 						setLoading((prev) => ({ ...prev, show: true }));
 						const res = await createTraining({
-							title,
+							title: title.trim(),
 							tags,
 							exercises,
 							price,
@@ -156,7 +169,7 @@ const Form = ({ training }) => {
 	return (
 		<Box>
 			{" "}
-			<Loading loading={alert} type="alert" />
+			{/* <Loading loading={alert} type="alert" /> */}
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
@@ -172,7 +185,16 @@ const Form = ({ training }) => {
 					setFieldValue,
 					resetForm,
 				}) => (
-					<form onSubmit={handleSubmit}>
+					<form
+						onSubmit={(e) => {
+							if (
+								description === "" ||
+								description.replace(/(<([^>]+)>)/gi, "") === ""
+							) {
+								setErr(true);
+							}
+							handleSubmit(e);
+						}}>
 						<Box
 							display="grid"
 							gap="30px"
@@ -229,6 +251,9 @@ const Form = ({ training }) => {
 													"& .Mui-selected": {
 														color: theme.palette.background.alt,
 														bgcolor: theme.palette.secondary[300],
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
 													},
 												},
 											},
@@ -271,6 +296,9 @@ const Form = ({ training }) => {
 													"& .Mui-selected": {
 														color: theme.palette.background.alt,
 														bgcolor: theme.palette.secondary[300],
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
 													},
 												},
 											},
@@ -293,7 +321,12 @@ const Form = ({ training }) => {
 								mb={4}
 								display="flex"
 								justifyContent="center">
-								<TextEditor name="body" setValue={setDescription} />
+								<TextEditor
+									setError={setErr}
+									error={err}
+									text="Please enter the training's description"
+									setValue={setDescription}
+								/>
 							</Box>
 							<Box
 								gridColumn="span 4"
@@ -324,12 +357,24 @@ const Form = ({ training }) => {
 											{...getRootProps()}
 											// border={`2px dashed ${theme.palette.primary.main}`}
 											p="1rem"
+											mt={4}
+											borderRadius="5px"
+											border={`1px solid ${
+												Boolean(touched.pictures) &&
+												Boolean(errors.pictures) &&
+												theme.palette.error.main
+											}`}
 											sx={{ "&:hover": { cursor: "pointer" } }}>
 											<input {...getInputProps()} />
 											{!values.pictures.length > 0 ? (
 												<Typography
 													variant="h5"
-													color={theme.palette.secondary[200]}
+													color={
+														Boolean(touched.pictures) &&
+														Boolean(errors.pictures)
+															? theme.palette.error.main
+															: theme.palette.secondary[200]
+													}
 													textAlign="center"
 													fontWeight="bold">
 													Add Pictures
@@ -343,6 +388,13 @@ const Form = ({ training }) => {
 													{values.pictures.length} pictures selected
 												</Typography>
 											)}
+											{Boolean(touched.pictures) &&
+												Boolean(errors.pictures) && (
+													<FormHelperText
+														sx={{ color: theme.palette.error.main }}>
+														{touched.pictures && errors.pictures}
+													</FormHelperText>
+												)}
 										</Box>
 									)}
 								</Dropzone>

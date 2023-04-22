@@ -22,27 +22,49 @@ import Loading from "../../components/reusable/Loading";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 
 const registerSchema = yup.object().shape({
-	firstName: yup.string().required("Please enter first name"),
-	lastName: yup.string().required("Please enter last name"),
-	email: yup.string().email("invalid email").required("Please enter the email"),
+	firstName: yup
+		.string()
+		.required("Please enter your first name")
+		.transform((_, v) => v.trim()),
+	lastName: yup
+		.string()
+		.required("Please enter your last name")
+		.transform((_, v) => v.trim()),
+	email: yup
+		.string()
+		.email("invalid email")
+		.required("Please enter the email")
+		.transform((_, v) => v.trim()),
 	password: yup.string().required("Please enter the password"),
 	retypePassword: yup
 		.string()
 		.required("Please retype your password.")
 		.oneOf([yup.ref("password")], "Your passwords do not match."),
-	location: yup.string().required("Please enter your location"),
-	occupation: yup.string().required("Please enter your occupation"),
+	location: yup
+		.string()
+		.required("Please enter your location")
+		.transform((_, v) => v.trim()),
+	occupation: yup
+		.string()
+		.required("Please enter your occupation")
+		.transform((_, v) => v.trim()),
 	picture: yup.string(),
 	phoneNumber: yup
 		.string()
 		.matches(
 			/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
 			"Phone number is not valid",
-		),
+		)
+		.required("Please enter your phone")
+		.transform((_, v) => v.trim()),
 });
 
 const loginSchema = yup.object().shape({
-	email: yup.string().email("invalid email").required("Please enter the email"),
+	email: yup
+		.string()
+		.email("invalid email")
+		.required("Please enter the email")
+		.transform((_, v) => v.trim()),
 	password: yup.string().required("Please enter the password"),
 });
 
@@ -72,10 +94,13 @@ const Form = ({ user = null }) => {
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const isLogin = pageType === "login";
 	const isRegister = pageType === "register" || user;
-
+	const [changed, setChanged] = useState(false);
 	const [loginUser] = useLoginMutation();
 	const [registerUser] = useRegisterMutation();
 	const [updateUser] = useUpdateUserMutation();
+	useEffect(() => {
+		setPageType(pathname.slice(1));
+	}, [pathname]);
 
 	const isUpdate = useLocation()
 		.pathname?.split("/")
@@ -96,7 +121,7 @@ const Form = ({ user = null }) => {
 		password: "",
 		location: user?.location || "",
 		occupation: user?.occupation || "",
-		picture: "",
+		picture: user?.image?.url || "",
 		phoneNumber: user?.phoneNumber || "",
 		retypePassword: "",
 	};
@@ -122,12 +147,14 @@ const Form = ({ user = null }) => {
 				setMessage(res.error.data.message);
 			}
 			setMessage("");
+
 			onSubmitProps.resetForm();
 			navigate("/");
 		} catch (error) {
 			console.log(error);
 			// setLoading((prev) => ({ ...prev, show: false }));
-			onSubmitProps.resetForm();
+			onSubmitProps.setFieldError("email", "Credentials are not valid!");
+			onSubmitProps.setFieldError("password", "Credentials are not valid!");
 			setCredentials((prev) => ({
 				...prev,
 				show: true,
@@ -144,10 +171,10 @@ const Form = ({ user = null }) => {
 		try {
 			let res1, res2;
 			if (user) {
-				// setLoading((prev) => ({ ...prev, show: true }));
+				setLoading((prev) => ({ ...prev, show: true }));
 				res2 = await updateUser(values);
 				console.log({ res2 });
-				// setLoading((prev) => ({ ...prev, show: false }));
+				setLoading((prev) => ({ ...prev, show: false }));
 				if (res2?.error?.data?.isError) {
 					if (res2?.error?.data?.error === "credentials") {
 						setCredentials((prev) => ({
@@ -262,29 +289,33 @@ const Form = ({ user = null }) => {
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (isRegister) {
-			const username = `${values.firstName} ${values.lastName}`;
+			const username = `${values.firstName.trim()} ${values.lastName.trim()}`;
 
-			const { email, location, occupation, password, picture } = values;
-			const phoneNumber = values.phoneNumber || "";
+			const { email, location, occupation, password, picture, phoneNumber } =
+				values;
+			// const phoneNumber = values.phoneNumber || "";
+			const isNotChanged = user && !changed;
 			const credentials = {
-				email,
-				location,
-				occupation,
+				email: email.trim(),
+				location: location.trim(),
+				occupation: occupation.trim(),
 				password,
-				image: picture,
+				image: isNotChanged ? "" : picture,
 				username,
-				phoneNumber,
+				phoneNumber: phoneNumber.trim(),
 			};
+
 			await register(credentials, onSubmitProps);
 		} else if (isLogin) {
-			await login(values, onSubmitProps);
+			const { email, password } = values;
+			await login({ email: email.trim(), password }, onSubmitProps);
 		}
 	};
 
 	return (
 		<Box>
 			<Loading loading={loading} />
-			<Loading loading={credentials} type="alert" />
+			{/* <Loading loading={credentials} type="alert" /> */}
 			<Formik
 				onSubmit={handleFormSubmit}
 				initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
@@ -346,7 +377,7 @@ const Form = ({ user = null }) => {
 										sx={{ gridColumn: "span 2" }}
 									/>
 									<TextField
-										label="PhoneNumber"
+										label="Phone Number"
 										onBlur={handleBlur}
 										onChange={handleChange}
 										value={values.phoneNumber}
@@ -389,6 +420,7 @@ const Form = ({ user = null }) => {
 												)
 													.then((urls) => {
 														setFieldValue("picture", urls[0]);
+														setChanged(true);
 													})
 													.catch((error) => {
 														console.error(error);
@@ -408,7 +440,8 @@ const Form = ({ user = null }) => {
 																color={palette.secondary[200]}
 																textAlign="center"
 																fontWeight="bold">
-																If no picture is added the old one will stay
+																{/* If no picture is added the old one will stay */}
+																Add picture
 															</Typography>
 														) : (
 															<Typography
@@ -420,10 +453,13 @@ const Form = ({ user = null }) => {
 															</Typography>
 														)
 													) : (
-														<FlexBetween>
-															<Typography>Picture selected</Typography>
-															<EditOutlinedIcon />
-														</FlexBetween>
+														<Typography
+															variant="h5"
+															color={palette.secondary[200]}
+															textAlign="center"
+															fontWeight="bold">
+															Picture selected
+														</Typography>
 													)}
 												</Box>
 											)}
@@ -516,6 +552,7 @@ const Form = ({ user = null }) => {
 								<Typography
 									onClick={() => {
 										setPageType(isLogin ? "register" : "login");
+										navigate(isLogin ? "/register" : "/login");
 										resetForm();
 									}}
 									gutterBottom

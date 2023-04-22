@@ -29,10 +29,16 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 const postSchema = yup.object().shape({
 	tags: yup
 		.array()
-		.required("Please enter the tags")
-		.min(1, "Please enter the post tags"),
-	title: yup.string().required("Please enter the title"),
-	pictures: yup.array(),
+		.required("Please enter at least one tag")
+		.min(1, "Please enter at least one tag"),
+	title: yup
+		.string()
+		.required("Please enter the post's title")
+		.transform((_, v) => v.trim()),
+	pictures: yup
+		.array()
+		.required("Please enter the post's title")
+		.min(1, "Please enter at least one pciture"),
 });
 
 const Form = ({ post }) => {
@@ -60,6 +66,7 @@ const Form = ({ post }) => {
 		title: post?.title || "",
 		pictures: post?.images?.map(({ url }) => url) || [],
 	};
+	const [err, setErr] = useState(false);
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
 			setMessage("Plese provide a body to the post");
@@ -68,6 +75,7 @@ const Form = ({ post }) => {
 				show: true,
 				msg: "Plese provide a body to the post",
 			}));
+			setErr(true);
 
 			setTimeout(
 				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
@@ -99,7 +107,7 @@ const Form = ({ post }) => {
 						}));
 						const res = await createPost({
 							body,
-							title,
+							title: title.trim(),
 							tags,
 							images: pictures,
 						});
@@ -136,11 +144,10 @@ const Form = ({ post }) => {
 						show: true,
 						msg: "Updating the post...",
 					}));
-					//!!!
 					const res = await updatePost({
 						id: post.id,
 						body,
-						title,
+						title: title.trim(),
 						tags,
 						images: changed ? pictures : [],
 					});
@@ -190,7 +197,7 @@ const Form = ({ post }) => {
 
 	return (
 		<Box>
-			<Loading loading={credentials} type="alert" />
+			{/* <Loading loading={credentials} type="alert" /> */}
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
@@ -206,7 +213,13 @@ const Form = ({ post }) => {
 					setFieldValue,
 					resetForm,
 				}) => (
-					<form onSubmit={handleSubmit}>
+					<form
+						onSubmit={(e) => {
+							if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
+								setErr(true);
+							}
+							handleSubmit(e);
+						}}>
 						<Box
 							display="grid"
 							gap="30px"
@@ -249,6 +262,9 @@ const Form = ({ post }) => {
 													"& .Mui-selected": {
 														color: theme.palette.background.alt,
 														bgcolor: theme.palette.secondary[300],
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
 													},
 												},
 											},
@@ -270,7 +286,9 @@ const Form = ({ post }) => {
 								display="flex"
 								justifyContent="center">
 								<TextEditor
-									name="body"
+									error={err}
+									setError={setErr}
+									text="Please provide the post's body"
 									setValue={setBody}
 									value={post?.body || ""}
 								/>
@@ -305,13 +323,25 @@ const Form = ({ post }) => {
 											{...getRootProps()}
 											// border={`2px dashed ${theme.palette.primary.main}`}
 											p="1rem"
+											mt={4}
+											borderRadius="5px"
+											border={`1px solid ${
+												Boolean(touched.pictures) &&
+												Boolean(errors.pictures) &&
+												theme.palette.error.main
+											}`}
 											sx={{ "&:hover": { cursor: "pointer" } }}>
 											<input {...getInputProps()} />
 											{!values.pictures.length > 0 ? (
 												!post ? (
 													<Typography
 														variant="h5"
-														color={theme.palette.secondary[200]}
+														color={
+															Boolean(touched.pictures) &&
+															Boolean(errors.pictures)
+																? theme.palette.error.main
+																: theme.palette.secondary[200]
+														}
 														textAlign="center"
 														fontWeight="bold">
 														Add Picture
@@ -334,6 +364,13 @@ const Form = ({ post }) => {
 													{values.pictures.length} pictures selected
 												</Typography>
 											)}
+											{Boolean(touched.pictures) &&
+												Boolean(errors.pictures) && (
+													<FormHelperText
+														sx={{ color: theme.palette.error.main }}>
+														{touched.pictures && errors.pictures}
+													</FormHelperText>
+												)}
 										</Box>
 									)}
 								</Dropzone>

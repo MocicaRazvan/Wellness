@@ -72,6 +72,14 @@ const Faq = () => {
 	const { palette } = useTheme();
 	return (
 		<Box m="auto 20px" pt={2} px={8} sx={{ borderRadius: "5px" }}>
+			<Typography
+				color={palette.secondary[400]}
+				fontWeight="700"
+				fontSize={30}
+				gutterBottom
+				textAlign="center">
+				Frequently Asked Questions
+			</Typography>
 			{faqArray.map(({ q, a }) => (
 				<Accordion key={q} sx={{ bgcolor: palette.background.alt, mb: 2 }}>
 					<AccordionSummary

@@ -1,4 +1,11 @@
-import { Box, Button, TextField, useMediaQuery, useTheme } from "@mui/material";
+import {
+	Box,
+	Button,
+	FormHelperText,
+	TextField,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
@@ -25,6 +32,7 @@ const Test = () => {
 	});
 	const theme = useTheme();
 	const [sendEmail] = useSendEmailAdminMutation();
+	const [error, setError] = useState(false);
 
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const initialValues = {
@@ -44,9 +52,12 @@ const Test = () => {
 			}
 			quill.on("text-change", () => {
 				setBody(quillRef.current.firstChild.innerHTML);
+				if (error) {
+					setError(false);
+				}
 			});
 		}
-	}, [body, quill, quillRef]);
+	}, [body, error, quill, quillRef]);
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
@@ -55,7 +66,7 @@ const Test = () => {
 				show: true,
 				msg: "Please provide a body",
 			}));
-
+			setError(true);
 			setTimeout(
 				() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
 				2000,
@@ -64,7 +75,7 @@ const Test = () => {
 			setLoading((prev) => ({ ...prev, show: true }));
 			const res = await sendEmail({
 				body,
-				email: values.email,
+				email: values.email.trim(),
 				subject: values.subject,
 			});
 			onSubmitProps.resetForm();
@@ -96,7 +107,7 @@ const Test = () => {
 					zIndex: 2000,
 					position: "relative",
 				}}>
-				<Loading loading={alert} type="alert" />
+				{/* <Loading loading={alert} type="alert" /> */}
 				<Loading loading={loading} type="alert" />
 			</Box>
 			<Box
@@ -129,7 +140,13 @@ const Test = () => {
 							setFieldValue,
 							resetForm,
 						}) => (
-							<form onSubmit={handleSubmit}>
+							<form
+								onSubmit={(e) => {
+									if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
+										setError(true);
+									}
+									handleSubmit(e);
+								}}>
 								<Box
 									display="grid"
 									gap="30px"
@@ -169,6 +186,13 @@ const Test = () => {
 											sx={{
 												width: { xs: 250, sm: 500, md: 600 },
 												height: { xs: 350, sm: 400 },
+												"& .ql-toolbar.ql-snow, .ql-container.ql-snow ": {
+													border: `1px solid ${
+														error
+															? theme.palette.error.main
+															: theme.palette.primary.main
+													} `,
+												},
 											}}>
 											<div
 												style={{
@@ -181,6 +205,12 @@ const Test = () => {
 										</Box>
 									</Box>
 								</Box>
+								{error && (
+									<FormHelperText
+										sx={{ mt: 2, ml: 2, color: theme.palette.error.main }}>
+										{`Please proivde the email's body`}
+									</FormHelperText>
+								)}
 								<Box textAlign="center" mt={6}>
 									<Button
 										type="submit"

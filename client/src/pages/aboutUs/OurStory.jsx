@@ -9,6 +9,14 @@ const OurStory = () => {
 	const { palette } = useTheme();
 	return (
 		<Box m={2} p={2}>
+			<Typography
+				color={palette.secondary[400]}
+				fontWeight="700"
+				fontSize={30}
+				gutterBottom
+				textAlign="center">
+				Our Story
+			</Typography>
 			<Box
 				display="flex"
 				flexDirection="column"

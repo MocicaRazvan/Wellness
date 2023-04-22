@@ -19,7 +19,7 @@ const OrderTroubleshoot = () => {
 					fontWeight="bold"
 					textAlign="center"
 					gutterBottom>
-					To start
+					Order Troubleshoot
 				</Typography>
 				<Typography
 					color={palette.secondary[200]}

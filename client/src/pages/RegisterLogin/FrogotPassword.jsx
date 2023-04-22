@@ -13,9 +13,14 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 import * as yup from "yup";
 import { useForgotPasswordMutation } from "../../redux/auth/authApiSlice";
 import { Formik } from "formik";
+import Loading from "../../components/reusable/Loading";
 
 const schema = yup.object().shape({
-	email: yup.string().email("invalid email").required("Please enter the email"),
+	email: yup
+		.string()
+		.email("invalid email")
+		.required("Please enter the email")
+		.transform((_, v) => v.trim()),
 });
 
 const FrogotPassword = () => {
@@ -24,23 +29,32 @@ const FrogotPassword = () => {
 	const [forgotPassword, { isSuccess, isLoading }] =
 		useForgotPasswordMutation();
 	const user = useSelector(selectCurrentUser);
-	const navigate = useNavigate();
 	const theme = useTheme();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 	const initialValues = { email: userEmail || "" };
-	const [first, setFirst] = useState(true);
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		try {
-			const res = await forgotPassword(values.email);
-			if (res?.error) {
-				setMessage("Email not valid");
-			} else {
-				setMessage("Check your email");
-			}
+			const res = await forgotPassword(values.email.trim());
+			// console.log({ res });
+			// if (res?.error) {
+			// 	setAlert((prev) => ({
+			// 		...prev,
+			// 		show: true,
+			// 		msg: "This email is not registered",
+			// 	}));
+
+			// 	setTimeout(
+			// 		() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
+			// 		2000,
+			// 	);
+			// } else {
+			// 	setMessage("Check your email!");
+			// }
+			setMessage("Check your email!");
 			onSubmitProps.resetForm();
 		} catch (error) {
-			setMessage("Email not valid");
+			setMessage("Check your email!");
 			onSubmitProps.resetForm();
 		}
 	};

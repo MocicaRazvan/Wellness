@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import { Button, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
+import Loading from "../../components/reusable/Loading";
 
 const schema = yup.object().shape({
 	password: yup.string().min(6).max(25).required("Please enter the password"),
@@ -26,6 +27,12 @@ const ResetPassword = () => {
 	const theme = useTheme();
 	const { resetToken } = useParams();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+	const [alert, setAlert] = useState({
+		show: false,
+		msg: "",
+		color: "red",
+	});
+	const [err, setErr] = useState(false);
 
 	if (user) navigate("/");
 
@@ -36,9 +43,19 @@ const ResetPassword = () => {
 				password: values.password,
 			});
 			if (res?.error) {
-				setMessage(res.error.message);
+				setAlert((prev) => ({
+					...prev,
+					show: true,
+					msg: res.error.data.message + "!",
+				}));
+
+				setTimeout(
+					() => setAlert((prev) => ({ ...prev, show: false, msg: "" })),
+					2000,
+				);
+				setErr(true);
 			} else {
-				navigate("/");
+				navigate("/login");
 			}
 			onSubmitProps.resetForm();
 		} catch (error) {
@@ -49,6 +66,7 @@ const ResetPassword = () => {
 
 	return (
 		<Box>
+			<Loading loading={alert} type="alert" />
 			<Box
 				width={isNonMobileScreens ? "50%" : "93%"}
 				p="2rem"
@@ -118,7 +136,7 @@ const ResetPassword = () => {
 										color: theme.palette.secondary[300],
 										"&:hover": { color: theme.palette.primary.main },
 									}}>
-									Save now!
+									Reset
 								</Button>
 							</Box>
 						</form>
@@ -129,6 +147,22 @@ const ResetPassword = () => {
 						variant="h5"
 						sx={{ mt: 5, color: theme.palette.secondary[200] }}>
 						{message}
+					</Typography>
+				)}
+				{err && (
+					<Typography
+						onClick={() => navigate("/forgotPassword")}
+						sx={{
+							mt: 4,
+							textDecoration: "underline",
+							color: theme.palette.secondary[200],
+							width: "fit-content",
+							"&:hover": {
+								cursor: "pointer",
+								color: theme.palette.primary.light,
+							},
+						}}>
+						Make a new password reset request!
 					</Typography>
 				)}
 			</Box>

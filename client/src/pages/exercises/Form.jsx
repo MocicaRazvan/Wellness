@@ -28,8 +28,14 @@ import muscleGroups from "../../utils/consts/muscleGorups";
 import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 
 const exerciseSchema = yup.object().shape({
-	clips: yup.array(),
-	title: yup.string().required("Please enter the title"),
+	clips: yup
+		.array()
+		.required("Please enter the exercise's videos")
+		.min(1, "Please enter at least one video"),
+	title: yup
+		.string()
+		.required("Please enter the exercise's title")
+		.transform((_, v) => v.trim()),
 	// body: yup.string().required("required"),
 	muscleGroups: yup
 		.array()
@@ -56,7 +62,7 @@ const Form = ({ exercise }) => {
 		msg: "",
 		color: "red",
 	});
-
+	const [err, setErr] = useState(false);
 	const [createExercise] = useCreateExerciseMutation();
 	const [updateExercise] = useUpdateExerciseMutation();
 
@@ -94,6 +100,7 @@ const Form = ({ exercise }) => {
 				show: true,
 				msg: "Plese provide a body to the exercise",
 			}));
+			setErr(true);
 			setTimeout(
 				() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
 				2000,
@@ -106,6 +113,10 @@ const Form = ({ exercise }) => {
 						show: true,
 						msg: "Please enter at least one video!",
 					}));
+					onSubmitProps.setFieldError(
+						"clips",
+						"Please enter at least one video!",
+					);
 					setTimeout(
 						() => setCredentials((prev) => ({ ...prev, show: false, msg: "" })),
 						2000,
@@ -120,7 +131,7 @@ const Form = ({ exercise }) => {
 						const res = await createExercise({
 							body,
 							videos: values.clips,
-							title: values.title,
+							title: values.title.trim(),
 							muscleGroups: values.muscleGroups,
 						});
 						setLoading((prev) => ({ ...prev, show: false }));
@@ -159,7 +170,7 @@ const Form = ({ exercise }) => {
 						id: exercise?.id,
 						body,
 						videos: changed ? values.clips : [],
-						title: values.title,
+						title: values.title.trim(),
 						muscleGroups: values.muscleGroups,
 					});
 					setLoading((prev) => ({ ...prev, show: false }));
@@ -192,7 +203,7 @@ const Form = ({ exercise }) => {
 	return (
 		<Box>
 			{" "}
-			<Loading loading={credentials} type="alert" />
+			{/* <Loading loading={credentials} type="alert" /> */}
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
@@ -208,7 +219,13 @@ const Form = ({ exercise }) => {
 					setFieldValue,
 					resetForm,
 				}) => (
-					<form onSubmit={handleSubmit}>
+					<form
+						onSubmit={(e) => {
+							if (body === "" || body.replace(/(<([^>]+)>)/gi, "") === "") {
+								setErr(true);
+							}
+							handleSubmit(e);
+						}}>
 						<Box
 							display="grid"
 							gap="30px"
@@ -256,6 +273,9 @@ const Form = ({ exercise }) => {
 													"& .Mui-selected": {
 														color: theme.palette.background.alt,
 														bgcolor: theme.palette.secondary[300],
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
 													},
 												},
 											},
@@ -280,7 +300,9 @@ const Form = ({ exercise }) => {
 								display="flex"
 								justifyContent="center">
 								<TextEditor
-									name="body"
+									error={err}
+									setError={setErr}
+									text="Please provide the exercise's body"
 									setValue={setBody}
 									value={exercise?.body || ""}
 								/>
@@ -315,13 +337,24 @@ const Form = ({ exercise }) => {
 										{...getRootProps()}
 										// border={`2px dashed ${theme.palette.primary.main}`}
 										p="1rem"
+										mt={4}
+										borderRadius="5px"
+										border={`1px solid ${
+											Boolean(touched.clips) &&
+											Boolean(errors.clips) &&
+											theme.palette.error.main
+										}`}
 										sx={{ "&:hover": { cursor: "pointer" } }}>
 										<input {...getInputProps()} />
 										{!values.clips.length > 0 ? (
 											!exercise ? (
 												<Typography
 													variant="h5"
-													color={theme.palette.secondary[200]}
+													color={
+														Boolean(touched.clips) && Boolean(errors.clips)
+															? theme.palette.error.main
+															: theme.palette.secondary[200]
+													}
 													textAlign="center"
 													fontWeight="bold">
 													Add Videos{" "}
@@ -347,6 +380,11 @@ const Form = ({ exercise }) => {
 													: " videos "}{" "}
 												selected
 											</Typography>
+										)}
+										{Boolean(touched.clips) && Boolean(errors.clips) && (
+											<FormHelperText sx={{ color: theme.palette.error.main }}>
+												{touched.clips && errors.clips}
+											</FormHelperText>
 										)}
 									</Box>
 								)}

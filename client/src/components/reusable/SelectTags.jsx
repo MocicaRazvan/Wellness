@@ -55,7 +55,7 @@ const SelectTags = ({ tags, setTags, error, type = "Post" }) => {
 			id = "CurEx";
 			break;
 		default:
-			id = "tags";
+			id = "Tags";
 			break;
 	}
 
@@ -64,6 +64,7 @@ const SelectTags = ({ tags, setTags, error, type = "Post" }) => {
 			<FormControl>
 				<InputLabel htmlFor={id}>{id}</InputLabel>
 				<Select
+					label={id}
 					sx={{ p: 0, m: 0 }}
 					disableUnderline
 					id={id}
@@ -82,6 +83,10 @@ const SelectTags = ({ tags, setTags, error, type = "Post" }) => {
 									"& .Mui-checked": {
 										color: theme.palette.secondary[300],
 									},
+									"& .css-8sgh38-MuiButtonBase-root-MuiCheckbox-root.Mui-checked":
+										{
+											color: theme.palette.secondary[300],
+										},
 								},
 							},
 						},

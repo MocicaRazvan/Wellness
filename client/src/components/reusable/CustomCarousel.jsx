@@ -87,6 +87,7 @@ const CustomCarousel = ({ images, height, width = "80%" }) => {
 					position: "absolute",
 					top: "50%",
 					width: "100%",
+					px: 2,
 					display: images.length === 1 ? "none" : "flex",
 				}}>
 				<Fab

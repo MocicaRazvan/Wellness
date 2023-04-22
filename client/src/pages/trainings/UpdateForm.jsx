@@ -25,11 +25,17 @@ import CustomCarousel from "../../components/reusable/CustomCarousel";
 import tags from "../../utils/consts/tags";
 
 const trainingSchema = yup.object().shape({
-	price: yup.number().required("Please enter the price").min(1),
-	pictures: yup.array().required("Please enter pictures"),
+	price: yup
+		.number()
+		.required("Please enter the trining's price")
+		.min(1, "Please enter a positive price"),
+	pictures: yup
+		.array()
+		.required("Please enter the trining's pcitures")
+		.min(1, "Please enter at least one pciture"),
 	tags: yup
 		.array()
-		.required("Please enter the tags")
+		.required("Please enter at least one tag")
 		.min(1, "Please enter at least one tag"),
 });
 const UpdateForm = ({ training }) => {
@@ -52,6 +58,7 @@ const UpdateForm = ({ training }) => {
 	const navigate = useNavigate();
 	const [updateTraining] = useUpdateTrainingMutation();
 	const [changed, setChanged] = useState(false);
+	const [err, setErr] = useState(false);
 	const initialValues = {
 		price: training?.price || null,
 		pictures: training?.images.map(({ url }) => url) || [],
@@ -121,7 +128,7 @@ const UpdateForm = ({ training }) => {
 	return (
 		<Box>
 			{" "}
-			<Loading loading={alert} type="alert" />
+			{/* <Loading loading={alert} type="alert" /> */}
 			<Loading loading={loading} />
 			<Formik
 				onSubmit={handleFormSubmit}
@@ -137,7 +144,16 @@ const UpdateForm = ({ training }) => {
 					setFieldValue,
 					resetForm,
 				}) => (
-					<form onSubmit={handleSubmit}>
+					<form
+						onSubmit={(e) => {
+							if (
+								description === "" ||
+								description.replace(/(<([^>]+)>)/gi, "") === ""
+							) {
+								setErr(true);
+							}
+							handleSubmit(e);
+						}}>
 						<Box
 							display="grid"
 							gap="30px"
@@ -185,6 +201,9 @@ const UpdateForm = ({ training }) => {
 													"& .Mui-selected": {
 														color: theme.palette.background.alt,
 														bgcolor: theme.palette.secondary[300],
+														"&:hover": {
+															color: theme.palette.secondary[300],
+														},
 													},
 												},
 											},
@@ -206,7 +225,9 @@ const UpdateForm = ({ training }) => {
 								display="flex"
 								justifyContent="center">
 								<TextEditor
-									name="body"
+									setError={setErr}
+									error={err}
+									text="Please enter the training's description"
 									setValue={setDescription}
 									value={training?.description}
 								/>
@@ -241,6 +262,7 @@ const UpdateForm = ({ training }) => {
 											{...getRootProps()}
 											// border={`2px dashed ${theme.palette.primary.main}`}
 											p="1rem"
+											mt={2}
 											sx={{ "&:hover": { cursor: "pointer" } }}>
 											<input {...getInputProps()} />
 											{!values.pictures.length > 0 ? (
