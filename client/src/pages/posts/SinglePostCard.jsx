@@ -7,6 +7,7 @@ import { usePostActionsMutation } from "../../redux/posts/postsApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
 
 const SinglePostCard = ({ post }) => {
 	const theme = useTheme();
@@ -26,8 +27,8 @@ const SinglePostCard = ({ post }) => {
 	}
 
 	return (
-		<Container sx={{ mt: 2 }}>
-			<Box position="relative">
+		<Box sx={{ mt: 2, width: { xs: "100%", md: "80%" } }}>
+			<Box position="relative" width="100%">
 				<Box
 					position={{ xs: "relative", md: "absolute" }}
 					top="0"
@@ -35,6 +36,7 @@ const SinglePostCard = ({ post }) => {
 					display="flex"
 					alignItems="center"
 					justifyContent="start"
+					width="100%"
 					gap={0.5}>
 					<IconButton
 						onClick={async () => {
@@ -100,27 +102,14 @@ const SinglePostCard = ({ post }) => {
 					{post?.title}
 				</Typography>
 			</Box>
-			<Carousel
-				animation="fade"
-				navButtonsAlwaysVisible
-				autoPlay={false}
-				interval={6000}>
-				{post?.images.map((item, i) => (
-					<Paper
-						key={`test3-item-${i}`}
-						elevation={10}
-						style={{ height: 400 }}
-						className="HeightItem">
-						<Box sx={{ width: "100%", height: "100%", position: "relative" }}>
-							<img
-								src={item.url}
-								style={{ width: "100%", height: "100%", objectFit: "cover" }}
-								alt=""
-							/>
-						</Box>
-					</Paper>
-				))}
-			</Carousel>
+
+			<Box width={"100%"}>
+				<CustomCarousel
+					width="100%"
+					images={post?.images?.map(({ url }) => url)}
+					height={600}
+				/>
+			</Box>
 			<Container sx={{ mt: 5 }}>
 				<Typography
 					varint="body1"
@@ -131,7 +120,7 @@ const SinglePostCard = ({ post }) => {
 					<div dangerouslySetInnerHTML={{ __html: post?.body }} />
 				</Typography>
 			</Container>
-		</Container>
+		</Box>
 	);
 };
 

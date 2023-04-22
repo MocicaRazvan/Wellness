@@ -279,7 +279,9 @@ const UpdateForm = ({ training }) => {
 											{openCarousel ? "Hide" : "See"} your pictures
 										</Button>
 										{openCarousel && (
-											<CustomCarousel images={values.pictures} height={250} />
+											<Box width="100%" p={0.5}>
+												<CustomCarousel images={values.pictures} height={250} />
+											</Box>
 										)}
 									</Box>
 								)}
@@ -295,7 +297,7 @@ const UpdateForm = ({ training }) => {
 								color: theme.palette.secondary[300],
 								"&:hover": { color: theme.palette.primary.main },
 							}}>
-							Submit your training
+							Submit Update
 						</Button>
 					</form>
 				)}

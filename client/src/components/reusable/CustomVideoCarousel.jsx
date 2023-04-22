@@ -1,10 +1,12 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Fab, Fade, MobileStepper } from "@mui/material";
+import { Fab, Fade, MobileStepper, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 
 const CustomCarousel = ({ videos, height }) => {
 	const [index, setIndex] = useState(0);
+	const theme = useTheme();
+
 	const handleIndex = (val) => {
 		if (videos) {
 			const len = videos.length;
@@ -44,27 +46,37 @@ const CustomCarousel = ({ videos, height }) => {
 					size="small"
 					onClick={() => handleIndex(false)}
 					sx={{
-						bgcolor: "#494949",
-						zIndex: "1 !important",
+						bgcolor: theme.palette.secondary[600],
 						"&:hover": {
-							bgcolor: "rgba(0,0,0,0.4)",
-							color: "rgba(255,255,255,0.4)",
+							bgcolor: theme.palette.secondary[300],
 						},
 					}}>
-					<KeyboardArrowLeft sx={{ color: "white" }} />
+					<KeyboardArrowLeft
+						sx={{
+							color: theme.palette.mode === "dark" ? "white" : "black",
+							"&:hover": {
+								color: theme.palette.mode === "dark" ? "black" : "white",
+							},
+						}}
+					/>
 				</Fab>
 				<Fab
 					size="small"
 					onClick={() => handleIndex(true)}
 					sx={{
-						bgcolor: "#494949",
-						zIndex: "1 !important",
+						bgcolor: theme.palette.secondary[600],
 						"&:hover": {
-							bgcolor: "rgba(0,0,0,0.4)",
-							color: "rgba(255,255,255,0.4)",
+							bgcolor: theme.palette.secondary[300],
 						},
 					}}>
-					<KeyboardArrowRight sx={{ color: "white" }} />
+					<KeyboardArrowRight
+						sx={{
+							color: theme.palette.mode === "dark" ? "white" : "black",
+							"&:hover": {
+								color: theme.palette.mode === "dark" ? "black" : "white",
+							},
+						}}
+					/>
 				</Fab>
 			</Box>
 			{videos.map((item, i) => (
@@ -90,10 +102,20 @@ const CustomCarousel = ({ videos, height }) => {
 							{videos.length > 1 && (
 								<Box display="flex" justifyContent="center" width="100%">
 									<MobileStepper
+										onClick={(e) => {
+											setIndex(
+												[...e.target.parentElement.children].indexOf(e.target),
+											);
+										}}
 										sx={{
+											zIndex: 100,
 											bgcolor: "transparent",
+											"& .MuiMobileStepper-dot": {
+												cursor: "pointer",
+												bgcolor: theme.palette.secondary[100],
+											},
 											"& .MuiMobileStepper-dotActive": {
-												bgcolor: "rgba(70, 70, 70, 0.163)",
+												bgcolor: theme.palette.secondary[500],
 											},
 										}}
 										variant="dots"

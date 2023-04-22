@@ -165,7 +165,10 @@ const SingleTraining = () => {
 				justifyContent="center"
 				flexDirection="column"
 				gap={2}>
-				<CustomCarousel images={images} height={{ xs: 300, md: 500 }} />
+				{/* <CustomCarousel images={images} height={{ xs: 300, md: 500 }} /> */}
+				<Box width={"100%"}>
+					<CustomCarousel images={images} height={600} />
+				</Box>
 				<Typography
 					variant="h4"
 					lineHeight={1.5}
@@ -201,25 +204,37 @@ const SingleTraining = () => {
 								size="small"
 								onClick={() => handleIndex(false)}
 								sx={{
-									bgcolor: "#494949",
+									bgcolor: theme.palette.secondary[600],
 									"&:hover": {
-										bgcolor: "rgba(0,0,0,0.4)",
-										color: "rgba(255,255,255,0.4)",
+										bgcolor: theme.palette.secondary[300],
 									},
 								}}>
-								<KeyboardArrowLeft sx={{ color: "white" }} />
+								<KeyboardArrowLeft
+									sx={{
+										color: theme.palette.mode === "dark" ? "white" : "black",
+										"&:hover": {
+											color: theme.palette.mode === "dark" ? "black" : "white",
+										},
+									}}
+								/>
 							</Fab>
 							<Fab
 								size="small"
 								onClick={() => handleIndex(true)}
 								sx={{
-									bgcolor: "#494949",
+									bgcolor: theme.palette.secondary[600],
 									"&:hover": {
-										bgcolor: "rgba(0,0,0,0.4)",
-										color: "rgba(255,255,255,0.4)",
+										bgcolor: theme.palette.secondary[300],
 									},
 								}}>
-								<KeyboardArrowRight sx={{ color: "white" }} />
+								<KeyboardArrowRight
+									sx={{
+										color: theme.palette.mode === "dark" ? "white" : "black",
+										"&:hover": {
+											color: theme.palette.mode === "dark" ? "black" : "white",
+										},
+									}}
+								/>
 							</Fab>
 						</Box>
 						<Box>
@@ -265,10 +280,22 @@ const SingleTraining = () => {
 													justifyContent="center"
 													width="100%">
 													<MobileStepper
+														onClick={(e) => {
+															setIndex(
+																[...e.target.parentElement.children].indexOf(
+																	e.target,
+																),
+															);
+														}}
 														sx={{
+															zIndex: 100,
 															bgcolor: "transparent",
+															"& .MuiMobileStepper-dot": {
+																cursor: "pointer",
+																bgcolor: theme.palette.secondary[100],
+															},
 															"& .MuiMobileStepper-dotActive": {
-																bgcolor: "rgba(70, 70, 70, 0.163)",
+																bgcolor: theme.palette.secondary[500],
 															},
 														}}
 														variant="dots"

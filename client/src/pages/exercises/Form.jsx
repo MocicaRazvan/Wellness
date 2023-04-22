@@ -382,7 +382,7 @@ const Form = ({ exercise }) => {
 								color: theme.palette.secondary[300],
 								"&:hover": { color: theme.palette.primary.main },
 							}}>
-							Submit your exercise
+							{exercise ? "Submit Update" : "Submit your exercise"}
 						</Button>
 					</form>
 				)}

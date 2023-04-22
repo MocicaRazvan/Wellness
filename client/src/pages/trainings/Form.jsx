@@ -362,7 +362,9 @@ const Form = ({ training }) => {
 											{openCarousel ? "Hide" : "See"} your pictures
 										</Button>
 										{openCarousel && (
-											<CustomCarousel images={values.pictures} height={250} />
+											<Box width="100%" p={0.5}>
+												<CustomCarousel images={values.pictures} height={250} />
+											</Box>
 										)}
 									</Box>
 								)}

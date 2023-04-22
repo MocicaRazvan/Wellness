@@ -2,7 +2,7 @@ import React from "react";
 import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 import { useParams } from "react-router-dom";
 import { Container } from "@mui/system";
-import { CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 
 import Core from "../../components/comments/Core";
 import SinglePostCard from "./SinglePostCard";
@@ -28,12 +28,14 @@ const SinglePost = () => {
 		);
 
 	return (
-		<Container>
+		<Box m="1.5rem 1rem">
 			<Stack gap={4}>
-				<SinglePostCard post={data?.post} />
+				<Box sx={{ display: "grid", placeItems: "center" }} width="100%">
+					<SinglePostCard post={data?.post} />
+				</Box>
 				<Core type="post" id={postId} />
 			</Stack>
-		</Container>
+		</Box>
 	);
 };
 

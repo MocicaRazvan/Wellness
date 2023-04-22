@@ -351,7 +351,9 @@ const Form = ({ post }) => {
 										{openCarousel ? "Hide" : "See"} your pictures
 									</Button>
 									{openCarousel && (
-										<CustomCarousel images={values.pictures} height={250} />
+										<Box width="100%" p={0.5}>
+											<CustomCarousel images={values.pictures} height={250} />
+										</Box>
 									)}
 								</Box>
 							)}
@@ -366,7 +368,7 @@ const Form = ({ post }) => {
 								color: theme.palette.secondary[300],
 								"&:hover": { color: theme.palette.primary.main },
 							}}>
-							Submit your post
+							{post ? "Submit Update" : "Submit your post"}
 						</Button>
 					</form>
 				)}
