@@ -68,6 +68,6 @@ export const CartTotal = styled("div")(({ theme }) => ({
 		color: theme.palette.secondary.main,
 	},
 	[theme.breakpoints.down("md")]: {
-		width: "100%",
+		width: "90%",
 	},
 }));

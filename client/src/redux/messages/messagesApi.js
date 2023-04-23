@@ -5,7 +5,7 @@ export const messagesApi = apiSlice.injectEndpoints({
 		getMessagesByConversation: builder.query({
 			query: ({ id }) => ({ url: `/messages/${id}` }),
 			transformResponse: ({ messages }) =>
-				messages.map((message) => ({ ...message, id: message._id })),
+				messages?.map((message) => ({ ...message, id: message._id })),
 			providesTags: (result, err, arg) => {
 				if (result) {
 					return [

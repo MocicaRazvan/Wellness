@@ -61,7 +61,7 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 			field: "username",
 			headerName: "Username",
 			// flex: 0.5,
-			width: 110,
+			width: 200,
 			renderCell: ({ row: { username, _id } }) => (
 				<Typography
 					fontSize={12.3}

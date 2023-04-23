@@ -24,6 +24,8 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetAllExercisesIdsByUserQuery } from "../../redux/exercises/exercisesApi";
 import { useCreateTriningMutation } from "../../redux/trainings/trainingsApi";
 import tags from "../../utils/consts/tags";
+import cantSee from "../../utils/lottie/cantSee.json";
+import LootieCustom from "../../components/reusable/LootieCustom";
 
 const trainingSchema = yup.object().shape({
 	title: yup
@@ -41,7 +43,8 @@ const trainingSchema = yup.object().shape({
 	price: yup
 		.number()
 		.required("Please enter the trining's price")
-		.min(1, "Please enter a positive price"),
+		.min(0.01, "Please enter a positive price")
+		.typeError("Plesase enter the training's price"),
 	pictures: yup
 		.array()
 		.required("Please enter the trining's pcitures")
@@ -82,7 +85,7 @@ const Form = ({ training }) => {
 		title: training?.title || "",
 		tags: training?.tags || [],
 		exercises: training?.exercises || [],
-		price: training?.price || 0,
+		price: training?.price || null,
 		pictures: training?.images || [],
 	};
 
@@ -166,6 +169,17 @@ const Form = ({ training }) => {
 		}
 	};
 
+	if (ids?.length === 0) {
+		return (
+			<LootieCustom
+				lootie={cantSee}
+				link={"/exercises/create"}
+				btnText="Start With An Exercise"
+				replace={false}
+				title="No exercises were found :("
+			/>
+		);
+	}
 	return (
 		<Box>
 			{" "}
@@ -292,6 +306,7 @@ const Form = ({ training }) => {
 										MenuProps: {
 											MenuListProps: {
 												sx: {
+													maxHeight: 400,
 													color: theme.palette.secondary[300],
 													"& .Mui-selected": {
 														color: theme.palette.background.alt,

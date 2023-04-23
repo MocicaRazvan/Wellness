@@ -11,6 +11,8 @@ import {
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
+import LootieCustom from "../../components/reusable/LootieCustom";
+import cantSee from "../../utils/lottie/cantSee.json";
 
 const UserExercises = () => {
 	const [page, setPage] = useState(0);
@@ -187,6 +189,17 @@ const UserExercises = () => {
 		},
 	];
 	console.log({ data });
+	if (data?.exercises?.length === 0) {
+		return (
+			<LootieCustom
+				lootie={cantSee}
+				link={"/exercises/create"}
+				btnText="Start Creating"
+				replace={false}
+				title="No exercises were found :("
+			/>
+		);
+	}
 	return (
 		<Box m="1.5rem 2.5rem">
 			<UserAgreement

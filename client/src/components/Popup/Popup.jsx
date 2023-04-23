@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import IconBtn from "../reusable/IconBtn";
 import MailIcon from "@mui/icons-material/Mail";
 import { Tooltip, useTheme } from "@mui/material";
@@ -37,6 +37,7 @@ export default function PopUp({
 		Object.values(approved).reduce((acc, cur) => (acc += cur.length), 0);
 
 	//when open the notification the count will be 0
+	console.log({ notifications });
 
 	const handleClick = (e) => {
 		if (e) {
@@ -130,7 +131,11 @@ export default function PopUp({
 		theme.palette.background.alt,
 		theme.palette.secondary,
 	]);
-
+	useEffect(() => {
+		if (badgeContent === 0) {
+			setOpen(false);
+		}
+	}, [badgeContent]);
 	// console.log({ parsed });
 
 	if (

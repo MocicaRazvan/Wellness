@@ -375,8 +375,8 @@ const Navigation = () => {
 			onClose={handleMobileMenuClose}>
 			{!isNotUser && (
 				<Box display="flex" justifyContent="center" flexDirection="column">
-					<MenuItem onClick={handleMenuClose}>
-						<Typography
+					<MenuItem>
+						{/* <Typography
 							onClick={() => {
 								navigate("/posts");
 								setActive("posts");
@@ -397,10 +397,18 @@ const Navigation = () => {
 							}}
 							variant="h6">
 							Posts
-						</Typography>
+						</Typography> */}
+						<ActiveTypograpghy
+							active={active === "posts"}
+							onClick={() => {
+								navigate("/posts");
+								setActive("posts");
+							}}>
+							Posts
+						</ActiveTypograpghy>
 					</MenuItem>
-					<MenuItem onClick={handleMenuClose}>
-						<Typography
+					<MenuItem>
+						{/* <Typography
 							onClick={() => {
 								navigate("/trainings");
 								setActive("trainings");
@@ -421,11 +429,19 @@ const Navigation = () => {
 							}}
 							variant="h6">
 							Trainings
-						</Typography>
+						</Typography> */}
+						<ActiveTypograpghy
+							active={active === "trainings"}
+							onClick={() => {
+								navigate("/trainings");
+								setActive("trainings");
+							}}>
+							Trainings
+						</ActiveTypograpghy>
 					</MenuItem>
 					{!isNotLogged && (
-						<MenuItem onClick={handleMenuClose}>
-							<Typography
+						<MenuItem>
+							{/* <Typography
 								onClick={() => {
 									navigate(`/trainings/bought`);
 									setActive("bought");
@@ -446,12 +462,20 @@ const Navigation = () => {
 								}}
 								variant="h6">
 								Bought Trainings
-							</Typography>
+							</Typography> */}
+							<ActiveTypograpghy
+								active={active === "bought"}
+								onClick={() => {
+									navigate(`/trainings/bought`);
+									setActive("bought");
+								}}>
+								Bought Trainings
+							</ActiveTypograpghy>
 						</MenuItem>
 					)}
 					{!isNotLogged && (
-						<MenuItem onClick={handleMenuClose}>
-							<Typography
+						<MenuItem>
+							{/* <Typography
 								onClick={() => {
 									navigate("/orders");
 									setActive("orders");
@@ -472,12 +496,20 @@ const Navigation = () => {
 								}}
 								variant="h6">
 								Orders
-							</Typography>
+							</Typography>{" "} */}
+							<ActiveTypograpghy
+								active={active === "orders"}
+								onClick={() => {
+									navigate("/orders");
+									setActive("orders");
+								}}>
+								Orders
+							</ActiveTypograpghy>
 						</MenuItem>
 					)}
 					{!isNotLogged && (
-						<MenuItem onClick={handleMenuClose}>
-							<Typography
+						<MenuItem>
+							{/* <Typography
 								onClick={() => {
 									handleSupport();
 									setActive("messenger");
@@ -498,7 +530,15 @@ const Navigation = () => {
 								}}
 								variant="h6">
 								Contact Support
-							</Typography>
+							</Typography> */}
+							<ActiveTypograpghy
+								active={active === "messenger"}
+								onClick={() => {
+									handleSupport();
+									setActive("messenger");
+								}}>
+								Contact Support
+							</ActiveTypograpghy>
 						</MenuItem>
 					)}
 				</Box>
@@ -524,7 +564,7 @@ const Navigation = () => {
 					<PopupWrapper left={true} />
 				</Box>
 			</MenuItem>
-			<MenuItem onClick={handleMenuClose}>
+			<MenuItem>
 				<IconButton onClick={() => navigate("/calculator")}>
 					<Calculate sx={{ fontSize: "25px" }} />
 				</IconButton>
@@ -608,7 +648,7 @@ const Navigation = () => {
 									)}
 								</IconButton>
 							)}
-							<Typography
+							{/* <Typography
 								onClick={() => {
 									navigate("/posts");
 									setActive("posts");
@@ -629,8 +669,16 @@ const Navigation = () => {
 								}}
 								variant="h6">
 								Posts
-							</Typography>
-							<Typography
+							</Typography> */}
+							<ActiveTypograpghy
+								active={active === "posts"}
+								onClick={() => {
+									navigate("/posts");
+									setActive("posts");
+								}}>
+								Posts
+							</ActiveTypograpghy>
+							{/* <Typography
 								onClick={() => {
 									navigate("/trainings");
 									setActive("trainings");
@@ -651,78 +699,110 @@ const Navigation = () => {
 								}}
 								variant="h6">
 								Trainings
-							</Typography>
+							</Typography> */}
+							<ActiveTypograpghy
+								active={active === "trainings"}
+								onClick={() => {
+									navigate("/trainings");
+									setActive("trainings");
+								}}>
+								Trainings
+							</ActiveTypograpghy>
 							{!isNotLogged && (
-								<Typography
+								// <Typography
+								// 	onClick={() => {
+								// 		navigate(`/trainings/bought`);
+								// 		setActive("bought");
+								// 	}}
+								// 	sx={{
+								// 		backgroundColor:
+								// 			active === "bought"
+								// 				? theme.palette.secondary[300]
+								// 				: "transparent",
+								// 		color:
+								// 			active === "bought"
+								// 				? theme.palette.primary[600]
+								// 				: theme.palette.secondary[200],
+								// 		borderRadius: 5,
+								// 		cursor: "pointer",
+								// 		p: 0.9,
+								// 		textAlign: "center",
+								// 	}}
+								// 	variant="h6">
+								// 	Bought Trainings
+								// </Typography>
+								<ActiveTypograpghy
+									active={active === "bought"}
 									onClick={() => {
 										navigate(`/trainings/bought`);
 										setActive("bought");
-									}}
-									sx={{
-										backgroundColor:
-											active === "bought"
-												? theme.palette.secondary[300]
-												: "transparent",
-										color:
-											active === "bought"
-												? theme.palette.primary[600]
-												: theme.palette.secondary[200],
-										borderRadius: 5,
-										cursor: "pointer",
-										p: 0.9,
-										textAlign: "center",
-									}}
-									variant="h6">
+									}}>
 									Bought Trainings
-								</Typography>
+								</ActiveTypograpghy>
 							)}
 							{!isNotLogged && (
-								<Typography
+								// <Typography
+								// 	onClick={() => {
+								// 		navigate("/orders");
+								// 		setActive("orders");
+								// 	}}
+								// 	sx={{
+								// 		backgroundColor:
+								// 			active === "orders"
+								// 				? theme.palette.secondary[300]
+								// 				: "transparent",
+								// 		color:
+								// 			active === "orders"
+								// 				? theme.palette.primary[600]
+								// 				: theme.palette.secondary[200],
+								// 		borderRadius: 5,
+								// 		cursor: "pointer",
+								// 		p: 0.9,
+								// 		textAlign: "center",
+								// 	}}
+								// 	variant="h6">
+								// 	Orders
+								// </Typography>
+								<ActiveTypograpghy
+									active={active === "orders"}
 									onClick={() => {
 										navigate("/orders");
 										setActive("orders");
-									}}
-									sx={{
-										backgroundColor:
-											active === "orders"
-												? theme.palette.secondary[300]
-												: "transparent",
-										color:
-											active === "orders"
-												? theme.palette.primary[600]
-												: theme.palette.secondary[200],
-										borderRadius: 5,
-										cursor: "pointer",
-										p: 0.9,
-										textAlign: "center",
-									}}
-									variant="h6">
+									}}>
 									Orders
-								</Typography>
+								</ActiveTypograpghy>
 							)}
 							{!isNotLogged && (
-								<Typography
+								// <Typography
+								// 	onClick={() => {
+								// 		handleSupport();
+								// 		setActive("messenger");
+								// 	}}
+								// 	sx={{
+								// 		backgroundColor:
+								// 			active === "messenger"
+								// 				? theme.palette.secondary[300]
+								// 				: "transparent",
+								// 		color:
+								// 			active === "messenger"
+								// 				? theme.palette.primary[600]
+								// 				: theme.palette.secondary[200],
+								// 		borderRadius: 5,
+								// 		cursor: "pointer",
+								// 		p: 0.9,
+								// 		textAlign: "center",
+								// 	}}
+								// 	variant="h6">
+								// 	Contact Support
+								// </Typography>
+								<ActiveTypograpghy
+									active={active === "messenger"}
 									onClick={() => {
 										handleSupport();
 										setActive("messenger");
-									}}
-									sx={{
-										backgroundColor:
-											active === "messenger"
-												? theme.palette.secondary[300]
-												: "transparent",
-										color:
-											active === "messenger"
-												? theme.palette.primary[600]
-												: theme.palette.secondary[200],
-										borderRadius: 5,
-										cursor: "pointer",
-										p: 0.9,
-										textAlign: "center",
-									}}
-									variant="h6">
+									}}>
 									Contact Support
-								</Typography>
+								</ActiveTypograpghy>
 							)}
 						</Box>
 					)}
@@ -792,7 +872,7 @@ const Navigation = () => {
 											<LightModeOutlined sx={{ fontSize: "25px" }} />
 										)}
 									</IconButton>
-									<Typography
+									{/* <Typography
 										onClick={() => {
 											navigate("/posts");
 											setActive("posts");
@@ -813,8 +893,16 @@ const Navigation = () => {
 										}}
 										variant="h6">
 										Posts
-									</Typography>
-									<Typography
+									</Typography> */}
+									<ActiveTypograpghy
+										active={active === "posts"}
+										onClick={() => {
+											navigate("/posts");
+											setActive("posts");
+										}}>
+										Posts
+									</ActiveTypograpghy>
+									{/* <Typography
 										onClick={() => {
 											navigate("/trainings");
 											setActive("trainings");
@@ -835,7 +923,15 @@ const Navigation = () => {
 										}}
 										variant="h6">
 										Trainings
-									</Typography>
+									</Typography> */}
+									<ActiveTypograpghy
+										active={active === "trainings"}
+										onClick={() => {
+											navigate("/trainings");
+											setActive("trainings");
+										}}>
+										Trainings
+									</ActiveTypograpghy>
 								</Box>
 
 								<Stack
@@ -925,6 +1021,29 @@ const StyledAppBar = styled(AppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
+}));
+
+const ActiveTypograpghy = styled(Typography, {
+	shouldForwardProp: (prop) => prop !== "active",
+})(({ theme, active }) => ({
+	display: "inline-block",
+	color: theme.palette.secondary[200],
+	position: "relative",
+	fontSize: 15,
+	fontWeight: 500,
+	cursor: "pointer",
+	"&::after": {
+		content: "''",
+		position: "absolute",
+		width: "100%",
+		transform: `scaleX(${active ? "1" : "0"})`,
+		height: "2.1px",
+		bottom: "0",
+		left: "0",
+		backgroundColor: theme.palette.secondary[300],
+		transformOrigin: `bottom ${active ? "left" : "right"}`,
+		transition: "transform 0.35s ease-out",
+	},
 }));
 
 export default Navigation;

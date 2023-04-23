@@ -13,7 +13,11 @@ const stripe = Stripe(process.env.STRIPE_KEY);
 
 //create order
 const createOrder = async (customer, data, lineItems) => {
-	const trainingIds = lineItems.data.map((item) => item.description);
+	// const ids = JSON.parse(customer.metadata.cart);
+	// const trainingIds = lineItems.data.map((item) => item.description);
+	console.log({ lineItems });
+	const trainingIds = JSON.parse(customer.metadata.cart);
+	console.log({ trainingIds });
 	const newOrder = new Order({
 		user: customer.metadata.userId,
 		customerId: data.customer,
@@ -60,7 +64,6 @@ const createOrder = async (customer, data, lineItems) => {
 //post
 exports.stripeCheckout = async (req, res) => {
 	const user = await User.findById(req.body.userId).lean();
-
 	const customer = await stripe.customers.create({
 		metadata: {
 			userId: req.body.userId,
@@ -75,11 +78,13 @@ exports.stripeCheckout = async (req, res) => {
 		price_data: {
 			currency: "usd",
 			product_data: {
-				name: item.id,
+				// name: item.id,
+				name: item.title,
 				images: [...item.images.map((img) => img.url)],
-				description: item.tags.join(","),
+				description: item.tags.join(" "),
 				metadata: {
 					id: item._id,
+					// title: item.title,
 				},
 			},
 			unit_amount: item.price * 100,

@@ -109,13 +109,17 @@ const Form = ({ user = null }) => {
 		.pathname?.split("/")
 		.some((e) => ["update"].includes(e));
 
-	useEffect(() => {
-		if (pathname.slice(1) === "login") {
-			setPageType("login");
-		} else if (pathname.slice(1) === "register") {
-			setPageType("register");
-		}
-	}, [pathname]);
+	// useEffect(() => {
+	// 	if (pathname.slice(1) === "login") {
+	// 		setPageType("login");
+	// 		navigate("/login");
+	// 	} else if (pathname.slice(1) === "register") {
+	// 		setPageType("register");
+	// 		navigate("/register");
+	// 	}
+	// }, [navigate, pathname]);
+
+	console.log({ pageType });
 
 	const initialValuesRegister = {
 		firstName: user?.username.split(" ")[0] || "",
@@ -314,12 +318,12 @@ const Form = ({ user = null }) => {
 			await login({ email: email.trim(), password }, onSubmitProps);
 		}
 	};
-
 	return (
 		<Box>
 			<Loading loading={loading} />
 			{/* <Loading loading={credentials} type="alert" /> */}
 			<Formik
+				enableReinitialize
 				onSubmit={handleFormSubmit}
 				initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
 				validationSchema={isLogin ? loginSchema : registerSchema}>

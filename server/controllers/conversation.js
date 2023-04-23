@@ -1,5 +1,8 @@
 const Conversation = require("../models/Conversation");
 const User = require("../models/User");
+const Message = require("../models/Message");
+const { default: mongoose } = require("mongoose");
+const Notification = require("../models/Notification");
 
 // post : /conversations
 exports.createConversation = async (req, res) => {
@@ -50,7 +53,7 @@ exports.getConversationsByUser = async (req, res) => {
 			: acc.push(cur);
 		return acc;
 	}, []);
-	console.log({ parsedConversations });
+	// console.log({ parsedConversations });
 	res.status(200).json({
 		userConversations: parsedConversations,
 		message: "User conversation retrived",
@@ -64,5 +67,22 @@ exports.getConversationById = async (req, res) => {
 	res.status(200).json({
 		conversation,
 		message: `Converastion with id ${req.params.conversationId} retrived`,
+	});
+};
+// /conversations/:conversationId
+exports.delteCoonversation = async (req, res) => {
+	const conversation = await Conversation.findById(req.params.conversationId);
+	console.log({ c: req.params.conversationId });
+	const md = await Message.deleteMany({
+		conversation: mongoose.Types.ObjectId(req.params.conversationId),
+	});
+	const mn = await Notification.deleteMany({
+		type: "message",
+		$or: [{ receiver: req.user?._id }, { sender: req.user?._id }],
+	});
+	await conversation.delete();
+	res.status(201).json({
+		conversation,
+		message: `Converastion with id ${req.params.conversationId} deleted`,
 	});
 };

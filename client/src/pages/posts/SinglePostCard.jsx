@@ -25,6 +25,7 @@ const SinglePostCard = ({ post }) => {
 	if (notShow && user?.id !== post?.user?._id && user?.role !== "admin") {
 		navigate("/");
 	}
+	const isAuthor = user && user?.id === post?.user?._id;
 
 	return (
 		<Box sx={{ mt: 2, width: { xs: "100%", md: "80%" } }}>
@@ -39,6 +40,8 @@ const SinglePostCard = ({ post }) => {
 					width="100%"
 					gap={0.5}>
 					<IconButton
+						disabled={isAuthor}
+						
 						onClick={async () => {
 							if (!user) {
 								navigate("/login");
@@ -63,6 +66,7 @@ const SinglePostCard = ({ post }) => {
 						{post?.likes?.length} likes
 					</Typography>
 					<IconButton
+						disabled={isAuthor}
 						onClick={async () => {
 							if (!user) {
 								navigate("/login");

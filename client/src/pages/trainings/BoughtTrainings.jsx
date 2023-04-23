@@ -20,6 +20,8 @@ import {
 import Header from "../../components/reusable/Header";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import { format } from "date-fns";
+import LootieCustom from "../../components/reusable/LootieCustom";
+import cantSee from "../../utils/lottie/cantSee.json";
 
 const BoughtTrainings = () => {
 	const [page, setPage] = useState(0);
@@ -72,7 +74,7 @@ const BoughtTrainings = () => {
 			field: "author",
 			headerName: "Author",
 			// flex: 1,
-			width: 175,
+			width: 200,
 			sortable: false,
 			filterable: false,
 			renderCell: ({
@@ -186,6 +188,17 @@ const BoughtTrainings = () => {
 		},
 	];
 
+	if (data?.trainings?.length === 0) {
+		return (
+			<LootieCustom
+				lootie={cantSee}
+				link={"/trainings"}
+				btnText="Go Shopping"
+				replace={false}
+				title="No bought trainings were found :("
+			/>
+		);
+	}
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title="Your Purchases" subtitle="Manage your purchases" />
@@ -195,7 +208,7 @@ const BoughtTrainings = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1100}>
+				<Box flex={isNonMobileScreens ? 0.95 : 1} maxWidth={1125}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.trainings || []}

@@ -57,6 +57,7 @@ const CartPopper = ({ setAnchorEl, anchorEl }) => {
 									<Typography
 										color={palette.secondary[300]}
 										fontSize={15}
+										textAlign="start"
 										fontWeight={900}
 										sx={{ cursor: "pointer" }}
 										onClick={() => {

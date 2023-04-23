@@ -30,7 +30,7 @@ const SingleOrder = () => {
 			<StackContainer>
 				<CartList cartItems={data?.trainings} type="order" />
 			</StackContainer>
-			<CartTotal sx={{ position: "sticky", top: 100 }}>
+			<CartTotal sx={{ position: "sticky", top: 100, right: 20 }}>
 				<Typography component="h3" gutterBottom>
 					Order Summary
 				</Typography>
@@ -57,10 +57,13 @@ const SingleOrder = () => {
 								flexDirection: "column",
 								gap: 0.2,
 							}}>
-							<Typography component="h4" color={theme.palette.secondary[200]}>
+							<Typography
+								component="h4"
+								color={theme.palette.secondary[200]}
+								textAlign="center">
 								Total Price
 							</Typography>
-							<Typography component="h3">${data?.total}</Typography>
+							<Typography component="h3">${data?.total / 100}</Typography>
 						</Box>
 						<Box
 							sx={{
@@ -70,7 +73,10 @@ const SingleOrder = () => {
 								flexDirection: "column",
 								gap: 0.2,
 							}}>
-							<Typography component="h4" color={theme.palette.secondary[200]}>
+							<Typography
+								component="h4"
+								color={theme.palette.secondary[200]}
+								textAlign="center">
 								Total trainings
 							</Typography>
 							<Typography component="h3">{data?.trainings?.length}</Typography>

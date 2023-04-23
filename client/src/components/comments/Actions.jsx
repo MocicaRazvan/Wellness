@@ -23,7 +23,7 @@ const Actions = ({ comment }) => {
 			console.log(error);
 		}
 	};
-
+	const isAuthor = user && user?.id === comment?.user?._id;
 
 	return (
 		<Box
@@ -44,6 +44,7 @@ const Actions = ({ comment }) => {
 				<IconButton
 					disableRipple
 					aria-label="like"
+					disabled={isAuthor}
 					onClick={() => {
 						if (!user) {
 							navigate("/login");
@@ -73,6 +74,7 @@ const Actions = ({ comment }) => {
 					disableRipple
 					aria-label="decrease score"
 					sx={{ mt: 0.4 }}
+					disabled={isAuthor}
 					onClick={() => {
 						if (!user) {
 							navigate("/login");

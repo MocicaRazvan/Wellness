@@ -11,9 +11,12 @@ exports.createMessage = async (req, res) => {
 //get : /messages/:conversationId
 
 exports.getMessagesFromAConversation = async (req, res) => {
-	const messages = await Message.find({
-		conversation: req.params.conversationId,
-	});
-
-	return res.status(200).json({ messages, message: "Messages reetrived" });
+	const conversationId = req.params?.conversationId;
+	if (conversationId !== undefined) {
+		const messages = await Message.find({
+			conversation: conversationId,
+		});
+		return res.status(200).json({ messages, message: "Messages reetrived" });
+	}
+	return res.status(400).json({ message: "No conversation", messages: [] });
 };

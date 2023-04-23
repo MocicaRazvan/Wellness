@@ -46,7 +46,16 @@ io.on("connection", (socket) => {
 		users = users.map((user) =>
 			user.userId === userId ? { ...user, mounted: false } : user,
 		);
+		console.log({ useIdUnmount: userId });
 		io.emit("getUsers", users);
+	});
+
+	socket.on("DelNotif", ({ convId, receiverId }) => {
+		console.log({ delId: convId });
+		const user = getUser(receiverId);
+		io.to(user?.socketId).emit("getDeleteNotif", {
+			convId,
+		});
 	});
 
 	socket.on("notifiUnmounted", ({ receiverId, type, sender, ref }) => {

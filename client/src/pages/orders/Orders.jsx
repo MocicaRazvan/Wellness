@@ -17,6 +17,8 @@ import {
 	useGetAllOrdersQuery,
 } from "../../redux/orders/orderApi";
 import { format } from "date-fns";
+import LootieCustom from "../../components/reusable/LootieCustom";
+import noOrder from "../../utils/lottie/noOrder.json";
 
 const Orders = () => {
 	const [page, setPage] = useState(0);
@@ -172,7 +174,17 @@ const Orders = () => {
 			),
 		},
 	];
-
+	if (data?.orders?.length === 0) {
+		return (
+			<LootieCustom
+				lootie={noOrder}
+				link={"/trainings"}
+				btnText="Go Shopping"
+				replace={false}
+				title="No orders were found :("
+			/>
+		);
+	}
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title="Your Orders" subtitle="Manage your orders" />

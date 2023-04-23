@@ -28,7 +28,8 @@ const trainingSchema = yup.object().shape({
 	price: yup
 		.number()
 		.required("Please enter the trining's price")
-		.min(1, "Please enter a positive price"),
+		.min(1, "Please enter a positive price")
+		.typeError("Plesase enter the training's price"),
 	pictures: yup
 		.array()
 		.required("Please enter the trining's pcitures")

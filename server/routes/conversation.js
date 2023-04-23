@@ -13,5 +13,8 @@ router
 router
 	.route("/:userId")
 	.get(verifyJwt, conversationController.getConversationsByUser);
+router
+	.route("/:conversationId")
+	.delete(verifyJwt, conversationController.delteCoonversation);
 
 module.exports = router;

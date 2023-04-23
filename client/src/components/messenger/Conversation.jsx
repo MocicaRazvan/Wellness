@@ -1,17 +1,51 @@
-import { alpha, Box, styled, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import {
+	alpha,
+	Box,
+	Button,
+	IconButton,
+	styled,
+	Tooltip,
+	Typography,
+	useTheme,
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { useGetUserByIdQuery } from "../../redux/user/userApi";
 import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import { useSelector } from "react-redux";
 import { selectNotifications } from "../../redux/notifications/notificationsSlice";
+import { useDeleteSupportConversationMutation } from "../../redux/conversation/conversationApi";
+import UserAgreement from "../reusable/UserAgreement";
+import TimelineDot from "@mui/lab/TimelineDot";
+import { useNavigate } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { selectSocket } from "../../redux/socket/socketSlice";
 
-const Conversation = ({ conversation, currentUser, currentChat }) => {
+const Conversation = ({
+	conversation,
+	currentUser,
+	currentChat,
+	userMounted,
+	adminId,
+	setCurrentChat,
+	focused,
+}) => {
 	const { palette } = useTheme();
 	// const { data: user } = useGetUserByIdQuery({
 	// 	id: conversation?.members?.find((m) => m !== currentUser.id),
 	// });
 	const user = conversation?.members?.find(({ _id }) => _id !== currentUser.id);
 	const amountNotif = useSelector(selectNotifications);
+	const [isMounted, setIsMounted] = useState(true);
+	const [open, setOpen] = useState(false);
+	const [deleteConversation] = useDeleteSupportConversationMutation();
+	const navigate = useNavigate();
+	const [dot, setDot] = useState(false);
+	const ref = useRef(null);
+	const socketRedux = useSelector(selectSocket);
+
+	useEffect(() => {
+		setIsMounted(userMounted.includes(user?._id));
+	}, [conversation?._id, currentChat?._id, user?._id, userMounted]);
 
 	useEffect(() => {
 		const scrollElem = document.getElementById(`${conversation?.id}`);
@@ -24,8 +58,41 @@ const Conversation = ({ conversation, currentUser, currentChat }) => {
 		}
 	});
 
+	useEffect(() => {
+		(async () =>
+			await new Promise((resolve) => setTimeout(resolve, 100)).then(() => {
+				setDot(isMounted);
+				ref.current = isMounted;
+			}))();
+	}, [isMounted, focused]);
+
+	const handleDelteConversation = async () => {
+		try {
+			socketRedux.emit("DelNotif", {
+				convId: conversation.id,
+				receiverId: user?._id,
+			});
+			await deleteConversation({ id: conversation?._id }).unwrap();
+			console.log("delnotif");
+
+			setCurrentChat(null);
+			navigate("/messenger", { replace: true });
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<ConversationWrapper>
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to delete this exercise? You can't undo after you press Agree, be careful what you want."
+				}
+				handleAgree={async () => await handleDelteConversation()}
+			/>
 			<img
 				src={user?.image?.url || blankUser}
 				alt=""
@@ -37,14 +104,63 @@ const Conversation = ({ conversation, currentUser, currentChat }) => {
 				color={palette.secondary[300]}>
 				{user?.username}
 			</Typography>
-			{amountNotif[conversation.id] && (
-				<Typography
-					variant="body1"
-					fontWeight="bold"
-					sx={{ textAlign: "end", flex: 1, color: palette.secondary[200] }}>
-					{amountNotif[conversation.id]}
-				</Typography>
-			)}
+
+			<Box
+				display="flex"
+				alignItems="center"
+				justifyContent="end"
+				flex={1}
+				sx={{ cursor: "default" }}
+				onClick={(e) => {
+					e.stopPropagation();
+				}}
+				gap={2}>
+				{amountNotif[conversation.id] && (
+					<Typography
+						variant="body1"
+						fontWeight="bold"
+						sx={{ textAlign: "end", flex: 1, color: palette.secondary[200] }}>
+						{amountNotif[conversation.id]}
+					</Typography>
+				)}
+				{/* <Button
+					sx={{ zIndex: 5 }}
+					disabled={dot}
+					onClick={(e) => {
+						e.stopPropagation();
+						setOpen(true);
+						// (async () => await deleteConversation({ id: conversation?._id }))();
+					}}>
+					Delete conv
+				</Button> */}
+				{!focused && (
+					<>
+						<Tooltip
+							title={!ref.current ? "Delete" : ""}
+							color="error"
+							arrow
+							placement="top">
+							<IconButton
+								sx={{ zIndex: 5 }}
+								disabled={ref.current}
+								onClick={(e) => {
+									e.stopPropagation();
+									setOpen(true);
+									// (async () => await deleteConversation({ id: conversation?._id }))();
+								}}>
+								<DeleteIcon />
+							</IconButton>
+						</Tooltip>
+						<TimelineDot
+							sx={{
+								bgcolor: ref.current
+									? palette.success.main
+									: palette.error.main,
+							}}
+						/>
+					</>
+				)}
+			</Box>
 		</ConversationWrapper>
 	);
 };

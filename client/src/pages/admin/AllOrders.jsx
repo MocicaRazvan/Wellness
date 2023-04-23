@@ -48,7 +48,7 @@ const AllOrders = () => {
 			field: "username",
 			headerName: "Username",
 			// flex: 1,
-			width: 120,
+			width: 200,
 			sortable: false,
 			filterable: false,
 			renderCell: ({
@@ -71,6 +71,7 @@ const AllOrders = () => {
 			field: "createdAt",
 			headerName: "CreatedAt",
 			// flex: 0.7,
+			sortable: false,
 			width: 150,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
@@ -156,7 +157,7 @@ const AllOrders = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isSmall ? 0.9 : 1} maxWidth={1300}>
+				<Box flex={isSmall ? 0.95 : 1} maxWidth={1400}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.orders || []}

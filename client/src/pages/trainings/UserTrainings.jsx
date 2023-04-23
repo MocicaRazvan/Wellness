@@ -19,6 +19,8 @@ import {
 	useGetUserTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
 import { format } from "date-fns";
+import LootieCustom from "../../components/reusable/LootieCustom";
+import cantSee from "../../utils/lottie/cantSee.json";
 
 const Trainings = () => {
 	const [page, setPage] = useState(0);
@@ -259,6 +261,19 @@ const Trainings = () => {
 			},
 		},
 	];
+
+	if (data?.trainings?.length === 0) {
+		return (
+			<LootieCustom
+				lootie={cantSee}
+				link={"/trainings/create"}
+				btnText="Start Creating"
+				replace={false}
+				title="No trainings were found :("
+			/>
+		);
+	}
+
 	return (
 		<Box m="1.5rem 2.5rem">
 			<UserAgreement

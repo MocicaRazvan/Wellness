@@ -6,7 +6,7 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
@@ -19,58 +19,90 @@ import {
 	CartTotal,
 	StackContainer,
 } from "../../components/reusable/CartWrappers";
-
+import UserAgreement from "../../components/reusable/UserAgreement";
+import Lottie from "react-lottie-player";
+import emptyCart from "../../utils/lottie/emptyCart.json";
+import LootieCustom from "../../components/reusable/LootieCustom";
 const Cart = () => {
 	const cartItems = useSelector(selectCartItems);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const theme = useTheme();
+	const [open, setOpen] = useState(false);
 	const total = cartItems?.reduce((acc, cur) => (acc += cur.price), 0);
 	if (cartItems?.length === 0) {
 		return (
-			<Container
-				sx={{
-					height: "100vh",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					p: 5,
-				}}>
-				<Box
-					bgcolor={theme.palette.background.alt}
-					height="50%"
-					width={{ xs: "100%", md: "50%" }}
-					borderRadius={20}
-					p={5}
-					display="flex"
-					justifyContent="center"
-					alignItems="center"
-					flexDirection="column"
-					gap={10}
-					sx={{
-						"& button": {
-							color: theme.palette.secondary[200],
-						},
-					}}>
-					<Typography
-						variant="h2"
-						fontWeight="bold"
-						color={theme.palette.secondary[300]}>
-						Your Cart is Empty
-					</Typography>
-					<Button
-						onClick={() => void navigate("/trainings")}
-						variant="contained"
-						size="large"
-						bgcolor={theme.palette.secondary[200]}>
-						Go to trainings
-					</Button>
-				</Box>
-			</Container>
+			<Box sx={{ m: "0 auto", width: "80%", height: "55%" }}>
+				<LootieCustom
+					lootie={emptyCart}
+					link={"/trainings"}
+					btnText="Go Shopping"
+					replace={false}
+					title="Your cart is empty :("
+				/>
+			</Box>
+			// 	<Container
+			// 		sx={{
+			// 			height: "80vh",
+			// 			// width: "100vw",
+			// 			display: "flex",
+			// 			justifyContent: "center",
+			// 			alignItems: "center",
+			// 			p: 5,
+			// 			bgcolor: theme.palette.background.alt,
+			// 			borderRadius: 20,
+			// 		}}>
+			// 		<Box
+			// 			bgcolor={theme.palette.background.alt}
+			// 			height="100%"
+			// 			width={{ xs: "100%", md: "50%" }}
+			// 			borderRadius={20}
+			// 			p={5}
+			// 			display="flex"
+			// 			justifyContent="center"
+			// 			alignItems="center"
+			// 			flexDirection="column"
+			// 			gap={10}
+			// 			sx={{
+			// 				"& button": {
+			// 					color: theme.palette.secondary[200],
+			// 				},
+			// 			}}>
+			// 			<Lottie
+			// 				loop
+			// 				animationData={emptyCart}
+			// 				play
+			// 				style={{ width: "100%", height: "75%", margin: 0, padding: 0 }}
+			// 			/>
+			// 			<Typography
+			// 				variant="h2"
+			// 				fontWeight="bold"
+			// 				color={theme.palette.secondary[300]}>
+			// 				Your Cart is Empty
+			// 			</Typography>
+			// 			<Button
+			// 				onClick={() => void navigate("/trainings")}
+			// 				variant="contained"
+			// 				size="large"
+			// 				bgcolor={theme.palette.secondary[200]}>
+			// 				Go to trainings
+			// 			</Button>
+			// 		</Box>
+			// 	</Container>
+			//
 		);
 	}
 	return (
 		<CartItems>
+			<UserAgreement
+				open={open}
+				setOpen={setOpen}
+				title={"Confirm delete"}
+				text={
+					"Are you sure you want to empty the cart? We are sure that you will enjoy the trainings."
+				}
+				handleAgree={() => dispatch(clearCart())}
+			/>
 			<StackContainer>
 				<Box mb={2} display={"flex"} justifyContent="start" width="100%">
 					<Button
@@ -82,7 +114,7 @@ const Cart = () => {
 								bgcolor: theme.palette.background.default,
 							},
 						}}
-						onClick={() => dispatch(clearCart())}
+						onClick={() => setOpen((prev) => !prev)}
 						variant="outlined"
 						startIcon={<DeleteIcon />}>
 						Clear Cart
@@ -90,7 +122,7 @@ const Cart = () => {
 				</Box>
 				<CartList cartItems={cartItems} />
 			</StackContainer>
-			<CartTotal sx={{ position: "sticky", top: 100 }}>
+			<CartTotal sx={{ position: "sticky", top: 100, right: 20 }}>
 				<Typography component="h3" gutterBottom>
 					Cart Summary
 				</Typography>
@@ -101,7 +133,7 @@ const Cart = () => {
 						justifyContent: "center",
 						alignItems: "center",
 						flexDirection: "column",
-						gap: 4,
+						gap: 2,
 					}}>
 					<Container
 						sx={{
@@ -112,6 +144,16 @@ const Cart = () => {
 							Total Price
 						</Typography>
 						<Typography component="h3">${total}</Typography>
+					</Container>
+					<Container
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+						}}>
+						<Typography component="h4" color={theme.palette.secondary[200]}>
+							Total Items
+						</Typography>
+						<Typography component="h3">{cartItems?.length}</Typography>
 					</Container>
 					<PayButton cartItems={cartItems} />
 				</Container>

@@ -45,12 +45,21 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const search = useSelector(selectCurrentSearch);
+	const [userMounted, setUserMounted] = useState([]);
+	const [focused, setFocused] = useState(false);
+	const navigate = useNavigate();
 
 	const quryParams = new URLSearchParams();
 
 	const { data: conversations, isLoading } = useGetConversationsByUserQuery(
 		{ id: user?.id, search },
-		{ skip, pollingInterval: 100000 },
+		{
+			skip,
+			pollingInterval: 100000,
+			refetchOnFocus: true,
+			refetchOnMountOrArgChange: true,
+			refetchOnReconnect: true,
+		},
 	);
 	const [deleteBySender] = useDeleteNotifcationsBySenderMutation();
 
@@ -68,6 +77,23 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		);
 
 	useEffect(() => {
+		if (user?.role === "admin") {
+			socket?.current?.on("getUsers", (users) => {
+				console.log({ users });
+				const mounted = users.reduce((acc, cur) => {
+					if (cur?.mounted && cur?.role !== "admin") {
+						acc.push(cur?.userId);
+					}
+					return acc;
+				}, []);
+
+				setUserMounted(mounted);
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user?.role, user?.id, socket?.current]);
+
+	useEffect(() => {
 		if (conversations) {
 			const conv = conversations.find(({ id }) => id === query.get("conv"));
 			if (conv) {
@@ -75,6 +101,15 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			}
 		}
 	}, [conversations, query]);
+
+	// useEffect(() => {
+	// 	if (user?.role !== "admin" && query.get("conv") && conversations) {
+	// 		if (conversations?.find(({ _id }) => _id === query.get("conv"))) {
+	// 			navigate("/error");
+	// 		}
+	// 	}
+	// }, [conversations, navigate, query, user?.role]);
+	// console.log({ conversations });
 
 	useEffect(() => {
 		if (
@@ -110,9 +145,9 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	]);
 
 	useEffect(() => {
-		console.log({
-			c: user?.id && user?.role === "admin" && socket?.current !== undefined,
-		});
+		// console.log({
+		// 	c: user?.id && user?.role === "admin" && socket?.current !== undefined,
+		// });
 		if (user?.id && user?.role === "admin" && socket?.current !== undefined) {
 			if (currentChat) {
 				socket.current.emit("mountUserConv", {
@@ -141,13 +176,15 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 				});
 			}
 		}
-		// return () => {
-		// 	if (user?.role === "admin" && socket?.current !== undefined) {
-		// 		socket.current.emit("deleteUserConv", {
-		// 			userId: user?.id,
-		// 		});
-		// 	}
-		// };
+		return () => {
+			if (user?.role === "admin" && socket?.current !== undefined) {
+				socket.current.emit("mountUserConv", {
+					convId: "conversatieInexistenta",
+					userId: user?.id,
+					role: user?.role,
+				});
+			}
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		currentChat,
@@ -250,25 +287,23 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		console.log("message sent");
 		//once
 		socket?.current.once("getPartener", (data) => {
-			// console.log({ data });
+			console.log({ data });
 			// console.log({ c: data?.curConv });
 			const isAdminConv =
 				data?.curConv?.convId !== currentChat.id &&
 				data?.curConv?.role === "admin";
 			const isAdminNotMounted = !data?.curConv && data?.user?.role === "admin";
-			// console.log({
-			// 	user: data?.user,
-			// });
-			// console.log({ m: data?.curConv?.convId, c: currentChat.id });
 
-			console.log({
-				c: data?.curConv,
-				e: data?.curConv?.convId !== currentChat.id,
-				a: data?.curConv?.role === "admin",
-				isAdminNotMounted,
-				isAdminConv,
-			});
-			if (!data?.user?.mounted || isAdminConv || isAdminNotMounted) {
+			const nm = data?.user?.role !== "admin" && !data?.user?.mounted;
+			// console.log({ nm });
+
+			// console.log({ user: data?.user, conv: data?.curConv });
+			// // console.log({ nm: mounted, isAdminConv, isAdminNotMounted });
+			// console.log({ data });
+			// console.log({ id: currentChat.id });
+			// console.log({ isAdminConv, isAdminNotMounted });
+			// console.log(!data?.user?.mounted || isAdminConv || isAdminNotMounted);
+			if (nm || isAdminConv || isAdminNotMounted) {
 				(async () => {
 					await createNotification({
 						receiver: receiverId,
@@ -302,6 +337,16 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 		<MessengerContainer>
 			{user?.role === "admin" && (
 				<ChatMenu id="chatMenu">
+					<Button
+						sx={{
+							width: 80,
+							color: !focused
+								? theme.palette.error.main
+								: theme.palette.success.main,
+						}}
+						onClick={() => setFocused((prev) => !prev)}>
+						{focused ? "See info" : "Hide info"}
+					</Button>
 					<div className="chatMenuWrapper">
 						{/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
 						{conversations.map((c, i) => (
@@ -319,6 +364,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 									onClick={() => {
 										// dispatch(setNotReload(true));
 										// void navigate(`/messenger?conv=${c.id}`, { replace: true });
+										setFocused(true);
 										quryParams.set("conv", c?.id);
 
 										setSearchParams(quryParams);
@@ -327,6 +373,10 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 										conversation={c}
 										currentUser={user}
 										currentChat={currentChat}
+										userMounted={userMounted}
+										adminId={user?.id}
+										setCurrentChat={setCurrentChat}
+										focused={focused}
 									/>
 								</Box>
 								{i !== conversations?.length - 1 && (
@@ -364,6 +414,8 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 							<div className="chatBoxBottom">
 								<TextField
 									multiline
+									onFocus={() => setFocused(true)}
+									// onBlur={() => setFocused(false)}
 									minRows={4}
 									id="outlined-multilined"
 									placeholder="Write something..."

@@ -13,7 +13,7 @@ const AllUsers = () => {
 		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
 			<Header title="Users" subtitle="Manage the users" />
 			<Box display="flex" justifyContent="center" overflow="hidden" m="0 auto">
-				<Box flex={isSmall ? 0.85 : 1} maxWidth={1200}>
+				<Box flex={isSmall ? 0.87 : 1} maxWidth={1300}>
 					<UsersDataGrid />
 				</Box>
 			</Box>

@@ -23,8 +23,8 @@ const CartList = ({ cartItems, type = "cart" }) => {
 					{item?.title}
 				</Typography>
 				<Typography component="h4" color={theme.palette.secondary[200]}>
-					{item?.price}
 					<span>$</span>
+					{item?.price}
 				</Typography>
 			</CartDetails>
 			<div>
@@ -58,6 +58,14 @@ const CartItem = styled("div")(({ theme }) => ({
 	backgroundColor: theme.palette.background.alt,
 	borderRadius: 20,
 	boxShadow: "rgb(3 0 71 / 9%) 0px 1px 3px",
+	"& .img ": {
+		"& img": {
+			borderRadius: 5,
+			objectFit: "cover",
+			width: "100%",
+			height: "100%",
+		},
+	},
 }));
 
 const CartDetails = styled("div")(({ theme }) => ({

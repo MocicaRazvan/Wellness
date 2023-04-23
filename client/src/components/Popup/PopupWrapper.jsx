@@ -210,6 +210,19 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 		}
 	}, [deleteApproved, pathname, socketRedux, user?.id]);
 
+	useEffect(() => {
+		if (socketRedux && notifications?.length > 0) {
+			socketRedux.on("getDeleteNotif", ({ convId }) => {
+				console.log({
+					convId,
+					notifications,
+					map: notifications.filter(({ ref }) => ref !== convId),
+				});
+				setNotifications((prev) => prev.filter(({ ref }) => ref !== convId));
+			});
+		}
+	}, [notifications, socketRedux]);
+
 	if ([!socketRedux, isLoading, notifications, user?.id].every(Boolean))
 		return <></>;
 

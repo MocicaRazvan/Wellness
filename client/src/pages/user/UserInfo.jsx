@@ -28,6 +28,7 @@ const UserInfo = ({ user, width = "50%", own = "false" }) => {
 	const { data, isLoading } = useGetCountStatsQuery(
 		{ id: user?.id },
 		{
+			skip: !user?.id,
 			refetchOnMountOrArgChange: true,
 			refetchOnReconnect: true,
 		},

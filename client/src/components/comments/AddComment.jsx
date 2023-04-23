@@ -7,6 +7,7 @@ import {
 	ThemeProvider,
 	Box,
 	useTheme,
+	FormHelperText,
 } from "@mui/material";
 import { useState } from "react";
 import { useCreateCommentMutation } from "../../redux/comments/commentsApi";
@@ -29,6 +30,7 @@ const AddComment = ({ type, id }) => {
 		color: "red",
 	});
 	const user = useSelector(selectCurrentUser);
+	const [err, setErr] = useState({ show: false, msg: "" });
 	const { palette } = useTheme();
 
 	const handleAddComment = async () => {
@@ -39,7 +41,10 @@ const AddComment = ({ type, id }) => {
 			});
 			if (result?.attributeScores?.TOXICITY) {
 				setLoading((prev) => ({ ...prev, show: true }));
+
 				setBody("");
+				setErr((prev) => ({ show: true, msg: "Calm down!" }));
+
 				setTimeout(() => {
 					setLoading((prev) => ({ ...prev, show: false }));
 				}, 2500);
@@ -55,6 +60,7 @@ const AddComment = ({ type, id }) => {
 				msg: "Please write in english!",
 			}));
 			setBody("");
+			setErr((prev) => ({ show: true, msg: "Please write in english!" }));
 			setTimeout(() => {
 				setLoading((prev) => ({ ...prev, show: false, msg: "Calm down!" }));
 			}, 2500);
@@ -64,33 +70,51 @@ const AddComment = ({ type, id }) => {
 
 	return (
 		<Card sx={{ bgcolor: palette.primary.main }}>
-			<Loading loading={loading} type="alert" />
+			{/* <Loading loading={loading} type="alert" /> */}
 			<Box sx={{ p: "15px" }}>
 				<Stack direction="row" spacing={2} alignItems="flex-start">
 					<Avatar src={user?.image?.url || blankUser} variant="rounded" />
-					<TextField
-						multiline
-						fullWidth
-						minRows={4}
-						placeholder="Add a comment"
-						inputProps={{
-							style: { color: palette.secondary[400] },
-						}}
-						sx={{
-							"& label.Mui-focused": {
-								color: palette.secondary[400],
-							},
-							" & .MuiOutlinedInput-root": {
-								"&.Mui-focused fieldset": {
-									borderColor: palette.background.default,
+					<Box flex={1}>
+						<TextField
+							multiline
+							fullWidth
+							minRows={4}
+							placeholder="Add a comment"
+							error={err.show}
+							inputProps={{
+								style: { color: palette.secondary[400] },
+							}}
+							sx={{
+								"& label.Mui-focused": {
+									color: palette.secondary[400],
 								},
-							},
-						}}
-						value={body}
-						onChange={(e) => {
-							setBody(e.target.value);
-						}}
-					/>
+								" & .MuiOutlinedInput-root": {
+									"&.Mui-focused fieldset": {
+										borderColor: err.show
+											? palette.error.main
+											: palette.background.default,
+									},
+								},
+							}}
+							value={body}
+							onChange={(e) => {
+								if (err.show) {
+									setErr({ show: false, msg: "" });
+								}
+								setBody(e.target.value);
+							}}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleAddComment();
+								}
+							}}
+						/>
+						{err.show && (
+							<FormHelperText sx={{ fontSize: 12, color: palette.error.main }}>
+								{err.msg}
+							</FormHelperText>
+						)}
+					</Box>
 					{body && (
 						<Button
 							size="large"

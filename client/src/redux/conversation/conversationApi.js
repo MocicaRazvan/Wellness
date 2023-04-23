@@ -41,10 +41,18 @@ export const conversationApiSlice = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: [{ type: "Conversation", id: "LIST" }],
 		}),
+		deleteSupportConversation: builder.mutation({
+			query: ({ id }) => ({
+				url: `/conversations/${id}`,
+				method: "DELETE",
+			}),
+			invalidatesTags: [{ type: "Conversation", id: "LIST" }],
+		}),
 	}),
 });
 export const {
 	useGetConversationsByUserQuery,
 	useCreateSupportConversationMutation,
 	useGetConversationByIdQuery,
+	useDeleteSupportConversationMutation,
 } = conversationApiSlice;

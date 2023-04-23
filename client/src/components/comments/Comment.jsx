@@ -10,6 +10,7 @@ import {
 	Box,
 	styled,
 	useTheme,
+	FormHelperText,
 } from "@mui/material";
 import YouTag from "./YouTag";
 import Actions from "./Actions";
@@ -46,6 +47,7 @@ const Comment = ({ comment }) => {
 	const [open, setOpen] = useState(false);
 	const [editingComm, setEditingComm] = useState(false);
 	const [body, setBody] = useState(comment?.body || "");
+	const [err, setErr] = useState({ show: false, msg: "" });
 
 	const handleDeleteComment = async () => {
 		try {
@@ -56,6 +58,10 @@ const Comment = ({ comment }) => {
 	};
 
 	const handleBodyChange = (e) => {
+		console.log("object");
+		if (err.show) {
+			setErr({ show: false, msg: "" });
+		}
 		setBody(e.target.value);
 	};
 
@@ -73,8 +79,11 @@ const Comment = ({ comment }) => {
 			});
 			if (result?.attributeScores?.TOXICITY) {
 				setLoading((prev) => ({ ...prev, show: true }));
+
 				setBody(comment?.body);
-				setEditingComm(false);
+				setErr((prev) => ({ show: true, msg: "You were nice last time!" }));
+				// setEditingComm(false);
+
 				setTimeout(() => {
 					setLoading((prev) => ({ ...prev, show: false }));
 				}, 2500);
@@ -84,8 +93,11 @@ const Comment = ({ comment }) => {
 			setEditingComm(false);
 		} catch (error) {
 			console.log(error);
+
 			setBody(comment?.body);
-			setEditingComm(false);
+			// setEditingComm(false);
+			setErr((prev) => ({ show: true, msg: "Please write in english!" }));
+
 			setLoading((prev) => ({
 				...prev,
 				show: true,
@@ -108,7 +120,7 @@ const Comment = ({ comment }) => {
 
 	return (
 		<Card sx={{ bgcolor: theme.palette.primary.main }}>
-			<Loading loading={loading} type="alert" />
+			{/* <Loading loading={loading} type="alert" /> */}
 			<UserAgreement
 				open={open}
 				setOpen={setOpen}
@@ -161,14 +173,24 @@ const Comment = ({ comment }) => {
 								{user?.id === comment?.user?._id && (
 									<Button
 										variant="text"
-										disabled={editingComm}
+										// disabled={editingComm}
 										sx={{
 											fontWeight: 500,
 											textTransform: "capitalize",
-											color: theme.palette.secondary[300],
+											color: editingComm
+												? theme.palette.secondary[500]
+												: theme.palette.secondary[200],
 										}}
 										startIcon={<Edit />}
-										onClick={() => setEditingComm(!editingComm)}>
+										onClick={() => {
+											if (editingComm) {
+												setBody(comment?.body);
+												if (err.show) {
+													setErr({ show: false, msg: "" });
+												}
+											}
+											setEditingComm((prev) => !prev);
+										}}>
 										Edit
 									</Button>
 								)}
@@ -176,7 +198,7 @@ const Comment = ({ comment }) => {
 									<Button
 										startIcon={<Delete />}
 										sx={{
-											color: theme.palette.secondary[300],
+											color: theme.palette.secondary[200],
 											fontWeight: 500,
 											textTransform: "capitalize",
 										}}
@@ -191,7 +213,6 @@ const Comment = ({ comment }) => {
 						{editingComm ? (
 							<>
 								<TextField
-									sx={{ p: "20px 0" }}
 									multiline
 									fullWidth
 									minRows={4}
@@ -201,15 +222,55 @@ const Comment = ({ comment }) => {
 									onChange={(e) => {
 										handleBodyChange(e);
 									}}
-								/>
-								{body && (
-									<UpdateBtn
-										onClick={() => {
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
 											handleUpdateComment();
-										}}>
-										Update
-									</UpdateBtn>
-								)}
+										}
+									}}
+									error={err.show}
+									inputProps={{
+										style: { color: theme.palette.secondary[400] },
+									}}
+									sx={{
+										p: "20px 0",
+										"& label.Mui-focused": {
+											color: theme.palette.secondary[400],
+										},
+										" & .MuiOutlinedInput-root": {
+											"&.Mui-focused fieldset": {
+												borderColor: err.show
+													? theme.palette.error.main
+													: theme.palette.background.default,
+											},
+										},
+									}}
+								/>
+
+								<Box
+									width="100%"
+									display="flex"
+									alignItems="center"
+									justifyContent="space-between">
+									<Box>
+										{err.show && (
+											<FormHelperText
+												sx={{
+													fontSize: 12,
+													color: theme.palette.error.main,
+												}}>
+												{err.msg}
+											</FormHelperText>
+										)}
+									</Box>
+									{body && (
+										<UpdateBtn
+											onClick={() => {
+												handleUpdateComment();
+											}}>
+											Update
+										</UpdateBtn>
+									)}
+								</Box>
 							</>
 						) : (
 							<Typography
