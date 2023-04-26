@@ -19,6 +19,7 @@ const InfoBar = ({
 	title = "Spendings by month",
 	subtitle = "Bar of monthly Spendings and Units",
 	small = "false",
+	height = "75vh",
 }) => {
 	const [year, setYear] = useState(new Date().getFullYear());
 	const years = useMemo(() => {
@@ -52,7 +53,7 @@ const InfoBar = ({
 		);
 
 	return (
-		<Box width="100%" height="75vh" m="1.5rem 2.5rem">
+		<Box width="100%" height={height} m="1.5rem 2.5rem">
 			<Header title={title} subtitle={subtitle} small={small} />
 			<FormControl sx={{ mt: "1rem", ml: 2 }}>
 				<InputLabel>Year</InputLabel>

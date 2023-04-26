@@ -15,6 +15,7 @@ const CustomDataGrid = ({
 	setSort,
 	height = "80vh",
 	setSelectedId = () => {},
+	disableSelectionOnClick = true,
 }) => {
 	const theme = useTheme();
 	return (
@@ -71,6 +72,7 @@ const CustomDataGrid = ({
 					console.log({ row: newSelectionArray[0] });
 					setSelectedId(newSelectionArray[0]);
 				}}
+				disableSelectionOnClick={disableSelectionOnClick}
 			/>
 		</Box>
 	);

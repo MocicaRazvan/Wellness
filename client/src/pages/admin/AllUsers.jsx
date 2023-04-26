@@ -52,20 +52,19 @@ const AllUsers = () => {
 				<Box
 					display="flex"
 					justifyContent="center"
-					overflow="hidden"
+					// overflow="hidden"
 					m="0 auto">
 					<Box flex={isSmall ? 0.87 : 1} maxWidth={1300}>
-						<UsersDataGrid setSelected={setSelected} />
+						<UsersDataGrid
+							setSelected={setSelected}
+							disableSelectionOnClick={false}
+						/>
 					</Box>
 				</Box>
 
 				{selected && (
 					<Fade in={selected ? true : false}>
-						<Box
-							mt={5}
-							sx={{
-								overflow: "hidden",
-							}}>
+						<Box mt={5}>
 							{/* <Typography
 								fontSize={{ md: 20, xs: 15 }}
 								mb={1}
@@ -99,7 +98,7 @@ const AllUsers = () => {
 									</Typography>
 								</AccordionSummary>
 								<AccordionDetails>
-									<Box>
+									<Box width="100%" height="100%">
 										<Box
 											width="95%"
 											mt={5}
@@ -110,12 +109,9 @@ const AllUsers = () => {
 											sx={{
 												"& > div": {
 													gridColumn: isNonMobileScreens ? "span 1" : "span 2",
-													maxHeight: spendingsOpen ? "100vh" : "0",
-													transition: "max-height 0.15s ease-out",
-													overflow: "hidden",
 												},
 											}}>
-											<Box width="100%">
+											<Box>
 												<Overview
 													admin={selected?._id}
 													title={`${selected?.username}'s Overview`}
@@ -123,22 +119,25 @@ const AllUsers = () => {
 													isProfile={true}
 													maxYear={moment(selected?.createdAt).year()}
 													small="true"
+													height="80vh"
+													subtitle="Overview of general spendings"
 												/>
 											</Box>
-											<Box width="100%">
+											<Box>
 												<InfoBar
 													userId={selected?._id}
 													maxYear={moment(selected?.createdAt).year()}
 													small="true"
 													title={`${selected?.username}'s spendings by month`}
+													height="80vh"
 												/>
 											</Box>
 										</Box>
-										<Box width="95%" mt={15}>
+										<Box width="100%" mt={15}>
 											<Daily
 												admin={selected?._id}
 												isProfile={true}
-												title={`${selected?.username}'s Daily Spendings1`}
+												title={`${selected?.username}'s Daily Spendings`}
 												subtitle="Chart of daily  spendings"
 												curve="linear"
 												small="true"
@@ -174,8 +173,7 @@ const AllUsers = () => {
 										<Box
 											display="flex"
 											justifyContent="center"
-											alignItems="center"
-											sx={{ overflowX: "hidden" }}>
+											alignItems="center">
 											<Box width="96%" mt={5} p={2} gap={1}>
 												<TrainerOverview
 													userId={selected?._id}

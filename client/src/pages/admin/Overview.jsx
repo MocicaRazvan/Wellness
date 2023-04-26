@@ -20,6 +20,7 @@ const Overview = ({
 	isProfile = false,
 	maxYear = new Date().getFullYear() - 9,
 	small = "false",
+	height = "75vh",
 }) => {
 	const [view, setView] = useState("units");
 	const [year, setYear] = useState(new Date().getFullYear());
@@ -37,7 +38,7 @@ const Overview = ({
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title={title} subtitle={subtitle} small={small} />
-			<Box height="75vh" display={isClose ? "none" : "block"}>
+			<Box height={height} display={isClose ? "none" : "block"}>
 				<FormControl sx={{ mt: "1rem" }}>
 					<InputLabel>View</InputLabel>
 					<Select
@@ -79,9 +80,11 @@ const Overview = ({
 					/>
 				</Box>
 			</Box>
-			<Box display={isClose ? "none" : "block"} mt={15}>
-				<MonthBar color="nivo" groupMode="stacked" />
-			</Box>
+			{!isProfile && (
+				<Box display={isClose ? "none" : "block"} mt={15}>
+					<MonthBar color="nivo" groupMode="stacked" />
+				</Box>
+			)}
 		</Box>
 	);
 };

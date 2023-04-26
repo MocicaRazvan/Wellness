@@ -8,6 +8,8 @@ import HotelIcon from "@mui/icons-material/Hotel";
 import jump from "../../images/parallax/jump.jpg";
 import salad from "../../images/parallax/salad.jpg";
 import success from "../../images/parallax/success.jpg";
+import success2 from "../../images/parallax/success2.jpg";
+import barbell from "../../images/parallax/barbell.jpg";
 import { Parallax } from "react-parallax";
 import { alpha, Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -301,7 +303,7 @@ const Home = () => {
 				values={values2}
 				links={["/register", "/trainings", "/trainings"]}
 			/>
-			<Parallax bgImage={success} strength={500}>
+			<Parallax bgImage={barbell} strength={500}>
 				<div
 					style={{
 						minHeight: "100vh",

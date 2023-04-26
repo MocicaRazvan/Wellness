@@ -94,7 +94,11 @@ const Breakdown = () => {
 					<BreakdownChart year={year} month={month} />
 				</Box>
 			</Box>
-			<Box flex={1} overflow="hidden" display={isClose ? "none" : "block"}>
+			<Box
+				flex={1}
+				overflow="hidden"
+				display={isClose ? "none" : "block"}
+				mt={5}>
 				<OrdersTagRadarChart />
 			</Box>
 		</Box>

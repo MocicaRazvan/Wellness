@@ -17,7 +17,11 @@ import UserAgreement from "../reusable/UserAgreement";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { useNavigate } from "react-router-dom";
 
-const UsersDataGrid = ({ height = "80vh", setSelected = () => {} }) => {
+const UsersDataGrid = ({
+	height = "80vh",
+	setSelected = () => {},
+	disableSelectionOnClick = true,
+}) => {
 	const [page, setPage] = useState(0);
 	const [pageSize, setPageSize] = useState(20);
 	const [sort, setSort] = useState({});
@@ -197,6 +201,7 @@ const UsersDataGrid = ({ height = "80vh", setSelected = () => {} }) => {
 				toolbar={{ searchInput, setSearchInput, setSearch }}
 				height={height}
 				setSelectedId={setSelectedId}
+				disableSelectionOnClick={disableSelectionOnClick}
 			/>
 		</>
 	);

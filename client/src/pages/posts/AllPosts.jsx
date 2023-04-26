@@ -57,7 +57,7 @@ const AllPosts = () => {
 		}
 	}, [data]);
 
-	if (isLoading)
+	if (isLoading || !data)
 		return (
 			<CircularProgress
 				sx={{ position: "absolute", top: "50%", left: "50%", height: "100vh" }}

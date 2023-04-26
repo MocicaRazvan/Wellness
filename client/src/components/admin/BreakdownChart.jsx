@@ -63,7 +63,7 @@ const BreakdownChart = ({
 
 	return (
 		<Box
-			height={isDashboard ? "400px" : "100%"}
+			height={isDashboard ? "400px" : "90%"}
 			width={undefined}
 			minHeight={isDashboard ? "325px" : undefined}
 			minWidth={isDashboard ? "325px" : undefined}
