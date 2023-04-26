@@ -1,6 +1,8 @@
 import {
 	Box,
 	CircularProgress,
+	IconButton,
+	Tooltip,
 	Typography,
 	useMediaQuery,
 	useTheme,
@@ -13,6 +15,9 @@ import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import PostCard from "./PostCard";
 import GridList from "../../components/reusable/GridList";
 import CustomPagination from "../../components/reusable/CustomPagination";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 const AllPosts = () => {
 	const [sorting, setSorting] = useState({});
@@ -23,6 +28,11 @@ const AllPosts = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(12);
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:600px)");
+	const user = useSelector(selectCurrentUser);
+	const [like, setLike] = useState(null);
+	const [dislike, setDislike] = useState(null);
+
+	console.log({ like, dislike });
 
 	const { data, isLoading, isError } = useGetPostsQuery(
 		{
@@ -31,6 +41,8 @@ const AllPosts = () => {
 			tags,
 			page,
 			limit: rowsPerPage,
+			like,
+			dislike,
 		} || "",
 		{
 			pollingInterval: 600000,
@@ -64,14 +76,76 @@ const AllPosts = () => {
 				fontSize={!isNonMobile && "25px"}>
 				Look at all these posts
 			</Typography>
-			<Filter
-				sorting={sorting}
-				isLoading={false}
-				isError={false}
-				tags={tags}
-				setSorting={setSorting}
-				setTags={setTags}
-			/>
+			<Box
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+				flexDirection={isNonMobile ? "row" : "column"}>
+				<Box flex={1}>
+					<Filter
+						sorting={sorting}
+						isLoading={false}
+						isError={false}
+						tags={tags}
+						setSorting={setSorting}
+						setTags={setTags}
+					/>
+				</Box>
+				{user && (
+					<Box
+						flex={0.25}
+						display="flex"
+						justifyContent="start"
+						alignItems="center"
+						gap={1}>
+						<Tooltip title={!like && "Liked posts"} arrow placement="bottom">
+							<Box>
+								<IconButton
+									onClick={() => {
+										setDislike(null);
+										if (like) {
+											setLike(null);
+										} else {
+											setLike(user?.id);
+										}
+									}}>
+									<ThumbUpIcon
+										sx={{
+											color: like
+												? theme.palette.secondary[300]
+												: theme.palette.success.main,
+										}}
+									/>
+								</IconButton>
+							</Box>
+						</Tooltip>
+						<Tooltip
+							title={!dislike && "Disliked posts"}
+							arrow
+							placement="bottom">
+							<Box>
+								<IconButton
+									onClick={() => {
+										setLike(null);
+										if (dislike) {
+											setDislike(null);
+										} else {
+											setDislike(user?.id);
+										}
+									}}>
+									<ThumbDownIcon
+										sx={{
+											color: dislike
+												? theme.palette.secondary[300]
+												: theme.palette.error.main,
+										}}
+									/>
+								</IconButton>
+							</Box>
+						</Tooltip>
+					</Box>
+				)}
+			</Box>
 			{data?.posts?.length === 0 && (
 				<Typography
 					fontSize={40}

@@ -1,4 +1,11 @@
-import { Box, Button, Typography, styled, useTheme } from "@mui/material";
+import {
+	Box,
+	Button,
+	Tooltip,
+	Typography,
+	styled,
+	useTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
@@ -25,6 +32,8 @@ const AllOrders = () => {
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
 	const isSideBarOpen = useOutletContext();
 	const isSmall = isNonMobileScreens && !isSideBarOpen;
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
+	const isClose = !isNonSmallScreens && isSideBarOpen;
 
 	const columns = [
 		{
@@ -56,15 +65,17 @@ const AllOrders = () => {
 					user: { username, _id },
 				},
 			}) => (
-				<Typography
-					fontSize={12.3}
-					sx={{
-						cursor: "pointer",
-						"&:hover": { color: palette.secondary[300] },
-					}}
-					onClick={() => void navigate("/user/author", { state: _id })}>
-					{username}
-				</Typography>
+				<Tooltip title="Go to profile" arrow placement="top">
+					<Typography
+						fontSize={12.3}
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: palette.secondary[300] },
+						}}
+						onClick={() => void navigate("/user/author", { state: _id })}>
+						{username}
+					</Typography>
+				</Tooltip>
 			),
 		},
 		{
@@ -157,7 +168,10 @@ const AllOrders = () => {
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
-				<Box flex={isSmall ? 0.95 : 1} maxWidth={1400}>
+				<Box
+					flex={isSmall ? 0.95 : 1}
+					maxWidth={1400}
+					display={isClose ? "none" : "block"}>
 					<CustomDataGrid
 						isLoading={isLoading || !data}
 						rows={data?.orders || []}

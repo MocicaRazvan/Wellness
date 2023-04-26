@@ -10,8 +10,8 @@ const postAdapter = createEntityAdapter({
 export const postApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getPosts: builder.query({
-			query: ({ search, tags, sorting, page, limit }) => {
-				const params = {};
+			query: ({ search, tags, sorting, page, limit, like, dislike }) => {
+				const params = { like, dislike };
 				if (search) {
 					params.search = search;
 				}

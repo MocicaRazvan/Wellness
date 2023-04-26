@@ -1,6 +1,7 @@
 import { useTheme } from "@emotion/react";
 import {
 	Box,
+	Button,
 	CircularProgress,
 	Typography,
 	useMediaQuery,
@@ -13,6 +14,8 @@ import GridList from "../../components/reusable/GridList";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import { useGetTrainingsQuery } from "../../redux/trainings/trainingsApi";
 import TrainingCard from "./TrainingCard";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 
 const AllTrainings = () => {
 	const [sorting, setSorting] = useState({});
@@ -23,6 +26,8 @@ const AllTrainings = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(12);
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:600px)");
+	const user = useSelector(selectCurrentUser);
+	const [curUser, setCurUser] = useState({ userId: null, subscriptions: null });
 	const { data, isLoading, isError } = useGetTrainingsQuery(
 		{
 			sorting,
@@ -30,6 +35,7 @@ const AllTrainings = () => {
 			tags,
 			page,
 			limit: rowsPerPage,
+			curUser: JSON.stringify(curUser),
 		} || "",
 		{
 			pollingInterval: 600000,
@@ -37,6 +43,7 @@ const AllTrainings = () => {
 			refetchOnMountOrArgChange: true,
 		},
 	);
+
 	useEffect(() => {
 		if (data) {
 			setPage(data?.page);
@@ -53,6 +60,7 @@ const AllTrainings = () => {
 				thickness={7}
 			/>
 		);
+	console.log({ curUser });
 	return (
 		<Box p={2}>
 			<Typography
@@ -64,15 +72,57 @@ const AllTrainings = () => {
 				fontSize={!isNonMobile && "25px"}>
 				Look at all these trainings
 			</Typography>
-			<Filter
-				sorting={sorting}
-				isLoading={false}
-				isError={false}
-				tags={tags}
-				setSorting={setSorting}
-				setTags={setTags}
-				type="training"
-			/>
+			<Box
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+				flexDirection={isNonMobile ? "row" : "column"}>
+				<Box flex={1}>
+					<Filter
+						sorting={sorting}
+						isLoading={false}
+						isError={false}
+						tags={tags}
+						setSorting={setSorting}
+						setTags={setTags}
+						type="training"
+					/>
+				</Box>
+				{user && (
+					<Box
+						flex={0.25}
+						display="flex"
+						justifyContent="start"
+						alignItems="center">
+						<Button
+							variant="contained"
+							size="large"
+							startIcon={curUser.userId === null ? <LocalMallIcon /> : null}
+							sx={{
+								width: 120,
+								bgcolor: theme.palette.secondary[300],
+								color: theme.palette.background.default,
+								"&:hover": {
+									color: theme.palette.secondary[300],
+									bgcolor: theme.palette.primary.main,
+								},
+							}}
+							onClick={() => {
+								if (curUser.userId !== null) {
+									setCurUser({ userId: null, subscriptions: null });
+								} else {
+									setCurUser({
+										userId: user?.id,
+										subscriptions: user?.subscriptions,
+									});
+									// console.log({ userId });
+								}
+							}}>
+							{curUser.userId === null ? "Buyable" : "All"}
+						</Button>
+					</Box>
+				)}
+			</Box>
 			{data?.trainings?.length === 0 && (
 				<Typography
 					fontSize={40}

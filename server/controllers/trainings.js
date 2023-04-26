@@ -136,6 +136,19 @@ exports.getAllTrainings = async (req, res) => {
 	} else {
 		query = Trainings.find({ approved: true, display: true }).lean();
 		total = Trainings.countDocuments({ approved: true, display: true });
+		const curUser = JSON.parse(q.curUser);
+
+		if (curUser.userId !== null) {
+			s = curUser.subscriptions.map(mongoose.Types.ObjectId);
+			query = Trainings.find({
+				user: { $ne: mongoose.Types.ObjectId(curUser.userId) },
+				_id: { $nin: s },
+			});
+			total = Trainings.countDocuments({
+				user: { $ne: mongoose.Types.ObjectId(curUser.userId) },
+				_id: { $nin: s },
+			});
+		}
 	}
 
 	if (q.sort) {

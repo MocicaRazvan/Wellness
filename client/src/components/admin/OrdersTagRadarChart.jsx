@@ -17,12 +17,20 @@ const OrdersTagRadarChart = () => {
 		refetchOnReconnect: true,
 	});
 	const theme = useTheme();
-	const max = useMemo(
-		() =>
-			data?.reduce((acc, { total }) => (total > acc ? (acc = total) : acc), 0),
+	// const max = useMemo(
+	// 	() =>
+	// 		data?.reduce((acc, { total }) => (total > acc ? (acc = total) : acc), 0),
 
-		[data],
-	);
+	// 	[data],
+	// );
+	const formatedData = useMemo(() => {
+		if (data) {
+			const c = [...data];
+			c?.sort((a, b) => a.total - b.total);
+			return c;
+		}
+		return [];
+	}, [data]);
 	if (isLoading || !data)
 		return (
 			<CircularProgress
@@ -39,10 +47,10 @@ const OrdersTagRadarChart = () => {
 				subtitle="Brakedown of orders by the trainings tags in them"
 			/>
 			<ResponsiveContainer width="100%" aspect={2}>
-				<RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+				<RadarChart cx="50%" cy="50%" outerRadius="80%" data={formatedData}>
 					<PolarGrid />
 					<PolarAngleAxis dataKey="tag" />
-					<PolarRadiusAxis domain={[0, max]} angle={0} />
+					<PolarRadiusAxis domain={[0, formatedData.at(-1)?.total]} angle={0} />
 					<Radar
 						dataKey="total"
 						stroke={theme.palette.secondary.main}

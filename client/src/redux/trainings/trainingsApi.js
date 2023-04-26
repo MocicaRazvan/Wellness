@@ -15,8 +15,8 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 			],
 		}),
 		getTrainings: builder.query({
-			query: ({ search, tags, sorting, page, limit, admin }) => {
-				const params = { admin };
+			query: ({ search, tags, sorting, page, limit, admin, curUser }) => {
+				const params = { admin, curUser };
 				if (search) {
 					params.search = search;
 				}

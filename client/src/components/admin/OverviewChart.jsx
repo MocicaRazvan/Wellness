@@ -14,7 +14,10 @@ const OverviewChart = ({
 }) => {
 	const theme = useTheme();
 
-	const { data, isLoading } = useGetEarningsQuery({ year, admin });
+	const { data, isLoading } = useGetEarningsQuery(
+		{ year, admin },
+		{ refetchOnReconnect: true },
+	);
 
 	const [totalSalesLine, totalUnitsLine] = useMemo(() => {
 		if (!data) return [];

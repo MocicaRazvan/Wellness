@@ -1,8 +1,16 @@
-import { FormControl, MenuItem, InputLabel, Box, Select } from "@mui/material";
+import {
+	FormControl,
+	MenuItem,
+	InputLabel,
+	Box,
+	Select,
+	useMediaQuery,
+} from "@mui/material";
 import React, { useMemo, useState } from "react";
 import OverviewChart from "../../components/admin/OverviewChart";
 import Header from "../../components/reusable/Header";
 import { useOutletContext } from "react-router-dom";
+import MonthBar from "../../components/admin/MonthBar";
 
 const Overview = ({
 	admin = true,
@@ -16,6 +24,8 @@ const Overview = ({
 	const [view, setView] = useState("units");
 	const [year, setYear] = useState(new Date().getFullYear());
 	const isSideBarOpen = useOutletContext();
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
+	const isClose = !isNonSmallScreens && isSideBarOpen;
 
 	const years = useMemo(() => {
 		const items = [];
@@ -27,7 +37,7 @@ const Overview = ({
 	return (
 		<Box m="1.5rem 2.5rem">
 			<Header title={title} subtitle={subtitle} small={small} />
-			<Box height="75vh">
+			<Box height="75vh" display={isClose ? "none" : "block"}>
 				<FormControl sx={{ mt: "1rem" }}>
 					<InputLabel>View</InputLabel>
 					<Select
@@ -57,12 +67,20 @@ const Overview = ({
 						{years}
 					</Select>
 				</FormControl>
-				<OverviewChart
-					view={view}
-					year={year}
-					admin={admin}
-					isProfile={isProfile}
-				/>
+				<Box
+					// sx={{ overflowY: "hidden" }}
+					width="100%"
+					height="100%">
+					<OverviewChart
+						view={view}
+						year={year}
+						admin={admin}
+						isProfile={isProfile}
+					/>
+				</Box>
+			</Box>
+			<Box display={isClose ? "none" : "block"} mt={15}>
+				<MonthBar color="nivo" groupMode="stacked" />
 			</Box>
 		</Box>
 	);

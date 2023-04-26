@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useGetEarningsQuery } from "../../redux/orders/orderApi";
 import {
 	Box,
 	CircularProgress,
@@ -6,21 +7,23 @@ import {
 	InputLabel,
 	MenuItem,
 	Select,
+	useMediaQuery,
 } from "@mui/material";
-import months from "../../utils/consts/months";
 import noData from "../../utils/lottie/noData.json";
 import Lottie from "react-lottie-player";
-import { useGetTotalUserMonthQuery } from "../../redux/orders/orderApi";
+import { useOutletContext } from "react-router-dom";
+import Bar from "../statistics/Bar";
 import Header from "../reusable/Header";
-import Bar from "./Bar";
-const InfoBar = ({
-	userId,
+import months from "../../utils/consts/months";
+
+const MonthBar = ({
 	maxYear = new Date().getFullYear() - 9,
-	title = "Spendings by month",
-	subtitle = "Bar of monthly Spendings and Units",
-	small = "false",
+	admin = true,
+	color = "dark2",
+	groupMode = "grouped",
 }) => {
 	const [year, setYear] = useState(new Date().getFullYear());
+	const isNonMobile = useMediaQuery("(min-width:1000px)");
 	const years = useMemo(() => {
 		const items = [];
 		for (let i = new Date().getFullYear(); i >= maxYear; i--) {
@@ -28,17 +31,17 @@ const InfoBar = ({
 		}
 		return items;
 	}, [maxYear]);
-	const { data, isLoading } = useGetTotalUserMonthQuery(
-		{ year, userId },
+	const { data, isLoading } = useGetEarningsQuery(
+		{ year, admin },
 		{ refetchOnReconnect: true },
 	);
 
 	const formatedData = useMemo(
 		() =>
-			data?.map(({ _id, total: t, units }) => ({
-				month: months[_id - 1],
-				total: t / 100,
-				"units*10": units * 10,
+			data?.map(({ month, totalSales, totalUnits }) => ({
+				month,
+				total: totalSales / 100,
+				"units*10": totalUnits * 10,
 			})),
 		[data],
 	);
@@ -50,10 +53,13 @@ const InfoBar = ({
 				thickness={7}
 			/>
 		);
-
+	console.log({ data, formatedData });
 	return (
 		<Box width="100%" height="75vh" m="1.5rem 2.5rem">
-			<Header title={title} subtitle={subtitle} small={small} />
+			<Header
+				title={"Overviw Per Month"}
+				subtitle={"Overview of general revenue and profit per month"}
+			/>
 			<FormControl sx={{ mt: "1rem", ml: 2 }}>
 				<InputLabel>Year</InputLabel>
 				<Select
@@ -87,10 +93,20 @@ const InfoBar = ({
 					/>
 				</Box>
 			) : (
-				<Bar formatedData={formatedData} />
+				// <Box>
+				<Box width="100%" height="100%" m="0 auto" sx={{ overflow: "hidden" }}>
+					<Bar
+						formatedData={formatedData}
+						layout={isNonMobile ? "vertical" : "horizontal"}
+						color={color}
+						groupMode={groupMode}
+					/>
+				</Box>
+
+				// </Box>
 			)}
 		</Box>
 	);
 };
 
-export default InfoBar;
+export default MonthBar;

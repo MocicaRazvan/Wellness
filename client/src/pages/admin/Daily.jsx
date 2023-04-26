@@ -1,4 +1,9 @@
-import { CircularProgress, TextField, useTheme } from "@mui/material";
+import {
+	CircularProgress,
+	TextField,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useGetdDailyEarningsQuery } from "../../redux/orders/orderApi";
@@ -12,6 +17,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Lottie from "react-lottie-player";
 import noData from "../../utils/lottie/noData.json";
+import { useOutletContext } from "react-router-dom";
 
 const Daily = ({
 	admin = true,
@@ -29,6 +35,9 @@ const Daily = ({
 	const [firstStartDate, setFirstStartDate] = useState(null);
 	const [firstEndDate, setFirstEndDate] = useState(null);
 	const dateRef = useRef({ start: null, end: null });
+	const isSideBarOpen = useOutletContext();
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
+	const isClose = !isNonSmallScreens && isSideBarOpen;
 	useEffect(() => {
 		const sortedDates = data
 			?.map(({ date }) => date)
@@ -93,11 +102,10 @@ const Daily = ({
 			/>
 		);
 
-
 	return (
 		<Box m="1.5rem 2.5rem" overflow="hidden">
 			<Header title={title} subtitle={subtitle} small={small} />
-			<Box height="75vh" mt={1}>
+			<Box height="75vh" mt={1} display={isClose ? "none" : "block"}>
 				<Box display="flex" justifyContent="flex-end">
 					<LocalizationProvider children dateAdapter={AdapterDateFns}>
 						<DesktopDatePicker

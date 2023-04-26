@@ -63,6 +63,14 @@ exports.getAllPosts = async (req, res) => {
 	let total = Posts.countDocuments({ approved: true, display: true });
 
 	query = Posts.find({ approved: true, display: true }).lean();
+	if (q.like !== "null") {
+		query = query.find({ likes: q.like });
+		total = total.countDocuments({ likes: q.like });
+	} else if (q.dislike !== "null") {
+		query = query.find({ dislikes: q.dislike });
+		total = total.countDocuments({ dislikes: q.dislike });
+	}
+
 	if (q.sort) {
 		const generateSort = () => {
 			const sortParsed = JSON.parse(q.sort);
@@ -99,6 +107,7 @@ exports.getAllPosts = async (req, res) => {
 	if (page > pages) {
 		page = pages;
 	}
+
 	return res.status(200).json({
 		message: "Post delivered successfully",
 		posts,

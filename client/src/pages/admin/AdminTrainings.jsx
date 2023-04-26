@@ -4,11 +4,12 @@ import {
 	Tooltip,
 	Typography,
 	styled,
+	useMediaQuery,
 	useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
@@ -40,6 +41,9 @@ const AdminTrainings = () => {
 	const { palette } = useTheme();
 	const socketRedux = useSelector(selectSocket);
 	const navigate = useNavigate();
+	const isSideBarOpen = useOutletContext();
+	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
+	const isClose = !isNonSmallScreens && isSideBarOpen;
 
 	const { data, isLoading } = useGetTrainingsQuery(
 		{
@@ -131,15 +135,17 @@ const AdminTrainings = () => {
 					user: { username, _id },
 				},
 			}) => (
-				<Typography
-					fontSize={12.3}
-					sx={{
-						cursor: "pointer",
-						"&:hover": { color: palette.secondary[300] },
-					}}
-					onClick={() => void navigate("/user/author", { state: _id })}>
-					{username}
-				</Typography>
+				<Tooltip title="Go to profile" arrow placement="top">
+					<Typography
+						fontSize={12.3}
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: palette.secondary[300] },
+						}}
+						onClick={() => void navigate("/user/author", { state: _id })}>
+						{username}
+					</Typography>
+				</Tooltip>
 			),
 		},
 		{
@@ -322,7 +328,7 @@ const AdminTrainings = () => {
 			/>
 			<Box
 				maxWidth={1700}
-				display="flex"
+				display={isClose ? "none" : "flex"}
 				justifyContent="center"
 				overflow="hidden"
 				m="0 auto">
