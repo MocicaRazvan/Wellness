@@ -1,34 +1,36 @@
-import { CircularProgress, TextField, useTheme } from "@mui/material";
-import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useGetdDailyEarningsQuery } from "../../redux/orders/orderApi";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
+
+import { Box, CircularProgress, TextField, useTheme } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
-import { Box } from "@mui/system";
-import Header from "../../components/reusable/Header";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import moment from "moment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { useGetTotalUserDailyQuery } from "../../redux/orders/orderApi";
+import Header from "../reusable/Header";
 import Lottie from "react-lottie-player";
 import noData from "../../utils/lottie/noData.json";
 
-const Daily = ({
-	admin = true,
-	title = "DAILY SALES",
-	subtitle = "Chart of daily sales",
-	isProfile = false,
-	curve = "catmullRom",
+const TrainerDaily = ({
+	userId = "",
+	curve,
+	title = "Your Daily Sales",
+	subtitle = "Chart of your daily sales",
 	small = "false",
 }) => {
-	const { data, isLoading } = useGetdDailyEarningsQuery({ admin });
-	const theme = useTheme();
-
 	const [startDate, setStartDate] = useState(new Date("2020-01-01"));
 	const [endDate, setEndDate] = useState(new Date("2030-01-01"));
 	const [firstStartDate, setFirstStartDate] = useState(null);
 	const [firstEndDate, setFirstEndDate] = useState(null);
 	const dateRef = useRef({ start: null, end: null });
+	const theme = useTheme();
+	const { data, isLoading } = useGetTotalUserDailyQuery(
+		{
+			userId,
+		},
+		{ skip: !userId, refetchOnReconnect: true },
+	);
+
 	useEffect(() => {
 		const sortedDates = data
 			?.map(({ date }) => date)
@@ -47,14 +49,13 @@ const Daily = ({
 			setEndDate(new Date(sortedDates.at(-1)));
 		}
 	}, [data]);
-
 	console.log({ data });
 
 	const [formattedData] = useMemo(() => {
 		if (!data) return [];
 
 		const totalSalesLine = {
-			id: !isProfile ? "totalSales" : "totlatSpendings",
+			id: "totalSales",
 			color: theme.palette.secondary.main,
 			data: [],
 		};
@@ -71,7 +72,7 @@ const Daily = ({
 
 				totalSalesLine.data = [
 					...totalSalesLine.data,
-					{ x: splitDate, y: totalSales / 100 },
+					{ x: splitDate, y: totalSales },
 				];
 				totalUnitsLine.data = [
 					...totalUnitsLine.data,
@@ -82,7 +83,7 @@ const Daily = ({
 
 		const formattedData = [totalSalesLine, totalUnitsLine];
 		return [formattedData];
-	}, [data, isProfile, theme.palette.secondary, startDate, endDate]);
+	}, [data, theme.palette.secondary, startDate, endDate]);
 
 	if (isLoading || !data)
 		return (
@@ -92,7 +93,6 @@ const Daily = ({
 				thickness={7}
 			/>
 		);
-
 
 	return (
 		<Box m="1.5rem 2.5rem" overflow="hidden">
@@ -242,4 +242,4 @@ const Daily = ({
 	);
 };
 
-export default Daily;
+export default TrainerDaily;

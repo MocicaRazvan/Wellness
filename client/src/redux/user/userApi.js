@@ -69,7 +69,7 @@ export const userApi = apiSlice.injectEndpoints({
 			},
 		}),
 		getAllMonthlyStats: builder.query({
-			query: () => "/user/admin/month/all",
+			query: ({ year, month }) => `/user/admin/month/all/${year}/${month}`,
 			transformResponse: ({ message, ...rest }) =>
 				Object.entries(rest)
 					.map(([k, v]) => ({ [k]: v.length }))

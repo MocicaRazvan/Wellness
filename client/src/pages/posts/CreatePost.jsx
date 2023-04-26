@@ -1,9 +1,25 @@
 import { useTheme, useMediaQuery, Box, Typography } from "@mui/material";
 import Form from "./Form";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const CreatePost = () => {
 	const theme = useTheme();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+	const curUser = useSelector(selectCurrentUser);
+	const [user, setUser] = useState(null);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		setUser(curUser);
+	}, [curUser]);
+	if (!user) return;
+
+	if (user?.role === "user") {
+		navigate("/");
+	}
 	return (
 		<Box>
 			<Box

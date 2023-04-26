@@ -57,12 +57,6 @@ const AllPosts = () => {
 	return (
 		<Box p={2}>
 			<Typography
-				// className="text-gradient"
-				// sx={{
-				// 	background: `-webkit-linear-gradient(${theme.palette.secondary[300]}, #333)`,
-				// 	WebkitBackgroundClip: "text",
-				// 	WebkitTextFillColor: "transparent",
-				// }}
 				variant="h2"
 				color={theme.palette.secondary[200]}
 				fontWeight="bold"

@@ -59,7 +59,7 @@ const Navigation = () => {
 	let isSearchBarOpen =
 		pathnames.includes(pathname) ||
 		(user?.role === "admin" && pathname === "/messenger");
-	const isNonMobile = useMediaQuery("(min-width:900px)");
+	const isNonMobile = useMediaQuery("(min-width:1155px)");
 	const isNotLogged = user === null;
 
 	const [direction, setDirection] = useState({
@@ -80,7 +80,11 @@ const Navigation = () => {
 		if (
 			!pathname
 				.split("/")
-				.some((e) => ["posts", "trainings", "orders", "messenger"].includes(e))
+				.some((e) =>
+					["posts", "trainings", "orders", "messenger", "statistics"].includes(
+						e,
+					),
+				)
 		) {
 			setActive("");
 		}
@@ -305,6 +309,39 @@ const Navigation = () => {
 					</Accordion>
 				</ListItem>
 				<Divider />
+				<ListItem disablePadding>
+					<Accordion
+						onClick={(e) => e.stopPropagation()}
+						sx={{
+							width: "100%",
+							color: theme.palette.secondary[200],
+						}}>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls="panel1a-content"
+							id="panel1a-header">
+							<Typography>Statistics</Typography>
+						</AccordionSummary>
+						<AccordionDetails>
+							<List disablePadding>
+								<ListItem disablePadding>
+									<ListItemButton
+										onClick={() => navigate("/statistics/spendings")}>
+										<ListItemText primary={"View your spendings"} />
+									</ListItemButton>
+								</ListItem>
+								<ListItem disablePadding>
+									<ListItemButton
+										onClick={() => navigate("/statistics/earnings")}>
+										<ListItemText primary={"View your earnings"} />
+									</ListItemButton>
+								</ListItem>
+							</List>
+						</AccordionDetails>
+					</Accordion>
+				</ListItem>
+				<Divider />
+
 				{isAdmin && (
 					<ListItem onClick={() => navigate("/admin/dashboard")}>
 						<ListItemButton
@@ -504,6 +541,18 @@ const Navigation = () => {
 									setActive("orders");
 								}}>
 								Orders
+							</ActiveTypograpghy>
+						</MenuItem>
+					)}
+					{!isNotLogged && (
+						<MenuItem>
+							<ActiveTypograpghy
+								active={active === "statistics"}
+								onClick={() => {
+									setActive("statistics");
+									navigate("/statistics/spendings");
+								}}>
+								Spendings Overview
 							</ActiveTypograpghy>
 						</MenuItem>
 					)}
@@ -773,6 +822,16 @@ const Navigation = () => {
 								</ActiveTypograpghy>
 							)}
 							{!isNotLogged && (
+								<ActiveTypograpghy
+									active={active === "statistics"}
+									onClick={() => {
+										setActive("statistics");
+										navigate("/statistics/spendings");
+									}}>
+									Spendings Overview
+								</ActiveTypograpghy>
+							)}
+							{!isNotLogged && (
 								// <Typography
 								// 	onClick={() => {
 								// 		handleSupport();
@@ -1032,6 +1091,7 @@ const ActiveTypograpghy = styled(Typography, {
 	fontSize: 15,
 	fontWeight: 500,
 	cursor: "pointer",
+	textAlign: "center",
 	"&::after": {
 		content: "''",
 		position: "absolute",

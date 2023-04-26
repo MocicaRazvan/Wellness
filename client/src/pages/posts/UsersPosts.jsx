@@ -17,6 +17,7 @@ import CustomPagination from "../../components/reusable/CustomPagination";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
+import { useNavigate } from "react-router-dom";
 
 const UsersPosts = () => {
 	const [sorting, setSorting] = useState({});
@@ -29,6 +30,7 @@ const UsersPosts = () => {
 	const [notDisplayed, setNotDisplayed] = useState(false);
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:750px)");
+	const navigate = useNavigate();
 
 	const user = useSelector(selectCurrentUser);
 	const { data, isLoading } = useGetPostsByUserQuery(
@@ -59,7 +61,9 @@ const UsersPosts = () => {
 				thickness={7}
 			/>
 		);
-
+	if (user?.role === "user") {
+		navigate("/");
+	}
 	return (
 		<Box p={2}>
 			<Typography

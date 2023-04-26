@@ -2,11 +2,20 @@ import { Box, CircularProgress, useTheme } from "@mui/material";
 import React from "react";
 import { useGetAllMonthlyStatsQuery } from "../../redux/user/userApi";
 import { ResponsivePie } from "@nivo/pie";
+import Lottie from "react-lottie-player";
+import noData from "../../utils/lottie/noData.json";
 
-const BreakdownChart = ({ isDashboard = false }) => {
-	const { data, isLoading } = useGetAllMonthlyStatsQuery(null, {
-		refetchOnFocus: true,
-	});
+const BreakdownChart = ({
+	isDashboard = false,
+	year = new Date().getFullYear(),
+	month = new Date().getMonth() + 1,
+}) => {
+	const { data, isLoading } = useGetAllMonthlyStatsQuery(
+		{ year, month },
+		{
+			refetchOnFocus: true,
+		},
+	);
 	const theme = useTheme();
 	if (isLoading || !data)
 		return (
@@ -23,6 +32,25 @@ const BreakdownChart = ({ isDashboard = false }) => {
 		theme.palette.secondary[300],
 		theme.palette.secondary[500],
 	];
+
+	console.log({ data });
+	if (Object.values(data).reduce((acc, cur) => (acc += cur), 0) === 0) {
+		return (
+			<Box
+				width="100%"
+				height="100%"
+				display="flex"
+				justifyContent="center"
+				alignItems="center">
+				<Lottie
+					loop
+					animationData={noData}
+					play
+					style={{ width: "65%", height: "65%", margin: 0, padding: 0 }}
+				/>
+			</Box>
+		);
+	}
 
 	const formattedData = Object.entries(data)
 		.map(([type, nr], i) => ({

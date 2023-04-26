@@ -21,9 +21,11 @@ router.route("/bought/:orderId").put(ordersController.changeOrderStatus);
 router
 	.route("/admin/month/:month")
 	.get(verifyJwt, ordersController.getOrdersByMonth);
-router.route("/admin/get/total").get(verifyJwt, ordersController.getEarnings);
 router
-	.route("/admin/get/dailyTotal")
+	.route("/admin/get/total/:year/:admin")
+	.get(verifyJwt, ordersController.getEarnings);
+router
+	.route("/admin/get/dailyTotal/:admin")
 	.get(verifyJwt, ordersController.getDailyEarnings);
 router
 	.route("/admin/get/tagsStats")
@@ -31,5 +33,14 @@ router
 router
 	.route("/session/:session")
 	.get(verifyJwt, ordersController.updateSession);
+router
+	.route("/user/month/:year/:userId")
+	.get(verifyJwt, ordersController.getTotalUserMonth);
+router
+	.route("/trainer/month/earnings/:userId/:year")
+	.get(verifyJwt, ordersController.getUserMonthEarnings);
+router
+	.route("/trainer/daily/earnings/:userId")
+	.get(verifyJwt, ordersController.getUserDailyEarnings);
 
 module.exports = router;

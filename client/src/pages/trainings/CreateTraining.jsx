@@ -1,10 +1,27 @@
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React from 'react'
-import Form from './Form';
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import Form from "./Form";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
-const CreateTraining = () => {const theme = useTheme();
-const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
- return (
+const CreateTraining = () => {
+	const theme = useTheme();
+	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+	const curUser = useSelector(selectCurrentUser);
+	const [user, setUser] = useState(null);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		setUser(curUser);
+	}, [curUser]);
+	if (!user) return;
+
+	if (user?.role === "user") {
+		console.log("herer");
+		navigate("/");
+	}
+	return (
 		<Box>
 			<Box
 				width={isNonMobileScreens ? "50%" : "93%"}
@@ -24,7 +41,7 @@ const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 				<Form />
 			</Box>
 		</Box>
- );
-}
+	);
+};
 
-export default CreateTraining
+export default CreateTraining;

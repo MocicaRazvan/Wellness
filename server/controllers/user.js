@@ -156,40 +156,48 @@ exports.getAllUsersAdmin = async (req, res) => {
 	});
 };
 
-// get: user/admin/month/all
+// get: user/admin/month/all/:year/:month
 exports.getAllMonthlyStats = async (req, res) => {
-	const month = new Date().getMonth() + 1;
+	// const month = new Date().getMonth() + 1;
+	// const year = new Date().getFullYear();
+	let { year, month } = req.params;
+	year = Number(year);
+	month = Number(month);
 	const users = await User.aggregate([
 		{
 			$addFields: {
 				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
 			},
 		},
-		{ $match: { month } },
+		{ $match: { month, year } },
 	]);
 	const posts = await Posts.aggregate([
 		{
 			$addFields: {
 				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
 			},
 		},
-		{ $match: { month } },
+		{ $match: { month, year } },
 	]);
 	const trainings = await Training.aggregate([
 		{
 			$addFields: {
 				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
 			},
 		},
-		{ $match: { month } },
+		{ $match: { month, year } },
 	]);
 	const exercises = await Exercises.aggregate([
 		{
 			$addFields: {
 				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
 			},
 		},
-		{ $match: { month } },
+		{ $match: { month, year } },
 	]);
 
 	res

@@ -47,6 +47,10 @@ const trainingSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		bought: {
+			type: [Object],
+			default: [],
+		},
 	},
 	{ timestamps: true },
 );

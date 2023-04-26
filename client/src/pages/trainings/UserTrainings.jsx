@@ -262,6 +262,10 @@ const Trainings = () => {
 		},
 	];
 
+	if (user?.role === "user") {
+		navigate("/");
+	}
+
 	if (data?.trainings?.length === 0) {
 		return (
 			<LootieCustom

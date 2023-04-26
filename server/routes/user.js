@@ -5,11 +5,13 @@ const userController = require("../controllers/user");
 const router = express.Router();
 
 router.route("/single").get(verifyJwt, userController.getSingleUser);
-router.route("/countStats/:userId").get(verifyJwt, userController.getCountStats);
+router
+	.route("/countStats/:userId")
+	.get(verifyJwt, userController.getCountStats);
 router.route("/admin/totalMonth").get(verifyJwt, userController.getTotalMonth);
 router.route("/admin/all").get(verifyJwt, userController.getAllUsersAdmin);
 router
-	.route("/admin/month/all")
+	.route("/admin/month/all/:year/:month")
 	.get(verifyJwt, userController.getAllMonthlyStats);
 router
 	.route("/admin/relativeStats")

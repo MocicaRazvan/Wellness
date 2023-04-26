@@ -51,6 +51,8 @@ import OurStory from "./pages/aboutUs/OurStory";
 import OrderTroubleshoot from "./pages/customerCare/OrderTroubleshoot";
 import UpdateTraining from "./pages/trainings/UpdateTraining";
 import AutorProfile from "./pages/user/AutorProfile";
+import Spendings from "./pages/statistics/Spendings";
+import Earnings from "./pages/statistics/Earnings";
 
 function App() {
 	const mode = useSelector(selectCurrentMode);
@@ -117,6 +119,10 @@ function App() {
 								</Route>
 								<Route path="/messenger">
 									<Route index element={<MessengerWrapper />} />
+								</Route>
+								<Route path="/statistics">
+									<Route path="spendings" element={<Spendings />} />
+									<Route path="earnings" element={<Earnings />} />
 								</Route>
 							</Route>
 							<Route path="/admin" element={<AdminLayout />}>

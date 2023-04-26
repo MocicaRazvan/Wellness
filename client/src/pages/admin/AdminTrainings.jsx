@@ -287,7 +287,7 @@ const AdminTrainings = () => {
 										});
 										setApproveOpen(true);
 									}}>
-									{!params.row.approved ? "Approve" : "Disaprove"}
+									{!params.row.approved ? "Approve" : "Disapprove"}
 								</Button>
 							</Box>
 						)}

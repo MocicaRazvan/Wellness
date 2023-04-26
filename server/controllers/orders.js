@@ -1,6 +1,7 @@
+const { default: mongoose } = require("mongoose");
 const Orders = require("../models/Order");
 const getCountryIso3 = require("country-iso-2-to-3");
-//const ObjectId = require("mongoose").mongo.BSONPure.ObjectID.fromHexString;
+const Trainings = require("../models/Training"); //const ObjectId = require("mongoose").mongo.BSONPure.ObjectID.fromHexString;
 
 //get: /orders
 // exports.getAllOrders = async (req, res) => {
@@ -214,47 +215,103 @@ exports.getOrdersByMonth = async (req, res) => {
 		.status(200)
 		.json({ message: `Orders by month ${month} retrived`, orders });
 };
-// get: /admin/get/total
+// get: /admin/get/total/:year/:admin
 exports.getEarnings = async (req, res) => {
-	const total = await Orders.aggregate([
-		{
-			$addFields: {
-				month: { $month: "$createdAt" },
-				year: { $year: "$createdAt" },
-				units: 1,
+	const { year, admin = "true" } = req.params;
+	console.log({ r: req.params, admin });
+
+	let total;
+	if (admin === "true") {
+		total = await Orders.aggregate([
+			{
+				$addFields: {
+					month: { $month: "$createdAt" },
+					year: { $year: "$createdAt" },
+					units: 1,
+				},
 			},
-		},
-		{ $match: { year: new Date().getFullYear() } },
-		{
-			$group: {
-				_id: "$month",
-				totalSales: { $sum: "$total" },
-				totalUnits: { $sum: "$units" },
+			{ $match: { year: Number(year) } },
+			{
+				$group: {
+					_id: "$month",
+					totalSales: { $sum: "$total" },
+					totalUnits: { $sum: "$units" },
+				},
 			},
-		},
-	]).sort("_id");
+		]).sort("_id");
+	} else {
+		total = await Orders.aggregate([
+			{
+				$addFields: {
+					month: { $month: "$createdAt" },
+					year: { $year: "$createdAt" },
+					units: 1,
+				},
+			},
+			{
+				$match: {
+					year: Number(year),
+					user: mongoose.Types.ObjectId(admin),
+				},
+			},
+			{
+				$group: {
+					_id: "$month",
+					totalSales: { $sum: "$total" },
+					totalUnits: { $sum: "$units" },
+				},
+			},
+		]).sort("_id");
+	}
 
 	res.status(200).json({ message: "Total retrived", total });
 };
-// get: /admin/get/dailyTotal
+// get: /admin/get/dailyTotal/:admin
 exports.getDailyEarnings = async (req, res) => {
-	const total = await Orders.aggregate([
-		{
-			$addFields: {
-				date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-				year: { $year: "$createdAt" },
-				units: 1,
+	const { admin } = req.params;
+	let total;
+	if (admin === "true") {
+		total = await Orders.aggregate([
+			{
+				$addFields: {
+					date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+					year: { $year: "$createdAt" },
+					units: 1,
+				},
 			},
-		},
-		{ $match: { year: new Date().getFullYear() } },
-		{
-			$group: {
-				_id: "$date",
-				totalSales: { $sum: "$total" },
-				totalUnits: { $sum: "$units" },
+			{ $match: { year: new Date().getFullYear() } },
+			{
+				$group: {
+					_id: "$date",
+					totalSales: { $sum: "$total" },
+					totalUnits: { $sum: "$units" },
+				},
 			},
-		},
-	]).sort("_id");
+		]).sort("_id");
+	} else {
+		total = await Orders.aggregate([
+			{
+				$addFields: {
+					date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+					year: { $year: "$createdAt" },
+					units: 1,
+				},
+			},
+			{
+				$match: {
+					year: new Date().getFullYear(),
+					user: mongoose.Types.ObjectId(admin),
+				},
+			},
+			{
+				$group: {
+					_id: "$date",
+					totalSales: { $sum: "$total" },
+					totalUnits: { $sum: "$units" },
+				},
+			},
+		]).sort("_id");
+	}
 
 	res.status(200).json({ message: "Total retrived", total });
 };
@@ -361,4 +418,131 @@ exports.updateSession = async (req, res) => {
 	return res
 		.status(201)
 		.json({ updated: true, message: "Order session updated" });
+};
+//get: /orders/user/month/:year/:userId
+exports.getTotalUserMonth = async (req, res) => {
+	const { year, userId } = req.params;
+	const total = await Orders.aggregate([
+		{
+			$addFields: {
+				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
+				units: 1,
+			},
+		},
+		{
+			$match: {
+				year: Number(year),
+				user: mongoose.Types.ObjectId(userId),
+			},
+		},
+		{
+			$group: {
+				_id: "$month",
+				total: { $sum: "$total" },
+				units: { $sum: "$units" },
+			},
+		},
+	]).sort("_id");
+	console.log({ total });
+	return res.status(200).json({ message: "Data retrived", total });
+};
+
+//get: /trainer/month/earnings/:userId/:year
+exports.getUserMonthEarnings = async (req, res) => {
+	const userId = mongoose.Types.ObjectId(req.params.userId);
+	const curYear = Number(req.params.year);
+	// const curYear = 2022;
+	const orders = await Orders.aggregate([
+		{
+			$lookup: {
+				from: Trainings.collection.name,
+				localField: "trainings",
+				foreignField: "_id",
+				as: "ltrainings",
+			},
+		},
+
+		{
+			$addFields: {
+				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
+			},
+		},
+
+		{
+			$match: {
+				// "ltrainings._id": { $in: ids },
+				"ltrainings.user": userId,
+				year: Number(curYear),
+			},
+		},
+		{
+			$project: { ltrainings: 1, month: 1 },
+		},
+	]);
+
+	const total = orders.reduce((acc, { month, ltrainings }) => {
+		ltrainings.forEach(({ user, price }) => {
+			if (user.toString() === userId.toString()) {
+				acc[month]
+					? ((acc[month].totalSales += price), (acc[month].totalUnits += 1))
+					: (acc[month] = {
+							totalSales: price,
+							totalUnits: 1,
+					  });
+			}
+		});
+		return acc;
+	}, {});
+	const format = Object.entries(total).map(([k, v]) => ({ month: k, ...v }));
+
+	return res.json({ ms: "Data retrived", total: format });
+};
+//get: /trainer/daily/earnings/:userId
+exports.getUserDailyEarnings = async (req, res) => {
+	const userId = mongoose.Types.ObjectId(req.params.userId);
+	const orders = await Orders.aggregate([
+		{
+			$lookup: {
+				from: Trainings.collection.name,
+				localField: "trainings",
+				foreignField: "_id",
+				as: "ltrainings",
+			},
+		},
+
+		{
+			$addFields: {
+				date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+			},
+		},
+
+		{
+			$match: {
+				// "ltrainings._id": { $in: ids },
+				"ltrainings.user": userId,
+			},
+		},
+		{
+			$project: { ltrainings: 1, date: 1 },
+		},
+	]);
+	const total = orders.reduce((acc, { date, ltrainings }) => {
+		ltrainings.forEach(({ user, price }) => {
+			if (user.toString() === userId.toString()) {
+				acc[date]
+					? ((acc[date].totalSales += price), (acc[date].totalUnits += 1))
+					: (acc[date] = {
+							totalSales: price,
+							totalUnits: 1,
+					  });
+			}
+		});
+		return acc;
+	}, {});
+	const format = Object.entries(total).map(([k, v]) => ({ date: k, ...v }));
+	console.log({ format });
+
+	return res.status(200).json({ message: "Data Retrived", total: format });
 };

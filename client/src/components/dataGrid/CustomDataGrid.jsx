@@ -14,6 +14,7 @@ const CustomDataGrid = ({
 	setPageSize,
 	setSort,
 	height = "80vh",
+	setSelectedId = () => {},
 }) => {
 	const theme = useTheme();
 	return (
@@ -65,6 +66,10 @@ const CustomDataGrid = ({
 				components={{ Toolbar: DataGridCustomToolbar }}
 				componentsProps={{
 					toolbar,
+				}}
+				onSelectionModelChange={(newSelectionArray) => {
+					console.log({ row: newSelectionArray[0] });
+					setSelectedId(newSelectionArray[0]);
 				}}
 			/>
 		</Box>

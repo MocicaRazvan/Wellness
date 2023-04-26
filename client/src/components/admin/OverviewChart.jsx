@@ -1,12 +1,20 @@
 import { useMemo } from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { CircularProgress, useTheme } from "@mui/material";
+import { Box, CircularProgress, useTheme } from "@mui/material";
 import { useGetEarningsQuery } from "../../redux/orders/orderApi";
+import Lottie from "react-lottie-player";
+import noData from "../../utils/lottie/noData.json";
 
-const OverviewChart = ({ isDashboard = false, view }) => {
+const OverviewChart = ({
+	isDashboard = false,
+	view,
+	year = new Date().getFullYear(),
+	admin = true,
+	isProfile,
+}) => {
 	const theme = useTheme();
 
-	const { data, isLoading } = useGetEarningsQuery();
+	const { data, isLoading } = useGetEarningsQuery({ year, admin });
 
 	const [totalSalesLine, totalUnitsLine] = useMemo(() => {
 		if (!data) return [];
@@ -43,7 +51,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 
 		return [[totalSalesLine], [totalUnitsLine]];
 	}, [data, theme.palette.secondary]);
-	console.log({ data });
+	console.log({ data, totalSalesLine, totalUnitsLine });
 
 	if (isLoading || !data)
 		return (
@@ -53,6 +61,27 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 				thickness={7}
 			/>
 		);
+
+	if (
+		totalSalesLine[0].data?.length === 0 &&
+		totalUnitsLine[0].data?.length === 0
+	) {
+		return (
+			<Box
+				width="100%"
+				height="100%"
+				display="flex"
+				justifyContent="center"
+				alignItems="center">
+				<Lottie
+					loop
+					animationData={noData}
+					play
+					style={{ width: "65%", height: "65%", margin: 0, padding: 0 }}
+				/>
+			</Box>
+		);
+	}
 
 	return (
 		<ResponsiveLine
@@ -120,7 +149,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 				tickSize: 5,
 				tickPadding: 5,
 				tickRotation: 0,
-				legend: isDashboard ? "" : "Month",
+				legend: isDashboard || isProfile ? "" : "Month",
 				legendOffset: 36,
 				legendPosition: "middle",
 			}}
@@ -130,9 +159,16 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 				tickSize: 5,
 				tickPadding: 5,
 				tickRotation: 0,
-				legend: isDashboard
-					? ""
-					: `Total ${view === "sales" ? "Revenue" : "Units"} for Year`,
+				legend:
+					isDashboard || isProfile
+						? ""
+						: `Total ${
+								view === "sales"
+									? isProfile
+										? "Spendings"
+										: "Revenue"
+									: "Units"
+						  } for Year`,
 				legendOffset: -60,
 				legendPosition: "middle",
 			}}
@@ -145,7 +181,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 			pointLabelYOffset={-12}
 			useMesh={true}
 			legends={
-				!isDashboard
+				!isDashboard && !isProfile
 					? [
 							{
 								anchor: "bottom-right",

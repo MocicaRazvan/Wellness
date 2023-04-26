@@ -123,13 +123,15 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
 			],
 		}),
 		getEarnings: builder.query({
-			query: () => ({ url: "/orders/admin/get/total" }),
+			query: ({ year, admin }) => ({
+				url: `/orders/admin/get/total/${year}/${admin}`,
+			}),
 			transformResponse: ({ total }) =>
 				total.map(({ _id, ...rest }) => ({ ...rest, month: months[_id - 1] })),
 			providesTags: [{ type: "Order", id: "LIST" }],
 		}),
 		getdDailyEarnings: builder.query({
-			query: () => ({ url: "/orders/admin/get/dailyTotal" }),
+			query: ({ admin }) => ({ url: `/orders/admin/get/dailyTotal/${admin}` }),
 			transformResponse: ({ total }) =>
 				total.map(({ _id, ...rest }) => ({
 					...rest,
@@ -169,6 +171,23 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
 			transformResponse: ({ locations }) => locations,
 			providesTags: [{ type: "Order", id: "LIST" }],
 		}),
+		getTotalUserMonth: builder.query({
+			query: ({ year, userId }) => `/orders/user/month/${year}/${userId}`,
+			transformResponse: ({ total }) => total,
+		}),
+		getTotalUserDaily: builder.query({
+			query: ({ userId }) => `/orders/trainer/daily/earnings/${userId}`,
+			transformResponse: ({ total }) => total,
+		}),
+		getUserEarnings: builder.query({
+			query: ({ userId, year }) =>
+				`/orders/trainer/month/earnings/${userId}/${year}`,
+			transformResponse: ({ total }) =>
+				total.map(({ month, ...rest }) => ({
+					month: months[month - 1],
+					...rest,
+				})),
+		}),
 	}),
 });
 export const {
@@ -186,4 +205,7 @@ export const {
 	useGetOrdersLocationQuery,
 	useGetdDailyEarningsQuery,
 	useUpdateOrderSessionQuery,
+	useGetTotalUserMonthQuery,
+	useGetUserEarningsQuery,
+	useGetTotalUserDailyQuery,
 } = ordersApiSlice;

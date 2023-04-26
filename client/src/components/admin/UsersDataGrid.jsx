@@ -7,7 +7,7 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	useGetAllUsersAdminQuery,
 	useMakeUserTrainerMutationMutation,
@@ -17,7 +17,7 @@ import UserAgreement from "../reusable/UserAgreement";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { useNavigate } from "react-router-dom";
 
-const UsersDataGrid = ({ height = "80vh" }) => {
+const UsersDataGrid = ({ height = "80vh", setSelected = () => {} }) => {
 	const [page, setPage] = useState(0);
 	const [pageSize, setPageSize] = useState(20);
 	const [sort, setSort] = useState({});
@@ -26,6 +26,9 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 	const [createConv] = useCreateSupportConversationMutation();
 	const { palette } = useTheme();
 	const navigate = useNavigate();
+	const [selectedId, setSelectedId] = useState(null);
+
+	console.log({ selectedId });
 
 	const [makeTrainer] = useMakeUserTrainerMutationMutation();
 
@@ -35,9 +38,18 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 		sort: JSON.stringify(sort),
 		search,
 	});
+	console.log({ data });
 
 	const [open, setOpen] = useState(false);
 	const [trainerId, settrainerId] = useState(null);
+
+	useEffect(() => {
+		if (selectedId && data?.users) {
+			setSelected(data?.users.find(({ _id }) => _id === selectedId));
+		} else {
+			setSelected(null);
+		}
+	}, [data?.users, selectedId, setSelected]);
 
 	const handleMakeTrainer = async (id) => {
 		if (trainerId) {
@@ -182,6 +194,7 @@ const UsersDataGrid = ({ height = "80vh" }) => {
 				pageSize={pageSize}
 				toolbar={{ searchInput, setSearchInput, setSearch }}
 				height={height}
+				setSelectedId={setSelectedId}
 			/>
 		</>
 	);

@@ -72,7 +72,7 @@ const Orders = () => {
 			field: "createdAt",
 			headerName: "CreatedAt",
 			// flex: 0.7,
-			width: 170,
+			width: 150,
 			sortable: false,
 			renderCell: ({ row: { createdAt } }) =>
 				format(new Date(createdAt), "dd/MM/yyyy"),
@@ -174,6 +174,7 @@ const Orders = () => {
 			),
 		},
 	];
+
 	if (data?.orders?.length === 0) {
 		return (
 			<LootieCustom
@@ -209,6 +210,26 @@ const Orders = () => {
 					/>
 				</Box>
 			</Box>
+			{/* <Box mt={5}>
+				<Header title="Your Orders Spendings" subtitle="Spendings overview" />
+				<Box mt={5}>{user && <InfoBar userId={user?.id} />}</Box>
+				<Box width="100%">
+					<Overview
+						admin={user?.id}
+						subtitle="Overview of user spendings"
+						sales="Amount"
+						isProfile={true}
+					/>
+					<Box mt={15}>
+						<Daily
+							admin={user?.id}
+							isProfile={true}
+							title="Daily Spendings"
+							subtitle="Chart of daily"
+						/>
+					</Box>
+				</Box>
+			</Box> */}
 		</Box>
 	);
 };
