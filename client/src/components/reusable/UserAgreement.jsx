@@ -16,6 +16,7 @@ export default function UserAgreement({
 	handleAgree,
 	title = "",
 	text = "",
+	loader = true,
 }) {
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -56,7 +57,9 @@ export default function UserAgreement({
 							onClick={() => {
 								handleAgree();
 
-								setLoading((prev) => ({ ...prev, show: true }));
+								if (loader) {
+									setLoading((prev) => ({ ...prev, show: true }));
+								}
 
 								setTimeout(() => {
 									setLoading((prev) => ({ ...prev, show: false }));

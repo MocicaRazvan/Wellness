@@ -3,16 +3,12 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { updateUser } from "../../redux/auth/authSlice";
 import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { useGetSingleUserQuery } from "../../redux/user/userApi";
 import checkout from "../../utils/lottie/checkout.json";
+import success from "../../utils/lottie/success.json";
 import { selectSocket } from "../../redux/socket/socketSlice";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 import { useUpdateOrderSessionQuery } from "../../redux/orders/orderApi";
@@ -110,10 +106,28 @@ const CheckoutSuccess = () => {
 					<Typography
 						variant="h2"
 						fontWeight="bold"
-						fontSize={{ xs: 20, md: 35 }}
+						fontSize={{ xs: 30, md: 40 }}
 						letterSpacing={1.2}
+						sx={{
+							cursor: "pointer",
+						}}
 						color={theme.palette.secondary[300]}>
-						Your items are on their way!
+						Order Completed!
+					</Typography>
+					<Typography
+						variant="h2"
+						fontWeight="bold"
+						fontSize={{ xs: 15, md: 20 }}
+						letterSpacing={1.2}
+						sx={{
+							cursor: "pointer",
+							"&:hover": {
+								color: theme.palette.primary.main,
+							},
+						}}
+						onClick={() => navigate("/orders")}
+						color={theme.palette.secondary[300]}>
+						Check the your orders page!
 					</Typography>
 					<Button
 						variant="contained"
@@ -122,12 +136,16 @@ const CheckoutSuccess = () => {
 						Continue Shopping
 					</Button>
 				</Box>
-				<Box flex="1">
+				<Box
+					flex="1"
+					display="flex"
+					justifyContent="center"
+					alignItems="center">
 					<Lottie
 						loop
-						animationData={checkout}
+						animationData={success}
 						play
-						style={{ width: "100%", height: "100%", margin: 0, padding: 0 }}
+						style={{ width: "50%", height: "50%", margin: 0, padding: 0 }}
 					/>
 				</Box>
 			</Box>

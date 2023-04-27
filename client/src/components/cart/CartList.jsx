@@ -1,51 +1,69 @@
-import { Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { styled } from "@mui/system";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeFormCart } from "../../redux/cart/cartSlice";
+import { useState } from "react";
+import CustomSnack from "../reusable/CustomSnack";
 
 const CartList = ({ cartItems, type = "cart" }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [open, setOpen] = useState(false);
+	const [cur, setCur] = useState("");
 	const theme = useTheme();
 
-	return cartItems.map((item) => (
-		<CartItem key={item.id}>
-			<div className="img">
-				<img src={item?.images[0].url} alt={item.title} />
-			</div>
-			<CartDetails>
-				<Typography
-					component="h3"
-					color={theme.palette.secondary[300]}
-					fontWeight="bold">
-					{item?.title}
-				</Typography>
-				<Typography component="h4" color={theme.palette.secondary[200]}>
-					<span>$</span>
-					{item?.price}
-				</Typography>
-			</CartDetails>
-			<div>
-				{type === "cart" && (
-					<RemoveCart
-						onClick={() => void dispatch(removeFormCart({ id: item.id }))}>
-						<IconButton>
-							<RemoveIcon />
-						</IconButton>
-					</RemoveCart>
-				)}
-			</div>
-			<CartControl>
-				<Button
-					color="secondary"
-					onClick={() => navigate(`/trainings/find/${item?.id}`)}>
-					View More
-				</Button>
-			</CartControl>
-		</CartItem>
-	));
+	return (
+		<>
+			<CustomSnack
+				open={open}
+				setOpen={setOpen}
+				message={`${cur} removed from cart`}
+				severity="error"
+			/>
+			{cartItems.map((item) => (
+				<CartItem key={item.id}>
+					<div className="img">
+						<img src={item?.images[0].url} alt={item.title} />
+					</div>
+					<CartDetails>
+						<Typography
+							component="h3"
+							color={theme.palette.secondary[300]}
+							fontWeight="bold">
+							{item?.title}
+						</Typography>
+						<Typography component="h4" color={theme.palette.secondary[200]}>
+							<span>$</span>
+							{item?.price}
+						</Typography>
+					</CartDetails>
+					<div>
+						{type === "cart" && (
+							<RemoveCart
+								onClick={() => {
+									setOpen(true);
+									setCur(item.title);
+									dispatch(removeFormCart({ id: item.id }));
+								}}>
+								<IconButton>
+									<RemoveIcon />
+								</IconButton>
+							</RemoveCart>
+						)}
+					</div>
+					<CartControl>
+						<Button
+							color="secondary"
+							onClick={() => navigate(`/trainings/find/${item?.id}`)}>
+							View More
+						</Button>
+					</CartControl>
+				</CartItem>
+			))}
+		</>
+	);
 };
 const CartItem = styled("div")(({ theme }) => ({
 	width: "100%",

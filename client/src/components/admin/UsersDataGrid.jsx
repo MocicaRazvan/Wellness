@@ -16,10 +16,12 @@ import CustomDataGrid from "../dataGrid/CustomDataGrid";
 import UserAgreement from "../reusable/UserAgreement";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { useNavigate } from "react-router-dom";
+import CustomSnack from "../reusable/CustomSnack";
 
 const UsersDataGrid = ({
 	height = "80vh",
 	setSelected = () => {},
+	selected = null,
 	disableSelectionOnClick = true,
 }) => {
 	const [page, setPage] = useState(0);
@@ -31,6 +33,11 @@ const UsersDataGrid = ({
 	const { palette } = useTheme();
 	const navigate = useNavigate();
 	const [selectedId, setSelectedId] = useState(null);
+	const [snackInfo, setSnackInfo] = useState({
+		open: false,
+		message: "",
+		severity: "success",
+	});
 
 	console.log({ selectedId });
 
@@ -50,15 +57,31 @@ const UsersDataGrid = ({
 	useEffect(() => {
 		if (selectedId && data?.users) {
 			setSelected(data?.users.find(({ _id }) => _id === selectedId));
+			setSnackInfo((prev) => ({
+				...prev,
+				message: `${
+					data?.users.find(({ _id }) => _id === selectedId)?.username
+				} is now a trainer`,
+			}));
+			console.log({
+				u: `${
+					data?.users.find(({ _id }) => _id === selectedId)?.username
+				} is now a trainer`,
+			});
 		} else {
 			setSelected(null);
 		}
 	}, [data?.users, selectedId, setSelected]);
 
+	console.log({ snackInfo });
+
 	const handleMakeTrainer = async (id) => {
 		if (trainerId) {
 			try {
 				await makeTrainer({ id }).unwrap();
+				setTimeout(() => {
+					setSnackInfo((prev) => ({ ...prev, open: true }));
+				}, 1000);
 			} catch (error) {
 				console.log(error);
 			}
@@ -187,6 +210,12 @@ const UsersDataGrid = ({
 					"Are you sure you want to make this person a trainer? You can't undo after you press Agree, be careful what you want."
 				}
 				handleAgree={async () => await handleMakeTrainer(trainerId)}
+			/>
+			<CustomSnack
+				open={snackInfo.open}
+				setOpen={(arg) => setSnackInfo((prev) => ({ ...prev, open: arg }))}
+				message={snackInfo.message}
+				severity={snackInfo.severity}
 			/>
 			<CustomDataGrid
 				isLoading={isLoading || !data}

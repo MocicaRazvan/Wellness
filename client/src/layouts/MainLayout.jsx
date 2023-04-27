@@ -57,6 +57,16 @@ const MainLayout = () => {
 	}, [dispatch, token, user?.id]);
 
 	useEffect(() => {
+		if (user?.role === "admin" && socket) {
+			socket.emit("mountUserConv", {
+				convId: "conversatieInexistenta",
+				userId: user?.id,
+				role: user?.role,
+			});
+		}
+	}, [socket, user?.id, user?.role]);
+
+	useEffect(() => {
 		if (token) {
 			const expData = jwtDecode(token).exp;
 			const currentTimeInMilisenconds = Math.floor(new Date().getTime() / 1000);

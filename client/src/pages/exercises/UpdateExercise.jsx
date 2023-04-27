@@ -54,7 +54,7 @@ const UpdateExercise = () => {
 					letterSpacing={1.5}
 					variant="h3"
 					sx={{ mb: "1.5rem" }}>
-					Update your exercise so your soul will be fullfield
+					Update the exercise {exercise?.title}
 				</Typography>
 				<Form exercise={exercise} />
 			</Box>

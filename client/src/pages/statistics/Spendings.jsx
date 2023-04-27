@@ -50,7 +50,7 @@ const Spendings = () => {
 						maxYear={year}
 					/>
 				</Box>
-				<Box width="100%">
+				<Box width="100%" mt={isNonMobileScreens ? 0 : 10}>
 					<InfoBar userId={user?.id} maxYear={year} />
 				</Box>
 			</Box>

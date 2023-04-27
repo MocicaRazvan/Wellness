@@ -13,7 +13,6 @@ export const slideInBottom = keyframes`
   }
 `;
 
-
 export const slideInRight = keyframes`
   0% {
     -webkit-transform: translateX(50px);
@@ -37,4 +36,14 @@ export const slideInLeft = keyframes`
             transform: translateX(0);
     opacity: 1;
   }
+`;
+export const shine = keyframes`
+0%{
+  mask-position: 150%;
+  -webkit-mask-position: 150%;
+}
+100%{
+   mask-position: -50%;
+  -webkit-mask-position: -50%;
+}
 `;

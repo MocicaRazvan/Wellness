@@ -130,7 +130,13 @@ const Form = ({ post }) => {
 							setMessage("");
 							setBody("");
 							onSubmitProps.resetForm();
-							navigate("/posts/user");
+							navigate("/posts/user", {
+								state: {
+									open: true,
+									severity: "success",
+									message: `${title} post created`,
+								},
+							});
 						}
 					} catch (error) {
 						console.log(error);
@@ -173,7 +179,13 @@ const Form = ({ post }) => {
 						setMessage("");
 						setBody("");
 						onSubmitProps.resetForm();
-						navigate("/posts/user");
+						navigate("/posts/user", {
+							state: {
+								open: true,
+								severity: "success",
+								message: `${title} post updated`,
+							},
+						});
 					}
 				} catch (error) {
 					console.log(error);
@@ -362,7 +374,11 @@ const Form = ({ post }) => {
 													color={theme.palette.secondary[200]}
 													textAlign="center"
 													fontWeight="bold">
-													{values.pictures.length} pictures selected
+													{values.pictures.length}
+													{values.pictures.length === 1
+														? " picture"
+														: " pictures"}{" "}
+													selected
 												</Typography>
 											)}
 											{Boolean(touched.pictures) &&
@@ -386,7 +402,8 @@ const Form = ({ post }) => {
 										variant="outlined"
 										onClick={() => setOpenCarousel((prev) => !prev)}
 										sx={{ color: theme.palette.secondary[200], width: "50%" }}>
-										{openCarousel ? "Hide" : "See"} your pictures
+										{openCarousel ? "Hide" : "See"} your{" "}
+										{values.pictures.length === 1 ? " picture" : " pictures"}
 									</Button>
 									{openCarousel && (
 										<Box width="100%" p={0.5}>

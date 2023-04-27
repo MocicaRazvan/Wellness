@@ -13,6 +13,7 @@ import Header from "../../components/reusable/Header";
 import Loading from "../../components/reusable/Loading";
 import { useSendEmailAdminMutation } from "../../redux/user/userApi";
 import { useQuill } from "react-quilljs";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const trainingSchema = yup.object().shape({
 	email: yup.string().email("invalid email").required("Please enter the email"),
@@ -44,6 +45,7 @@ const Test = () => {
 		toolbar: [["bold", "italic", "underline", "strike"]],
 	};
 	const { quill, quillRef } = useQuill({ modules });
+	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
 		if (quill) {
@@ -73,6 +75,9 @@ const Test = () => {
 			);
 		} else {
 			setLoading((prev) => ({ ...prev, show: true }));
+			// setTimeout(() => {
+			// 	setOpen(true);
+			// }, 300);
 			const res = await sendEmail({
 				body,
 				email: values.email.trim(),
@@ -80,10 +85,7 @@ const Test = () => {
 			});
 			onSubmitProps.resetForm();
 			setBody("");
-			setTimeout(
-				() => setLoading((prev) => ({ ...prev, show: false, msg: "" })),
-				2000,
-			);
+			setTimeout(() => setLoading((prev) => ({ ...prev, show: false })), 1500);
 
 			if (res?.data?.error) {
 				setAlert((prev) => ({
@@ -101,6 +103,12 @@ const Test = () => {
 	};
 	return (
 		<Box m="1.5rem 2.5rem" pb={2}>
+			<CustomSnack
+				open={open}
+				setOpen={setOpen}
+				message="Email was sent"
+				severity="success"
+			/>
 			<Header title="Email" subtitle="Write on behalf of the company." />
 			<Box
 				sx={{

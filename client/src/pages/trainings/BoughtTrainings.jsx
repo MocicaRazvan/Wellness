@@ -5,6 +5,7 @@ import {
 	useMediaQuery,
 	useTheme,
 	Typography,
+	Tooltip,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
@@ -82,15 +83,17 @@ const BoughtTrainings = () => {
 					user: { username, _id },
 				},
 			}) => (
-				<Typography
-					fontSize={12.3}
-					sx={{
-						cursor: "pointer",
-						"&:hover": { color: palette.secondary[300] },
-					}}
-					onClick={() => void navigate("/user/author", { state: _id })}>
-					{username}
-				</Typography>
+				<Tooltip title="Go to profile" arrow placement="top">
+					<Typography
+						fontSize={12.3}
+						sx={{
+							cursor: "pointer",
+							"&:hover": { color: palette.secondary[300] },
+						}}
+						onClick={() => void navigate("/user/author", { state: _id })}>
+						{username}
+					</Typography>
+				</Tooltip>
 			),
 		},
 		{

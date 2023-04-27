@@ -223,7 +223,7 @@ const Form = ({ user = null }) => {
 						);
 					}
 				} else {
-					navigate("/user/profile");
+					navigate("/user/profile", { state: { open: true } });
 				}
 			} else {
 				setLoading((prev) => ({ ...prev, show: true }));

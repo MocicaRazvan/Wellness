@@ -11,6 +11,7 @@ import {
 	styled,
 	useTheme,
 	FormHelperText,
+	Tooltip,
 } from "@mui/material";
 import YouTag from "./YouTag";
 import Actions from "./Actions";
@@ -26,12 +27,13 @@ import Perspective from "perspective-api-client";
 import Loading from "../reusable/Loading";
 import { useNavigate } from "react-router-dom";
 import UserAgreement from "../reusable/UserAgreement";
+import CustomSnack from "../reusable/CustomSnack";
 
 const perspective = new Perspective({
 	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
 });
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, setSnackOpen }) => {
 	const [loading, setLoading] = useState({
 		show: false,
 		msg: "You were nice last time!",
@@ -52,6 +54,9 @@ const Comment = ({ comment }) => {
 	const handleDeleteComment = async () => {
 		try {
 			await deleteComment({ id: comment?.id }).unwrap();
+			setTimeout(() => {
+				setSnackOpen(true);
+			}, 400);
 		} catch (error) {
 			console.log(error);
 		}
@@ -121,6 +126,7 @@ const Comment = ({ comment }) => {
 	return (
 		<Card sx={{ bgcolor: theme.palette.primary.main }}>
 			{/* <Loading loading={loading} type="alert" /> */}
+
 			<UserAgreement
 				open={open}
 				setOpen={setOpen}
@@ -129,7 +135,9 @@ const Comment = ({ comment }) => {
 					"Are you sure you want to delete this comment? You can't undo after you press Agree, be careful what you want."
 				}
 				handleAgree={async () => await handleDeleteComment()}
+				loader={false}
 			/>
+
 			<Box sx={{ p: "15px" }}>
 				<Stack spacing={2} direction="row">
 					<Box>
@@ -149,19 +157,34 @@ const Comment = ({ comment }) => {
 								justifyContent={{ xs: "space-between", sm: "flex-start" }}
 								width="100%">
 								<Avatar src={comment?.user?.image?.url} />
-								<Typography
-									fontWeight="bold"
-									sx={{
-										color: theme.palette.secondary[200],
-										fontWeight: "600",
-										cursor: "pointer",
-										"&:hover": { color: theme.palette.background.default },
-									}}
-									onClick={() =>
-										void navigate("/user/author", { state: comment?.user?._id })
-									}>
-									{comment?.user?.username}
-								</Typography>
+								{user?.id !== comment?.user?._id ? (
+									<Tooltip title="Go to profile" arrow placement="top">
+										<Typography
+											fontWeight="bold"
+											sx={{
+												color: theme.palette.secondary[200],
+												fontWeight: "600",
+												cursor: "pointer",
+												"&:hover": { color: theme.palette.background.default },
+											}}
+											onClick={() =>
+												void navigate("/user/author", {
+													state: comment?.user?._id,
+												})
+											}>
+											{comment?.user?.username}
+										</Typography>
+									</Tooltip>
+								) : (
+									<Typography
+										fontWeight="bold"
+										sx={{
+											color: theme.palette.secondary[200],
+											fontWeight: "600",
+										}}>
+										{comment?.user?.username}
+									</Typography>
+								)}
 								<Typography
 									textAlign="center"
 									sx={{ color: theme.palette.secondary[300] }}>

@@ -22,6 +22,7 @@ import {
 import { format } from "date-fns";
 import { selectSocket } from "../../redux/socket/socketSlice";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const AdminTrainings = () => {
 	const [page, setPage] = useState(0);
@@ -57,6 +58,11 @@ const AdminTrainings = () => {
 		},
 		{ skip: !user?.id, refetchOnFocus: true },
 	);
+	const [snackInfo, setSnackInfo] = useState({
+		open: false,
+		message: "",
+		severity: "",
+	});
 
 	const [deleteTraining] = useDeleteTrainingMutation();
 	const [approveTraining] = useApproveTrainingMutation();
@@ -81,6 +87,9 @@ const AdminTrainings = () => {
 						await createNotification(ob).unwrap();
 					}
 				}
+				setTimeout(() => {
+					setSnackInfo((prev) => ({ ...prev, open: true }));
+				}, 1000);
 			} catch (error) {
 				console.log(error);
 			}
@@ -104,6 +113,9 @@ const AdminTrainings = () => {
 					});
 					await createNotification(ob).unwrap();
 				}
+				setTimeout(() => {
+					setSnackInfo((prev) => ({ ...prev, open: true }));
+				}, 1000);
 			} catch (error) {
 				console.log(error);
 			}
@@ -261,6 +273,12 @@ const AdminTrainings = () => {
 											id: params.row.id,
 											user: params.row.user._id,
 										});
+										setSnackInfo((prev) => ({
+											...prev,
+											message: `${params.row.title} training deleted`,
+											severity: "error",
+											open: false,
+										}));
 										setOpen(true);
 									}}>
 									Delete
@@ -291,6 +309,14 @@ const AdminTrainings = () => {
 											state: !params.row.approved,
 											user: params.row.user._id,
 										});
+										setSnackInfo((prev) => ({
+											...prev,
+											message: `${params.row.title} training ${
+												!params.row.approved ? "approved" : "disapproved"
+											}`,
+											severity: !params.row.approved ? "success" : "warning",
+											open: false,
+										}));
 										setApproveOpen(true);
 									}}>
 									{!params.row.approved ? "Approve" : "Disapprove"}
@@ -307,6 +333,12 @@ const AdminTrainings = () => {
 
 	return (
 		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
+			<CustomSnack
+				open={snackInfo.open}
+				setOpen={(arg) => setSnackInfo((prev) => ({ ...prev, open: arg }))}
+				message={snackInfo.message}
+				severity={snackInfo.severity}
+			/>
 			<Header title="Trainings" subtitle="See the list of trainings." />
 			<UserAgreement
 				open={open}

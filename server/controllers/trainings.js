@@ -140,11 +140,11 @@ exports.getAllTrainings = async (req, res) => {
 
 		if (curUser.userId !== null) {
 			s = curUser.subscriptions.map(mongoose.Types.ObjectId);
-			query = Trainings.find({
+			query = query.find({
 				user: { $ne: mongoose.Types.ObjectId(curUser.userId) },
 				_id: { $nin: s },
 			});
-			total = Trainings.countDocuments({
+			total = total.countDocuments({
 				user: { $ne: mongoose.Types.ObjectId(curUser.userId) },
 				_id: { $nin: s },
 			});

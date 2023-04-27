@@ -30,8 +30,16 @@ import { useOutletContext } from "react-router-dom";
 import { selectSocket } from "../../redux/socket/socketSlice";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
-const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
+const Post = ({
+	post,
+	setDeleteId,
+	setOpen,
+	setApproveId,
+	setApproveOpen,
+	setSnackInfo,
+}) => {
 	const theme = useTheme();
 	const [isExpanded, setIsExpanded] = useState(false);
 	// const [deletePost] = useDeletePostMutation();
@@ -168,6 +176,12 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 						<Button
 							color="error"
 							onClick={() => {
+								setSnackInfo((prev) => ({
+									...prev,
+									severity: "error",
+									message: `${post?.title} deleted`,
+									open: false,
+								}));
 								setDeleteId({ id: post?.id, user: post?.user?._id });
 								setOpen((prev) => !prev);
 							}}>
@@ -181,6 +195,14 @@ const Post = ({ post, setDeleteId, setOpen, setApproveId, setApproveOpen }) => {
 										: theme.palette.success.main,
 								}}
 								onClick={() => {
+									setSnackInfo((prev) => ({
+										...prev,
+										severity: !post?.approved ? "success" : "warning",
+										message: `${post?.title} ${
+											!post?.approved ? "approved" : "disapproved"
+										}`,
+										open: false,
+									}));
 									setApproveId({
 										id: post?.id,
 										state: !post?.approved,
@@ -220,6 +242,11 @@ const AllPostsAdmin = () => {
 	const socketRedux = useSelector(selectSocket);
 	const user = useSelector(selectCurrentUser);
 	const [createNotification] = useCreateNotificationMutation();
+	const [snackInfo, setSnackInfo] = useState({
+		open: false,
+		message: "",
+		severity: "",
+	});
 
 	const handleDelete = async (id) => {
 		if (deleteId?.id) {
@@ -240,6 +267,9 @@ const AllPostsAdmin = () => {
 						await createNotification(ob).unwrap();
 					}
 				}
+				setTimeout(() => {
+					setSnackInfo((prev) => ({ ...prev, open: true }));
+				}, 1000);
 			} catch (error) {
 				console.log(error);
 			}
@@ -262,6 +292,9 @@ const AllPostsAdmin = () => {
 					});
 					await createNotification(ob).unwrap();
 				}
+				setTimeout(() => {
+					setSnackInfo((prev) => ({ ...prev, open: true }));
+				}, 1000);
 			} catch (error) {
 				console.log(error);
 			}
@@ -286,6 +319,12 @@ const AllPostsAdmin = () => {
 		);
 	return (
 		<Box m="1.5rem 2.5rem" pb={2}>
+			<CustomSnack
+				open={snackInfo.open}
+				setOpen={(arg) => setSnackInfo((prev) => ({ ...prev, open: arg }))}
+				message={snackInfo.message}
+				severity={snackInfo.severity}
+			/>
 			<UserAgreement
 				open={open}
 				setOpen={setOpen}
@@ -410,6 +449,7 @@ const AllPostsAdmin = () => {
 							setOpen={setOpen}
 							setApproveId={setApproveId}
 							setApproveOpen={setApproveOpen}
+							setSnackInfo={setSnackInfo}
 						/>
 					))}
 				</Box>

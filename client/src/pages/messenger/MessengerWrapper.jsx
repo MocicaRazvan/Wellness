@@ -44,6 +44,17 @@ const MessengerWrapper = ({ admin = false }) => {
 	// 		}
 	// 	};
 	// }, [socketRedux, user?.id, user?.role]);
+	useEffect(() => {
+		return () => {
+			if (user?.role === "admin" && socketRedux) {
+				socketRedux.emit("mountUserConv", {
+					convId: "conversatieInexistenta",
+					userId: user?.id,
+					role: user?.role,
+				});
+			}
+		};
+	}, [socketRedux, user?.id, user?.role]);
 
 	if (!socketRedux || !user?.id)
 		return (

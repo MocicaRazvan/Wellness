@@ -77,20 +77,17 @@ const Navigation = () => {
 	const [createConv] = useCreateSupportConversationMutation();
 
 	useEffect(() => {
-		if (
-			!pathname
-				.split("/")
-				.some((e) =>
-					["posts", "trainings", "orders", "messenger", "statistics"].includes(
-						e,
-					),
-				)
-		) {
+		const a = pathname
+			.split("/")
+			.find((e) =>
+				["posts", "trainings", "orders", "messenger", "statistics"].includes(e),
+			);
+
+		if (a) {
+			pathname === "/trainings/bought" ? setActive("bought") : setActive(a);
+		} else {
 			setActive("");
 		}
-		// if (pathname.split("/").some((e) => ["messenger"].includes(e))) {
-		// 	setActive("messenger");
-		// }
 	}, [pathname]);
 
 	const toggleDrawer = (anchor, open) => (event) => {

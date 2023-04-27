@@ -68,10 +68,11 @@ const makeAuth = (username) => `<!DOCTYPE html
                                     <tr>
                                         <td class="padding" style="padding:0;padding:15px;">
                                             <table class="content"
-                                                style="border-spacing:0;font-size:15px;line-height:20px;padding:0 5px;">
+                                                style="border-spacing:0;font-size:15px;line-height:20px;padding:0 5px;"
+                                                >
                                                 <tr>
-                                                    <td style="padding:0;">
-                                                        <h1 style="line-height:40px;font-size:30px;" >Welcome to our platform ${username} !</h1>
+                                                    <td style="padding:0;" align="center">
+                                                        <h1 style="line-height:40px;font-size:30px;" >Welcome to our platform: ${username} !</h1>
                                                         
                                                         <a href="http://localhost:3000/trainings" style=" text-decoration:none" target="_blank"clicktracking=off> <p style="margin-top: 20px;">Don't forget to browse the trainings ! </p> </a>
                                                     </td>

@@ -4,8 +4,11 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetCommentsQuery } from "../../redux/comments/commentsApi";
 import AddComment from "./AddComment";
 import Comment from "./Comment";
+import { useState } from "react";
+import CustomSnack from "../reusable/CustomSnack";
 
 const Core = ({ type, id }) => {
+	const [snackOpen, setSnackOpen] = useState(false);
 	const { data, isLoading } = useGetCommentsQuery(
 		{ [type]: id },
 		{
@@ -27,9 +30,20 @@ const Core = ({ type, id }) => {
 
 	return (
 		<Container maxWidth="md" sx={{ mt: 2 }}>
+			<CustomSnack
+				open={snackOpen}
+				setOpen={setSnackOpen}
+				message="Comment deleted"
+				severity="error"
+			/>
 			<Stack spacing={3}>
 				{data?.comments?.map((comment) => (
-					<Comment key={comment.id} comment={comment} />
+					<Comment
+						key={comment.id}
+						comment={comment}
+						snackOpen={snackOpen}
+						setSnackOpen={setSnackOpen}
+					/>
 				))}
 				{user && <AddComment type={type} id={id} />}
 			</Stack>

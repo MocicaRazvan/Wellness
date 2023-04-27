@@ -57,6 +57,13 @@ const AllPosts = () => {
 		}
 	}, [data]);
 
+	useEffect(() => {
+		if (!user) {
+			setLike(null);
+			setDislike(null);
+		}
+	}, [user]);
+
 	if (isLoading || !data)
 		return (
 			<CircularProgress
@@ -74,7 +81,7 @@ const AllPosts = () => {
 				fontWeight="bold"
 				textAlign="center"
 				fontSize={!isNonMobile && "25px"}>
-				Look at all these posts
+				Look at all {like ? "liked" : dislike ? "disliked" : "these"} posts
 			</Typography>
 			<Box
 				display="flex"

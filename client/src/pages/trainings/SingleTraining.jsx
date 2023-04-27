@@ -17,10 +17,12 @@ import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
 import { useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const SingleTraining = () => {
 	const { trainingId } = useParams();
 	const theme = useTheme();
+	const [open, setOpen] = useState(false);
 	const { data: training, isLoading } = useGetSingleTrainingQuery(
 		{
 			id: trainingId,
@@ -59,6 +61,7 @@ const SingleTraining = () => {
 		if (!user) {
 			navigate("/login");
 		}
+		setOpen(true);
 		dispatch(addToCart(training));
 	};
 
@@ -82,6 +85,11 @@ const SingleTraining = () => {
 
 	return (
 		<Box m="1.5rem 1rem" position="relative">
+			<CustomSnack
+				open={open}
+				setOpen={setOpen}
+				message={`${training?.title} added to cart`}
+			/>
 			<Box
 				sx={{
 					position: "absolute",

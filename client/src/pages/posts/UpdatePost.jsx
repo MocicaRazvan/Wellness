@@ -51,7 +51,7 @@ const UpdatePost = () => {
 					letterSpacing={1.5}
 					variant="h3"
 					sx={{ mb: "1.5rem" }}>
-					Update your post so your soul will be fullfield
+					Update the post {data?.post?.title}
 				</Typography>
 				<Form post={data?.post} />
 			</Box>

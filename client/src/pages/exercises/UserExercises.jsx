@@ -1,7 +1,7 @@
 import { Box, Button, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { format } from "date-fns";
 import {
@@ -13,8 +13,10 @@ import UserAgreement from "../../components/reusable/UserAgreement";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import LootieCustom from "../../components/reusable/LootieCustom";
 import cantSee from "../../utils/lottie/cantSee.json";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const UserExercises = () => {
+	const { state, pathname } = useLocation();
 	const [page, setPage] = useState(0);
 	const [pageSize, setPageSize] = useState(20);
 	const [sort, setSort] = useState({});
@@ -22,9 +24,11 @@ const UserExercises = () => {
 	const [searchInput, setSearchInput] = useState("");
 	const user = useSelector(selectCurrentUser);
 	const [open, setOpen] = useState(false);
-	const [deleteId, setDeleteId] = useState(null);
+	const [deleteId, setDeleteId] = useState({ id: null, title: "" });
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
 	const { palette } = useTheme();
+	const [snackOpen, setSnackOpen] = useState(state?.open || false);
+	const [deleteOpen, setDeleteOpen] = useState(false);
 	const { data, isLoading } = useGetUsersExercisesQuery(
 		{
 			id: user?.id,
@@ -40,6 +44,9 @@ const UserExercises = () => {
 	const handleDeleteExercise = async (id) => {
 		try {
 			await deleteExercise({ id }).unwrap();
+			setTimeout(() => {
+				setDeleteOpen(true);
+			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
@@ -176,7 +183,7 @@ const UserExercises = () => {
 									size="small"
 									disabled={params.row?.occurrences > 0}
 									onClick={() => {
-										setDeleteId(params.row.id);
+										setDeleteId({ id: params.row.id, title: params.row.title });
 										setOpen(true);
 									}}>
 									Delete
@@ -200,8 +207,22 @@ const UserExercises = () => {
 			/>
 		);
 	}
+
 	return (
 		<Box m="1.5rem 2.5rem">
+			<CustomSnack
+				open={snackOpen}
+				setOpen={setSnackOpen}
+				message={state?.message || ""}
+				severity={state?.severity}
+				pathname={pathname}
+			/>
+			<CustomSnack
+				open={deleteOpen}
+				setOpen={setDeleteOpen}
+				message={`${deleteId.title} exercise deleted`}
+				severity={"error"}
+			/>
 			<UserAgreement
 				open={open}
 				setOpen={setOpen}
@@ -209,7 +230,7 @@ const UserExercises = () => {
 				text={
 					"Are you sure you want to delete this exercise? You can't undo after you press Agree, be careful what you want."
 				}
-				handleAgree={async () => await handleDeleteExercise(deleteId)}
+				handleAgree={async () => await handleDeleteExercise(deleteId.id)}
 			/>
 			<Header title="Your Exercises" subtitle="Manage your exercises" />
 			<Box

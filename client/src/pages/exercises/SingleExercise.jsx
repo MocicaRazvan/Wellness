@@ -45,7 +45,14 @@ const SingleExercise = ({ id = null }) => {
 	const handleDeleteExercise = async (id) => {
 		try {
 			await deleteExercise({ id }).unwrap();
-			navigate("/exercises/user", { replace: true });
+			navigate("/exercises/user", {
+				replace: true,
+				state: {
+					message: `${exercise?.title} exercise deleted`,
+					severity: "error",
+					open: true,
+				},
+			});
 		} catch (error) {
 			console.log(error);
 		}

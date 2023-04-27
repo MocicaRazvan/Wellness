@@ -17,9 +17,11 @@ import CustomPagination from "../../components/reusable/CustomPagination";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const UsersPosts = () => {
+	const { state, pathname } = useLocation();
 	const [sorting, setSorting] = useState({});
 	const [tags, setTags] = useState([]);
 	const search = useSelector(selectCurrentSearch);
@@ -28,9 +30,14 @@ const UsersPosts = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(12);
 	const [notApproved, setNotApproved] = useState(false);
 	const [notDisplayed, setNotDisplayed] = useState(false);
+	const [open, setOpen] = useState(state?.open || false);
+	const [deleteTitle, setDeleteTitle] = useState({ title: "", open: false });
+	const [deleteOpen, setDeleteOpen] = useState(false);
 	const theme = useTheme();
 	const isNonMobile = useMediaQuery("(min-width:750px)");
 	const navigate = useNavigate();
+
+	console.log({ state });
 
 	const user = useSelector(selectCurrentUser);
 	const { data, isLoading } = useGetPostsByUserQuery(
@@ -53,6 +60,13 @@ const UsersPosts = () => {
 		}
 	}, [data]);
 
+	useEffect(() => {
+		if (deleteTitle.open) {
+			setDeleteOpen(true);
+			setDeleteTitle((prev) => ({ ...prev, open: false }));
+		}
+	}, [deleteTitle.open]);
+
 	if (isLoading)
 		return (
 			<CircularProgress
@@ -64,8 +78,22 @@ const UsersPosts = () => {
 	if (user?.role === "user") {
 		navigate("/");
 	}
+
 	return (
 		<Box p={2}>
+			<CustomSnack
+				open={open}
+				setOpen={setOpen}
+				message={state?.message || ""}
+				severity={state?.severity}
+				pathname={pathname}
+			/>
+			<CustomSnack
+				open={deleteOpen}
+				setOpen={setDeleteOpen}
+				message={`${deleteTitle.title} post deleted`}
+				severity={"error"}
+			/>
 			<Typography
 				// className="text-gradient"
 				variant="h2"
@@ -77,7 +105,7 @@ const UsersPosts = () => {
 					? "Look at your unapproved posts"
 					: notDisplayed
 					? "Look at your undisplayed posts"
-					: "Look at your unapproved posts"}
+					: "Look at your posts"}
 			</Typography>
 			<Box
 				display="flex"
@@ -157,7 +185,7 @@ const UsersPosts = () => {
 					No posts meet the criteria
 				</Typography>
 			)}
-			<GridList items={data?.posts} user="true">
+			<GridList items={data?.posts} user="true" setDeleteTitle={setDeleteTitle}>
 				<PostCard />
 			</GridList>
 			<CustomPagination

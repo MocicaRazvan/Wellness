@@ -152,7 +152,13 @@ const Form = ({ exercise }) => {
 							setMessage("");
 							setBody("");
 							onSubmitProps.resetForm();
-							navigate("/exercises/user");
+							navigate("/exercises/user", {
+								state: {
+									open: true,
+									severity: "success",
+									message: `${values.title.trim()} exercise created`,
+								},
+							});
 						}
 					} catch (error) {
 						console.log(error);
@@ -191,7 +197,13 @@ const Form = ({ exercise }) => {
 						setMessage("");
 						setBody("");
 						onSubmitProps.resetForm();
-						navigate("/exercises/user");
+						navigate("/exercises/user", {
+							state: {
+								open: true,
+								severity: "success",
+								message: `${values.title.trim()} exercise updated`,
+							},
+						});
 					}
 				} catch (error) {
 					console.log(error);
@@ -399,7 +411,8 @@ const Form = ({ exercise }) => {
 										variant="outlined"
 										onClick={() => setOpenCarousel((prev) => !prev)}
 										sx={{ color: theme.palette.secondary[200], width: "50%" }}>
-										{openCarousel ? "Hide" : "See"} your videos
+										{openCarousel ? "Hide" : "See"} your{" "}
+										{values.clips.length === 1 ? " video" : " videos"}
 									</Button>
 									{openCarousel && (
 										<Box width="100%" p={0.5}>

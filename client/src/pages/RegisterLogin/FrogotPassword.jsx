@@ -14,6 +14,7 @@ import * as yup from "yup";
 import { useForgotPasswordMutation } from "../../redux/auth/authApiSlice";
 import { Formik } from "formik";
 import Loading from "../../components/reusable/Loading";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const schema = yup.object().shape({
 	email: yup
@@ -32,6 +33,7 @@ const FrogotPassword = () => {
 	const theme = useTheme();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 	const initialValues = { email: userEmail || "" };
+	const [open, setOpen] = useState(false);
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		try {
@@ -52,6 +54,7 @@ const FrogotPassword = () => {
 			// 	setMessage("Check your email!");
 			// }
 			setMessage("Check your email!");
+			setOpen(true);
 			onSubmitProps.resetForm();
 		} catch (error) {
 			setMessage("Check your email!");
@@ -61,6 +64,12 @@ const FrogotPassword = () => {
 
 	return (
 		<Box>
+			<CustomSnack
+				open={open}
+				setOpen={setOpen}
+				severity="success"
+				message="Email was send"
+			/>
 			<Box
 				width={isNonMobileScreens ? "50%" : "93%"}
 				p="2rem"

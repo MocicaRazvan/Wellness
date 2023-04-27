@@ -19,6 +19,7 @@ import {
 import { format } from "date-fns";
 import LootieCustom from "../../components/reusable/LootieCustom";
 import noOrder from "../../utils/lottie/noOrder.json";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const Orders = () => {
 	const [page, setPage] = useState(0);
@@ -40,12 +41,16 @@ const Orders = () => {
 		},
 		{ skip: !user?.id },
 	);
+	const [open, setOpen] = useState(false);
 
 	const [changeOrderStatus] = useChangeOrderStatusMutation();
 
 	const handleOrderStatusChange = async (credentials) => {
 		try {
 			await changeOrderStatus(credentials).unwrap();
+			setTimeout(() => {
+				setOpen(true);
+			}, 200);
 		} catch (error) {
 			console.log(error);
 		}
@@ -188,6 +193,12 @@ const Orders = () => {
 	}
 	return (
 		<Box m="1.5rem 2.5rem">
+			<CustomSnack
+				open={open}
+				setOpen={setOpen}
+				message="Order confirmed"
+				severity="success"
+			/>
 			<Header title="Your Orders" subtitle="Manage your orders" />
 			<Box
 				maxWidth={1700}

@@ -28,6 +28,7 @@ import useQuery from "../../utils/hooks/useQuery";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { addSenderId } from "../../redux/notifications/notificationsSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();
@@ -48,6 +49,11 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	const [userMounted, setUserMounted] = useState([]);
 	const [focused, setFocused] = useState(false);
 	const navigate = useNavigate();
+	const [deleteConv, setDeleteConv] = useState({
+		message: "",
+		open: false,
+		severity: "error",
+	});
 
 	const quryParams = new URLSearchParams();
 
@@ -335,6 +341,12 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 	return (
 		<MessengerContainer>
+			<CustomSnack
+				open={deleteConv.open}
+				setOpen={(arg) => setDeleteConv((prev) => ({ ...prev, open: arg }))}
+				message={deleteConv.message}
+				severity={deleteConv.severity}
+			/>
 			{user?.role === "admin" && (
 				<ChatMenu id="chatMenu">
 					<Button
@@ -377,6 +389,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 										adminId={user?.id}
 										setCurrentChat={setCurrentChat}
 										focused={focused}
+										setDeleteConv={setDeleteConv}
 									/>
 								</Box>
 								{i !== conversations?.length - 1 && (

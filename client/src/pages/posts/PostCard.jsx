@@ -9,6 +9,7 @@ import {
 	Typography,
 	useTheme,
 	alpha,
+	Tooltip,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
@@ -20,29 +21,59 @@ import {
 } from "../../redux/posts/postsApiSlice";
 import { useState } from "react";
 import UserAgreement from "../../components/reusable/UserAgreement";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
-const PostCard = ({ item, user }) => {
+const PostCard = ({ item, user, setDeleteTitle }) => {
 	const navigate = useNavigate();
 	const theme = useTheme();
 	const [deletePost] = useDeletePostMutation();
 	const [displayPost] = useDisplayPostMutation();
 	const [openDisplay, setOpenDisplay] = useState(null);
 	const [open, setOpen] = useState(false);
+	const [snackOpen, setSnackOpen] = useState(false);
+	const [snackInfo, setSnackInfo] = useState({
+		message: null,
+		severity: "",
+	});
+
 	const handleDelete = async () => {
 		try {
 			await deletePost({ id: item.id }).unwrap();
+			setTimeout(() => {
+				// setSnackOpen(true);
+				// setSnackInfo({
+				// 	message: `${item?.title} post deleted`,
+				// 	severity: "error",
+				// });
+				setDeleteTitle({ title: item?.title, open: true });
+			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 	const handleDisplay = async () => {
+		setSnackOpen(false);
 		try {
 			await displayPost({ id: item.id }).unwrap();
+
+			setTimeout(() => {
+				console.log("here");
+				setSnackOpen(true);
+				setSnackInfo({
+					message: `${item?.title} post ${
+						!item.display ? "showing" : "hiding"
+					}`,
+					severity: !item.display ? "success" : "warning",
+				});
+				console.log({ snackOpen });
+			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 	if (!item) return;
+
+	console.log({ snackOpen });
 
 	return (
 		<>
@@ -63,6 +94,12 @@ const PostCard = ({ item, user }) => {
 					!item.display ? "show" : "hide"
 				} this post? You can't undo after you press Agree, be careful what you want.`}
 				handleAgree={async () => await handleDisplay()}
+			/>
+			<CustomSnack
+				open={snackOpen}
+				setOpen={setSnackOpen}
+				message={snackInfo.message}
+				severity={snackInfo.severity}
 			/>
 			<Card
 				sx={{
@@ -157,19 +194,21 @@ const PostCard = ({ item, user }) => {
 						<Box sx={{ display: "flex" }}>
 							<Avatar src={item?.user?.image?.url || blankImage} />
 							<Box ml={2}>
-								<Typography
-									variant="subtitle2"
-									component="p"
-									sx={{
-										cursor: "pointer",
-										"&:hover": { color: theme.palette.secondary[300] },
-									}}
-									color={theme.palette.secondary[100]}
-									onClick={() =>
-										void navigate("/user/author", { state: item?.user?._id })
-									}>
-									{item?.user?.username}
-								</Typography>
+								<Tooltip title="Go to profile" arrow placement="top">
+									<Typography
+										variant="subtitle2"
+										component="p"
+										sx={{
+											cursor: "pointer",
+											"&:hover": { color: theme.palette.secondary[300] },
+										}}
+										color={theme.palette.secondary[100]}
+										onClick={() =>
+											void navigate("/user/author", { state: item?.user?._id })
+										}>
+										{item?.user?.username}
+									</Typography>
+								</Tooltip>
 								<Typography
 									variant="subtitle2"
 									color={theme.palette.secondary[100]}

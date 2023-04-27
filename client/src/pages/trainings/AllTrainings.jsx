@@ -16,6 +16,7 @@ import { useGetTrainingsQuery } from "../../redux/trainings/trainingsApi";
 import TrainingCard from "./TrainingCard";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
+import { selectCartItems } from "../../redux/cart/cartSlice";
 
 const AllTrainings = () => {
 	const [sorting, setSorting] = useState({});
@@ -28,6 +29,7 @@ const AllTrainings = () => {
 	const isNonMobile = useMediaQuery("(min-width:600px)");
 	const user = useSelector(selectCurrentUser);
 	const [curUser, setCurUser] = useState({ userId: null, subscriptions: null });
+	const cartItems = useSelector(selectCartItems);
 	const { data, isLoading, isError } = useGetTrainingsQuery(
 		{
 			sorting,
@@ -52,6 +54,28 @@ const AllTrainings = () => {
 		}
 	}, [data]);
 
+	useEffect(() => {
+		if (!user) {
+			setCurUser({ userId: null, subscriptions: null });
+		}
+	}, [user]);
+	useEffect(() => {
+		if (cartItems && user?.subscriptions) {
+			console.log("chenge");
+
+			setTimeout(() => {
+				setCurUser((prev) => ({
+					...prev,
+					subscriptions: [
+						...user?.subscriptions,
+						...cartItems?.map(({ id }) => id),
+					],
+				}));
+			}, 455);
+		}
+	}, [cartItems, user?.subscriptions]);
+	console.log({ curUser });
+
 	if (isLoading)
 		return (
 			<CircularProgress
@@ -70,7 +94,8 @@ const AllTrainings = () => {
 				fontWeight="bold"
 				textAlign="center"
 				fontSize={!isNonMobile && "25px"}>
-				Look at all these trainings
+				Look at all {curUser?.userId !== null ? "buyable " : "these "}
+				trainings
 			</Typography>
 			<Box
 				display="flex"
@@ -113,7 +138,10 @@ const AllTrainings = () => {
 								} else {
 									setCurUser({
 										userId: user?.id,
-										subscriptions: user?.subscriptions,
+										subscriptions: [
+											...user?.subscriptions,
+											...cartItems?.map(({ id }) => id),
+										],
 									});
 									// console.log({ userId });
 								}

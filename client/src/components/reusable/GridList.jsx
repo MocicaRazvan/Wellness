@@ -1,7 +1,13 @@
 import { Grid, styled } from "@mui/material";
 import { Box } from "@mui/system";
 import { cloneElement } from "react";
-const GridList = ({ items, children, type, user = "false" }) => {
+const GridList = ({
+	items,
+	children,
+	type,
+	user = "false",
+	setDeleteTitle = () => {},
+}) => {
 	return (
 		<Wrapper component="div">
 			<Grid container spacing={2} columnSpacing={2} justifyContent="center">
@@ -14,7 +20,9 @@ const GridList = ({ items, children, type, user = "false" }) => {
 						key={item.id}
 						justifyContent="center"
 						alignItems="center">
-						<Box>{cloneElement(children, { item, type, user })}</Box>
+						<Box>
+							{cloneElement(children, { item, type, user, setDeleteTitle })}
+						</Box>
 					</Grid>
 				))}
 			</Grid>

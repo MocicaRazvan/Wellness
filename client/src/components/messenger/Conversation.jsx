@@ -28,6 +28,7 @@ const Conversation = ({
 	adminId,
 	setCurrentChat,
 	focused,
+	setDeleteConv,
 }) => {
 	const { palette } = useTheme();
 	// const { data: user } = useGetUserByIdQuery({
@@ -67,12 +68,18 @@ const Conversation = ({
 	}, [isMounted, focused]);
 
 	const handleDelteConversation = async () => {
+		setDeleteConv((prev) => ({ ...prev, open: false }));
 		try {
 			socketRedux.emit("DelNotif", {
 				convId: conversation.id,
 				receiverId: user?._id,
 			});
 			await deleteConversation({ id: conversation?._id }).unwrap();
+			setDeleteConv((prev) => ({
+				...prev,
+				open: true,
+				message: `Conversation with ${user?.username} deleted`,
+			}));
 			console.log("delnotif");
 
 			setCurrentChat(null);

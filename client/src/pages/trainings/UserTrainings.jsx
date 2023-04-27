@@ -6,9 +6,9 @@ import {
 	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
@@ -21,8 +21,10 @@ import {
 import { format } from "date-fns";
 import LootieCustom from "../../components/reusable/LootieCustom";
 import cantSee from "../../utils/lottie/cantSee.json";
+import CustomSnack from "../../components/reusable/CustomSnack";
 
 const Trainings = () => {
+	const { state, pathname } = useLocation();
 	const [page, setPage] = useState(0);
 	const [pageSize, setPageSize] = useState(20);
 	const [sort, setSort] = useState({});
@@ -34,6 +36,16 @@ const Trainings = () => {
 	const [displayId, setDisplayId] = useState({ id: null, state: false });
 	const user = useSelector(selectCurrentUser);
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
+	const [snackInfo, setSnackInfo] = useState({
+		title: "",
+		open: false,
+		severity: "",
+	});
+	const [snackOpen, setSnackOpen] = useState({
+		message: "",
+		open: false,
+		severity: "",
+	});
 	const { palette } = useTheme();
 	const navigate = useNavigate();
 
@@ -57,6 +69,9 @@ const Trainings = () => {
 	const handleDeleteTraining = async (id) => {
 		try {
 			await deleteTraining({ id }).unwrap();
+			setTimeout(() => {
+				setSnackInfo((prev) => ({ ...prev, open: true }));
+			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
@@ -64,6 +79,9 @@ const Trainings = () => {
 	const handleDisplay = async (id) => {
 		try {
 			if (displayId.id) await displayTraining({ id }).unwrap();
+			setTimeout(() => {
+				setSnackInfo((prev) => ({ ...prev, open: true }));
+			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
@@ -204,6 +222,11 @@ const Trainings = () => {
 									disabled={params.row?.occurrences > 0}
 									onClick={() => {
 										setDeleteId(params.row.id);
+										setSnackInfo({
+											open: false,
+											title: params.row.title,
+											severity: "error",
+										});
 										setOpen(true);
 									}}>
 									Delete
@@ -233,6 +256,11 @@ const Trainings = () => {
 											id: params.row.id,
 											state: !params.row.display,
 										});
+										setSnackInfo({
+											open: false,
+											title: params.row.title,
+											severity: params.row.display ? "warning" : "success",
+										});
 										setDisplayOpen(true);
 									}}>
 									{params.row.display ? "hide" : "show"}
@@ -261,6 +289,18 @@ const Trainings = () => {
 			},
 		},
 	];
+	useEffect(() => {
+		if (state?.open) {
+			setSnackOpen({
+				open: state?.open,
+				message: state?.message,
+				severity: state?.severity,
+			});
+			navigate("/trainings/user", { replace: true });
+		}
+	}, [navigate, state?.message, state?.open, state?.severity]);
+
+
 
 	if (user?.role === "user") {
 		navigate("/");
@@ -280,6 +320,25 @@ const Trainings = () => {
 
 	return (
 		<Box m="1.5rem 2.5rem">
+			<CustomSnack
+				open={snackOpen.open}
+				setOpen={(arg) => setSnackOpen((prev) => ({ ...prev, open: arg }))}
+				message={snackOpen.message}
+				severity={snackOpen.severity}
+				pathname={pathname}
+			/>
+			<CustomSnack
+				open={snackInfo.open}
+				setOpen={(arg) => snackInfo((prev) => ({ ...prev, open: arg }))}
+				message={`${snackInfo.title} training ${
+					snackInfo.severity === "error"
+						? "deleted"
+						: snackInfo.severity === "success"
+						? "showing"
+						: "hiding"
+				}`}
+				severity={snackInfo.severity}
+			/>
 			<UserAgreement
 				open={open}
 				setOpen={setOpen}
