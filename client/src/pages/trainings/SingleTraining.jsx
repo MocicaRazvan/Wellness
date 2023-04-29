@@ -60,9 +60,10 @@ const SingleTraining = () => {
 	const handleAddTocard = () => {
 		if (!user) {
 			navigate("/login");
+		} else {
+			dispatch(addToCart(training));
 		}
 		setOpen(true);
-		dispatch(addToCart(training));
 	};
 
 	const images = training?.images?.map(({ url }) => url);

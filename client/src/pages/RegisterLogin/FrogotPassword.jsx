@@ -6,7 +6,7 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
@@ -34,6 +34,7 @@ const FrogotPassword = () => {
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 	const initialValues = { email: userEmail || "" };
 	const [open, setOpen] = useState(false);
+	const navigate = useNavigate();
 
 	const handleFormSubmit = async (values, onSubmitProps) => {
 		try {
@@ -62,6 +63,13 @@ const FrogotPassword = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (!user?.id && userEmail) {
+			console.log("here");
+			navigate("/forgotPassword", { replace: true });
+		}
+	}, [navigate, user?.id, userEmail]);
+
 	return (
 		<Box>
 			<CustomSnack
@@ -77,6 +85,7 @@ const FrogotPassword = () => {
 				borderRadius="1.5rem"
 				bgcolor={theme.palette.background.alt}>
 				<Formik
+					enableReinitialize
 					onSubmit={handleFormSubmit}
 					initialValues={initialValues}
 					validationSchema={schema}>

@@ -73,7 +73,7 @@ function App() {
 								path="/resetPassword/:resetToken"
 								element={<ResetPassword />}
 							/>
-							<Route path="/calculator" element={<Calculator />} />
+
 							<Route path="/posts">
 								<Route index element={<AllPosts />} />
 								<Route path="find/:postId" element={<SinglePost />} />
@@ -124,6 +124,7 @@ function App() {
 									<Route path="spendings" element={<Spendings />} />
 									<Route path="earnings" element={<Earnings />} />
 								</Route>
+								<Route path="/calculator" element={<Calculator />} />
 							</Route>
 							<Route path="/admin" element={<AdminLayout />}>
 								<Route path="dashboard" element={<Dashboard />} />
