@@ -96,7 +96,7 @@ const Conversation = ({
 				setOpen={setOpen}
 				title={"Confirm delete"}
 				text={
-					"Are you sure you want to delete this exercise? You can't undo after you press Agree, be careful what you want."
+					"Are you sure you want to delete this conversation? You can't undo after you press Agree, be careful what you want."
 				}
 				handleAgree={async () => await handleDelteConversation()}
 			/>

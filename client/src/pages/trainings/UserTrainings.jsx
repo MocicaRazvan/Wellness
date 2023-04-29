@@ -300,8 +300,6 @@ const Trainings = () => {
 		}
 	}, [navigate, state?.message, state?.open, state?.severity]);
 
-
-
 	if (user?.role === "user") {
 		navigate("/");
 	}
@@ -329,7 +327,7 @@ const Trainings = () => {
 			/>
 			<CustomSnack
 				open={snackInfo.open}
-				setOpen={(arg) => snackInfo((prev) => ({ ...prev, open: arg }))}
+				setOpen={(arg) => setSnackInfo((prev) => ({ ...prev, open: arg }))}
 				message={`${snackInfo.title} training ${
 					snackInfo.severity === "error"
 						? "deleted"
