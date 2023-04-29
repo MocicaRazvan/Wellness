@@ -616,6 +616,7 @@ const Form = ({ user = null }) => {
 											cursor: "pointer",
 											color: palette.primary.light,
 										},
+										width: "fit-content",
 									}}>
 									{isLogin
 										? "Don't have an account? Sign Up here."
@@ -635,6 +636,7 @@ const Form = ({ user = null }) => {
 										cursor: "pointer",
 										color: palette.primary.light,
 									},
+									width: "fit-content",
 								}}>
 								Forgot your password?
 							</Typography>

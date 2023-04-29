@@ -191,13 +191,13 @@ const CartPopper = ({ setAnchorEl, anchorEl }) => {
 						color={palette.secondary[300]}
 						fontSize={17}
 						textAlign="center"
-						sx={{ p: 1, cursor: "pointer" }}
+						sx={{ px: 2, py: 1, cursor: "pointer" }}
 						fontWeight={900}
 						onClick={() => {
 							navigate("/trainings");
 							handleClose();
 						}}>
-						No itmes, go shopping!
+						No items, start shopping!
 					</Typography>
 				)}
 			</Popover>

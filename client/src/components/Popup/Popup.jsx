@@ -390,7 +390,7 @@ export default function PopUp({
 										sx={{
 											color: theme.palette.secondary[500],
 											"&:hover": {
-												color: theme.palette.background.alt,
+												color: theme.palette.primary.main,
 											},
 										}}
 										onClick={(e) => handleClick(e)}>

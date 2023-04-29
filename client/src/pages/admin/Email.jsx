@@ -198,7 +198,11 @@ const Test = () => {
 													border: `1px solid ${
 														error
 															? theme.palette.error.main
-															: theme.palette.primary.main
+															: theme.palette.primary[
+																	theme.palette.mode === "dark"
+																		? "light"
+																		: "dark"
+															  ]
 													} `,
 												},
 											}}>

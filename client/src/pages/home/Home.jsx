@@ -94,7 +94,7 @@ const timeLine = [
 
 	{
 		date: "",
-		title: "Work you ass off",
+		title: "Work your ass off",
 		text: `Working hard pays off. Realize that every change needs some sacrfices and be prepared to make some. In the end you will thank yourself.`,
 		icon: <DirectionsRunIcon sx={{ fontSize: iconSize }} />,
 	},

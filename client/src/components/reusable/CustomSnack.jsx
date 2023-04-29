@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 
 const CustomSnack = ({
@@ -57,6 +58,13 @@ const CustomSnack = ({
 				</React.Fragment>
 			}>
 			<Alert
+				// variant="filled"
+				iconMapping={{
+					success: <CheckCircleOutlineOutlinedIcon fontSize="inherit" />,
+					error: <CheckCircleOutlineOutlinedIcon fontSize="inherit" />,
+					warning: <CheckCircleOutlineOutlinedIcon fontSize="inherit" />,
+					info: <CheckCircleOutlineOutlinedIcon fontSize="inherit" />,
+				}}
 				onClose={handleClose}
 				severity={severity}
 				sx={{ width: "100%", minWidth: 200 }}>

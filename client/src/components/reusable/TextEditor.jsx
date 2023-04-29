@@ -36,7 +36,11 @@ const TextEditor = ({
 				height: { xs: 350, sm: 400 },
 				"& .ql-toolbar.ql-snow, .ql-container.ql-snow ": {
 					border: `1px solid ${
-						error ? theme.palette.error.main : theme.palette.primary.main
+						error
+							? theme.palette.error.main
+							: theme.palette.primary[
+									theme.palette.mode === "dark" ? "light" : "dark"
+							  ]
 					} `,
 				},
 			}}>

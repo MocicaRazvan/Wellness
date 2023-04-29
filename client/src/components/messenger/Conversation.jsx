@@ -91,15 +91,20 @@ const Conversation = ({
 
 	return (
 		<ConversationWrapper>
-			<UserAgreement
-				open={open}
-				setOpen={setOpen}
-				title={"Confirm delete"}
-				text={
-					"Are you sure you want to delete this conversation? You can't undo after you press Agree, be careful what you want."
-				}
-				handleAgree={async () => await handleDelteConversation()}
-			/>
+			<Box
+				onClick={(e) => {
+					e.stopPropagation();
+				}}>
+				<UserAgreement
+					open={open}
+					setOpen={setOpen}
+					title={"Confirm delete"}
+					text={
+						"Are you sure you want to delete this conversation? You can't undo after you press Agree, be careful what you want."
+					}
+					handleAgree={async () => await handleDelteConversation()}
+				/>
+			</Box>
 			<img
 				src={user?.image?.url || blankUser}
 				alt=""
