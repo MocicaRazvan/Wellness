@@ -56,6 +56,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	});
 
 	const quryParams = new URLSearchParams();
+	// console.log({ c: !query.get("conv"), q: quryParams.get("conv"), query });
 
 	const { data: conversations, isLoading } = useGetConversationsByUserQuery(
 		{ id: user?.id, search },
@@ -82,6 +83,12 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 				refetchOnFocus: true,
 			},
 		);
+
+	useEffect(() => {
+		if (!query.get("conv")) {
+			setCurrentChat(null);
+		}
+	}, [query]);
 
 	useEffect(() => {
 		if (user?.role === "admin") {
