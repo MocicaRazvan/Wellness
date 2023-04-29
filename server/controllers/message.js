@@ -12,7 +12,7 @@ exports.createMessage = async (req, res) => {
 
 exports.getMessagesFromAConversation = async (req, res) => {
 	const conversationId = req.params?.conversationId;
-	if (conversationId !== undefined) {
+	if (conversationId !== "null") {
 		const messages = await Message.find({
 			conversation: conversationId,
 		});

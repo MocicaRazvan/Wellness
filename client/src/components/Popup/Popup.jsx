@@ -65,15 +65,16 @@ export default function PopUp({
 
 	const cont = useMemo(() => {
 		if (notifications) {
-			const parsed = notifications?.reduce(
-				(acc, { sender: { _id, username }, ref }) => {
+			const parsed = notifications?.reduce((acc, cur) => {
+				if (cur?.sender?._id && cur?.sender?.username && cur?.ref) {
+					const { _id, username } = cur.sender;
+					const ref = cur?.ref;
 					acc[_id]
 						? acc[_id].total++
 						: (acc[_id] = { total: 1, user: username, ref });
-					return acc;
-				},
-				{},
-			);
+				}
+				return acc;
+			}, {});
 			const handleItemClick = (e, { _id }) => {
 				if (e) {
 					(async () => {
@@ -149,56 +150,6 @@ export default function PopUp({
 		!approved?.trainingBought
 	)
 		return <></>;
-
-	// const cont = Object.entries(parsed).map(([key, { total, user }]) => (
-	// 	<Box
-	// 		key={key}
-	// 		width="100%"
-	// 		display="flex"
-	// 		justifyContent="space-between"
-	// 		alignItems="center"
-	// 		onClick={(e) => {
-	// 			handleItemClick(e, { _id: key });
-	// 			dispatch(setNotReload(true));
-	// 			navigate(`/messenger?conv=${ref}`);
-	// 		}}
-	// 		gap={1}
-	// 		sx={{
-	// 			cursor: "pointer",
-	// 			"&:hover": {
-	// 				bgcolor: theme.palette.background.alt,
-	// 			},
-	// 		}}
-	// 		p={2}>
-	// 		<Typography color={theme.palette.secondary[200]} fontWeight={900}>
-	// 			{total}
-	// 		</Typography>
-	// 		<Typography color={theme.palette.secondary[300]} textAlign="end">
-	// 			{`${total > 1 ? "messages" : "message"} from ${user}`}
-	// 		</Typography>
-	// 	</Box>
-	// ));
-
-	// const content = notifications?.map(({ createdAt, sender, type, ref }) => (
-	// 	<Typography
-	// 		key={createdAt}
-	// 		sx={{
-	// 			p: 2,
-	// 			cursor: "pointer",
-	// 			color: theme.palette.secondary[300],
-	// 			"&:hover": {
-	// 				bgcolor: theme.palette.background.alt,
-	// 			},
-	// 		}}
-	// 		textAlign="center"
-	// 		onClick={(e) => {
-	// 			handleItemClick(e, sender);
-	// 			dispatch(setNotReload(true));
-	// 			navigate(`/messenger?conv=${ref}`);
-	// 		}}>
-	// 		{`${sender?.username} ${type}`}
-	// 	</Typography>
-	// ));
 
 	return (
 		<Box>

@@ -74,11 +74,12 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 	const { data: dataMessages, isLoading: isLoadingMessages } =
 		useGetMessagesByConversationQuery(
-			{ id: currentChat?.id },
+			{ id: currentChat?.id || null },
 			{
 				skip: skipMessages,
 				pollingInterval: 10000,
 				refetchOnMountOrArgChange: true,
+				refetchOnFocus: true,
 			},
 		);
 
@@ -133,7 +134,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 					try {
 						senderId && (await deleteBySender({ senderId }).unwrap());
 
-						dispatch(addSenderId(senderId));
+						// dispatch(addSenderId(senderId));
 					} catch (error) {
 						console.log(error);
 					}
@@ -169,7 +170,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 					try {
 						senderId && (await deleteBySender({ senderId }).unwrap());
 
-						dispatch(addSenderId(senderId));
+						// dispatch(addSenderId(senderId));
 					} catch (error) {
 						console.log(error);
 					}
@@ -202,10 +203,12 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	]);
 
 	useEffect(() => {
-		if (user?.role !== "admin") {
-			conversations && setCurrentChat(conversations[0]);
+		if (user?.role !== "admin" && conversations) {
+			setCurrentChat(conversations[0]);
+			setSearchParams({ conv: conversations[0].id });
 		}
-	}, [conversations, user?.role]);
+		///!!!
+	}, [conversations, setSearchParams, user?.role]);
 
 	useEffect(() => {
 		if (dataMessages) setMessages(dataMessages);
@@ -237,6 +240,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 				sender: data.senderId,
 				text: data.text,
 				createdAt: new Date(),
+				id: Math.random() + new Date().getTime(),
 			});
 		});
 	}, [mounted, ws]);
@@ -253,6 +257,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 						return [arrivalMessage];
 					}
 				});
+			setArrivalMessage(null);
 		}
 		// arrivalMessage &&
 		// 	currentChat?.members.includes(arrivalMessage.sender) &&
@@ -339,6 +344,8 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 	if (!socket?.current) return;
 
+	// console.log({ messages });
+
 	return (
 		<MessengerContainer>
 			<CustomSnack
@@ -363,7 +370,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 						{/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
 						{conversations.map((c, i) => (
 							<div
-								key={`conv-${i}-${new Date().getTime()}-${user?.id}`}
+								key={`conv-${i}-${Math.random()}-${user?.id}`}
 								id={`${c?.id}`}>
 								<Box
 									sx={{
@@ -415,7 +422,9 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 									</Typography>
 								) : (
 									messages?.map((m, indx) => (
-										<div key={m.id + indx} ref={scrollRef}>
+										<div
+											key={m.id + indx + Math.random() + new Date().getTime()}
+											ref={scrollRef}>
 											<Message
 												message={m}
 												own={m?.sender === user?.id ? "true" : null}

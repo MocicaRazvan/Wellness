@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PopUp from "./Popup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { selectSocket } from "../../redux/socket/socketSlice";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
@@ -12,12 +12,11 @@ import {
 	selectSenderNotification,
 	setNotificationsRedux,
 } from "../../redux/notifications/notificationsSlice";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 const PopupWrapper = ({ portal = false, left = false }) => {
-	const socketRedux = useSelector(selectSocket);
-	const [skip, setSkip] = useState(true);
-	const user = useSelector(selectCurrentUser);
+	const socketRedux = useSelector(selectSocket, shallowEqual);
+	const user = useSelector(selectCurrentUser, shallowEqual);
 	const [notifications, setNotifications] = useState([]);
 	const [approved, setApproved] = useState({
 		postApprove: [],
@@ -28,23 +27,18 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 		trainingDelete: [],
 		trainingBought: [],
 	});
-	const senderId = useSelector(selectSenderNotification);
+	// const senderId = useSelector(selectSenderNotification, shallowEqual);
 	const disaptch = useDispatch();
-	// const messages = useSelector(selectMessageNotification);
-	// const dispatch = useDispatch();
-	const { pathname } = useLocation();
 
+	const { pathname } = useLocation();
 	const { data, isLoading } = useGetNotificationsByUserQuery(
 		{ receiverId: user?.id },
-		{ skip, refetchOnMountOrArgChange: true, refetchOnReconnect: true },
+		{ refetchOnReconnect: true, refetchOnMountOrArgChange: true },
 	);
 	const [deleteApproved] = useDeleteApprovedMutation();
+	const [searchParams] = useSearchParams();
 
-	// console.log(notifications);
 
-	useEffect(() => {
-		if (user?.id) void setSkip(false);
-	}, [user?.id]);
 	useEffect(() => {
 		if (data?.notifications) setNotifications(data?.notifications);
 	}, [data?.notifications]);
@@ -116,14 +110,21 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 		}
 	}, [deleteApproved, pathname]);
 
+	// useEffect(() => {
+	// 	if (senderId && notifications?.length > 0) {
+	// 		setNotifications((prev) =>
+	// 			prev.filter(({ sender: { _id } }) => _id !== senderId),
+	// 		);
+	// 		disaptch(addSenderId(null));
+	// 	}
+	// }, [disaptch, notifications?.length, senderId]);
 	useEffect(() => {
-		if (senderId && notifications?.length > 0) {
+		if (searchParams.get("conv")) {
 			setNotifications((prev) =>
-				prev.filter(({ sender: { _id } }) => _id !== senderId),
+				prev.filter(({ ref }) => ref !== searchParams.get("conv")),
 			);
-			disaptch(addSenderId(null));
 		}
-	}, [disaptch, notifications?.length, senderId]);
+	}, [searchParams]);
 
 	useEffect(() => {
 		if (notifications) {
@@ -135,6 +136,7 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 		if (socketRedux && user?.id) {
 			socketRedux.on("getNotification", ({ type, sender, ref }) => {
 				//console.log(socketRedux);
+				console.log({ type, sender });
 				setNotifications((prev) => [
 					...prev,
 					{
@@ -143,8 +145,10 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 						type,
 						ref,
 						createdAt: new Date().getTime(),
+						_id: Math.random() + new Date().getTime(),
 					},
 				]);
+
 				//dispatch(addMessage({ value: 1 }));
 			});
 		}
@@ -213,11 +217,11 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 	useEffect(() => {
 		if (socketRedux && notifications?.length > 0) {
 			socketRedux.on("getDeleteNotif", ({ convId }) => {
-				console.log({
-					convId,
-					notifications,
-					map: notifications.filter(({ ref }) => ref !== convId),
-				});
+				// console.log({
+				// 	convId,
+				// 	notifications,
+				// 	map: notifications.filter(({ ref }) => ref !== convId),
+				// });
 				setNotifications((prev) => prev.filter(({ ref }) => ref !== convId));
 			});
 		}

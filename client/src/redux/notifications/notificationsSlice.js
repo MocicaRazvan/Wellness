@@ -4,6 +4,7 @@ const initialState = {
 	ids: [],
 	senderId: null,
 	notifications: null,
+	tempNotif: [],
 };
 
 const notificationsSlice = createSlice({
@@ -23,6 +24,13 @@ const notificationsSlice = createSlice({
 				return acc;
 			}, {});
 		},
+		setTempNotif: (state, action) => {
+			if (action.payload?.reset === true) {
+				state.tempNotif = [];
+			} else {
+				state.tempNotif = [...state.tempNotif, ...action.payload.notif];
+			}
+		},
 	},
 });
 
@@ -30,6 +38,7 @@ export default notificationsSlice.reducer;
 export const selectNotificationsIds = (state) => state.notifications.ids;
 export const selectSenderNotification = (state) => state.notifications.senderId;
 export const selectNotifications = (state) => state.notifications.notifications;
+export const selectTempNotif = (state) => state.notifications.tempNotif;
 
-export const { addIds, addSenderId, setNotificationsRedux } =
+export const { addIds, addSenderId, setNotificationsRedux, setTempNotif } =
 	notificationsSlice.actions;
