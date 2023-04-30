@@ -19,7 +19,7 @@ import { initializeSocket } from "../redux/socket/socketSlice";
 const MainLayout = () => {
 	const dispatch = useDispatch();
 	const token = useSelector(selectCurrentToken);
-	const socket = io("ws://localhost:8900");
+	const socket = io(process.env.REACT_APP_SOCKET_IO);
 	const user = useSelector(selectCurrentUser);
 	const isAdminPath = useLocation().pathname.includes("admin");
 	const { pathname } = useLocation();
