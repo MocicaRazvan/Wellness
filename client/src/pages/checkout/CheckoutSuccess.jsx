@@ -1,4 +1,4 @@
-import { Button, Typography, useTheme } from "@mui/material";
+import { Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
@@ -30,7 +30,7 @@ const CheckoutSuccess = () => {
 		{ session: searchParams.get("session") },
 		{ skip: !searchParams.get("session") },
 	);
-
+	const isNonMobile = useMediaQuery("(min-width:800px)");
 	useEffect(() => {
 		if (user && !isLoading) {
 			console.log(user);
@@ -101,7 +101,8 @@ const CheckoutSuccess = () => {
 					justifyContent="center"
 					alignItems="center"
 					flexDirection="column"
-					gap={5}>
+					gap={5}
+					mb={2}>
 					<Typography
 						variant="h2"
 						fontWeight="bold"
@@ -124,13 +125,13 @@ const CheckoutSuccess = () => {
 								color: theme.palette.primary.main,
 							},
 						}}
-						onClick={() => navigate("/orders")}
+						onClick={() => navigate("/orders", { replace: true })}
 						color={theme.palette.secondary[300]}>
 						Check the your orders page!
 					</Typography>
 					<Button
 						variant="contained"
-						onClick={() => navigate("/trainings")}
+						onClick={() => navigate("/trainings", { replace: true })}
 						color="secondary">
 						Continue Shopping
 					</Button>
@@ -144,7 +145,12 @@ const CheckoutSuccess = () => {
 						loop
 						animationData={success}
 						play
-						style={{ width: "50%", height: "50%", margin: 0, padding: 0 }}
+						style={{
+							width: isNonMobile ? "35%" : "60%",
+							height: isNonMobile ? "35%" : "60%",
+							margin: 0,
+							padding: 0,
+						}}
 					/>
 				</Box>
 			</Box>
