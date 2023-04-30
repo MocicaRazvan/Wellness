@@ -1,13 +1,10 @@
-import React from "react";
-import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
-import { useParams } from "react-router-dom";
-import { Container } from "@mui/system";
 import { Box, CircularProgress, Stack } from "@mui/material";
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 
 import Core from "../../components/comments/Core";
 import SinglePostCard from "./SinglePostCard";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const SinglePost = () => {
 	const { postId } = useParams();

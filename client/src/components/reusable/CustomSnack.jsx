@@ -1,14 +1,7 @@
-import {
-	Alert,
-	Button,
-	Grow,
-	IconButton,
-	Slide,
-	Snackbar,
-} from "@mui/material";
-import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+import { Alert, Button, IconButton, Snackbar } from "@mui/material";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const CustomSnack = ({

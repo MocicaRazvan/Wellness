@@ -1,4 +1,19 @@
 import {
+	ArrowDropDownCircleOutlined,
+	Book,
+	ChevronLeft,
+	ChevronRightOutlined,
+	EmailOutlined,
+	Groups2Outlined,
+	HomeOutlined,
+	MonitorHeartOutlined,
+	PieChartOutlined,
+	PointOfSaleOutlined,
+	PublicOutlined,
+	ReceiptLongOutlined,
+	TodayOutlined,
+} from "@mui/icons-material";
+import {
 	Box,
 	Button,
 	Divider,
@@ -14,27 +29,12 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import {
-	ChevronLeft,
-	ChevronRightOutlined,
-	HomeOutlined,
-	Groups2Outlined,
-	ReceiptLongOutlined,
-	PublicOutlined,
-	PointOfSaleOutlined,
-	TodayOutlined,
-	PieChartOutlined,
-	Book,
-	ArrowDropDownCircleOutlined,
-	MonitorHeartOutlined,
-	EmailOutlined,
-} from "@mui/icons-material";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import FlexBetween from "../reusable/FlexBetween";
 import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import { setNotReload } from "../../redux/messages/messagesSlice";
-import { useDispatch } from "react-redux";
+import FlexBetween from "../reusable/FlexBetween";
 
 const navItems = [
 	{

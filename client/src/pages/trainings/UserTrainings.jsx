@@ -6,11 +6,14 @@ import {
 	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import Header from "../../components/reusable/Header";
+import LootieCustom from "../../components/reusable/LootieCustom";
 import UserAgreement from "../../components/reusable/UserAgreement";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
@@ -18,10 +21,7 @@ import {
 	useDisplayTrainingMutation,
 	useGetUserTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
-import { format } from "date-fns";
-import LootieCustom from "../../components/reusable/LootieCustom";
 import cantSee from "../../utils/lottie/cantSee.json";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const Trainings = () => {
 	const { state, pathname } = useLocation();

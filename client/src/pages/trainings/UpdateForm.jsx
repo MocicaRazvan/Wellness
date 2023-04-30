@@ -11,17 +11,17 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
+import { Formik } from "formik";
 import React, { useState } from "react";
+import Dropzone from "react-dropzone";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
+import Loading from "../../components/reusable/Loading";
+import TextEditor from "../../components/reusable/TextEditor";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useUpdateTrainingMutation } from "../../redux/trainings/trainingsApi";
-import Loading from "../../components/reusable/Loading";
-import { Formik } from "formik";
-import TextEditor from "../../components/reusable/TextEditor";
-import Dropzone from "react-dropzone";
-import CustomCarousel from "../../components/reusable/CustomCarousel";
 import tags from "../../utils/consts/tags";
 
 const trainingSchema = yup.object().shape({

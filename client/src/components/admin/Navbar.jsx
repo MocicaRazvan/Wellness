@@ -1,12 +1,11 @@
-import { useState } from "react";
 import {
-	LightModeOutlined,
-	DarkModeOutlined,
-	Menu as MenuIcon,
-	Home,
 	ArrowDropDownCircleOutlined,
+	DarkModeOutlined,
+	Home,
+	LightModeOutlined,
 } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import {
 	AppBar,
 	Box,
@@ -18,15 +17,15 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
-import FlexBetween from "../reusable/FlexBetween";
-import { setMode } from "../../redux/auth/authSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { setMode } from "../../redux/auth/authSlice";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 import SearchBar from "../Navigation/SearchBar";
 import PopupWrapper from "../Popup/PopupWrapper";
-import { setNotReload } from "../../redux/messages/messagesSlice";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import CloseIcon from "@mui/icons-material/Close";
+import FlexBetween from "../reusable/FlexBetween";
 
 const Navbar = ({ user, setIsSideBarOpen, isSideBarOpen }) => {
 	const dispatch = useDispatch();

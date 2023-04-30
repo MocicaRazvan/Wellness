@@ -1,7 +1,5 @@
+import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
-import { Typography, Card, CardContent, CardMedia, Box, Chip } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ReactPlayer from "react-player";
 
 const VideoCard = ({ exercise }) => {

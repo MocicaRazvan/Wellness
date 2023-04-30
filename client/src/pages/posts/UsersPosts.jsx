@@ -1,3 +1,5 @@
+import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
+import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import {
 	Box,
 	Button,
@@ -8,17 +10,15 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import CustomPagination from "../../components/reusable/CustomPagination";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import Filter from "../../components/reusable/Filter";
+import GridList from "../../components/reusable/GridList";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetPostsByUserQuery } from "../../redux/posts/postsApiSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import PostCard from "./PostCard";
-import GridList from "../../components/reusable/GridList";
-import CustomPagination from "../../components/reusable/CustomPagination";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
-import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
-import { useLocation, useNavigate } from "react-router-dom";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const UsersPosts = () => {
 	const { state, pathname } = useLocation();

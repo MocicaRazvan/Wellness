@@ -1,11 +1,11 @@
 import { Box, CircularProgress, useTheme } from "@mui/material";
 import { useMemo } from "react";
 import {
+	PolarAngleAxis,
+	PolarGrid,
+	PolarRadiusAxis,
 	Radar,
 	RadarChart,
-	PolarGrid,
-	PolarAngleAxis,
-	PolarRadiusAxis,
 	ResponsiveContainer,
 } from "recharts";
 import { useGetTagStatsQuery } from "../../redux/orders/orderApi";

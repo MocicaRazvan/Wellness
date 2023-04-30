@@ -1,21 +1,19 @@
 import {
 	Avatar,
+	Box,
 	Button,
 	Card,
+	FormHelperText,
 	Stack,
 	TextField,
-	ThemeProvider,
-	Box,
 	useTheme,
-	FormHelperText,
 } from "@mui/material";
-import { useState } from "react";
-import { useCreateCommentMutation } from "../../redux/comments/commentsApi";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import Perspective from "perspective-api-client";
-import Loading from "../reusable/Loading";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useCreateCommentMutation } from "../../redux/comments/commentsApi";
 
 const perspective = new Perspective({
 	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,

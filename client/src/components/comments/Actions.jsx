@@ -1,14 +1,11 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import {
-	useCommentActionsMutation,
-	useDeleteCommentMutation,
-} from "../../redux/comments/commentsApi";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import React from "react";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useCommentActionsMutation } from "../../redux/comments/commentsApi";
 
 const Actions = ({ comment }) => {
 	const [actionComment] = useCommentActionsMutation();

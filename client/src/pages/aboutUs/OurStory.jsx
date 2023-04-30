@@ -1,8 +1,8 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React from "react";
 import bicepCurl from "../../images/ourStory/bicepCurl.jpg";
 import nutrition from "../../images/ourStory/nutrition.jpg";
 import yogaGroup from "../../images/ourStory/yogaGroup.jpg";
-import React from "react";
 
 const OurStory = () => {
 	const isNonMobile = useMediaQuery("(min-width:1000px)");

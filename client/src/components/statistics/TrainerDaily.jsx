@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Box, CircularProgress, TextField, useTheme } from "@mui/material";
-import { ResponsiveLine } from "@nivo/line";
-import moment from "moment";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { useGetTotalUserDailyQuery } from "../../redux/orders/orderApi";
-import Header from "../reusable/Header";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ResponsiveLine } from "@nivo/line";
+import moment from "moment";
 import Lottie from "react-lottie-player";
+import { useGetTotalUserDailyQuery } from "../../redux/orders/orderApi";
 import noData from "../../utils/lottie/noData.json";
+import Header from "../reusable/Header";
 
 const TrainerDaily = ({
 	userId = "",

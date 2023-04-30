@@ -1,19 +1,12 @@
-import { styled, useTheme } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
+import {
+	Calculate,
+	DarkModeOutlined,
+	LightModeOutlined,
+} from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuIcon from "@mui/icons-material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import {
-	LightModeOutlined,
-	DarkModeOutlined,
-	Calculate,
-} from "@mui/icons-material";
 import {
 	Accordion,
 	AccordionDetails,
@@ -24,26 +17,32 @@ import {
 	List,
 	ListItem,
 	ListItemButton,
-	SwipeableDrawer,
 	ListItemText,
+	SwipeableDrawer,
 	useMediaQuery,
 } from "@mui/material";
-import { useState } from "react";
-import IconBtn from "../reusable/IconBtn";
-import { useSelector, useDispatch } from "react-redux";
-import { logOut, selectCurrentUser, setMode } from "../../redux/auth/authSlice";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { styled, useTheme } from "@mui/material/styles";
 import { Stack } from "@mui/system";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.svg";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { logOut, selectCurrentUser, setMode } from "../../redux/auth/authSlice";
 import { selectCartItems } from "../../redux/cart/cartSlice";
-import SearchBar from "./SearchBar";
-import PopupWrapper from "../Popup/PopupWrapper";
-import pathnames from "../../utils/consts/searchBarRoutes";
 import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
-import { useEffect } from "react";
 import { setNotReload } from "../../redux/messages/messagesSlice";
+import pathnames from "../../utils/consts/searchBarRoutes";
+import PopupWrapper from "../Popup/PopupWrapper";
 import CartPopper from "../cart/CartPopper";
+import IconBtn from "../reusable/IconBtn";
+import SearchBar from "./SearchBar";
 
 const drawerWidth = 240;
 

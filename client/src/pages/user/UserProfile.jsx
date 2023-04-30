@@ -1,14 +1,9 @@
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import UserInfo from "./UserInfo";
-import Overview from "../admin/Overview";
-import Daily from "../admin/Daily";
-import InfoBar from "../../components/statistics/InfoBar";
-import TrainerOverview from "../../components/statistics/TrainerOverview";
 
-import moment from "moment";
 import { useLocation } from "react-router-dom";
 import CustomSnack from "../../components/reusable/CustomSnack";
 

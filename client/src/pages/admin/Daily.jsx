@@ -9,15 +9,15 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useGetdDailyEarningsQuery } from "../../redux/orders/orderApi";
 // import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
-import { ResponsiveLine } from "@nivo/line";
 import { Box } from "@mui/system";
-import Header from "../../components/reusable/Header";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ResponsiveLine } from "@nivo/line";
 import Lottie from "react-lottie-player";
-import noData from "../../utils/lottie/noData.json";
 import { useOutletContext } from "react-router-dom";
+import Header from "../../components/reusable/Header";
+import noData from "../../utils/lottie/noData.json";
 
 const Daily = ({
 	admin = true,

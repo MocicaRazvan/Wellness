@@ -1,8 +1,8 @@
 import { Box, CircularProgress, useTheme } from "@mui/material";
-import React from "react";
-import { useGetAllMonthlyStatsQuery } from "../../redux/user/userApi";
 import { ResponsivePie } from "@nivo/pie";
+import React from "react";
 import Lottie from "react-lottie-player";
+import { useGetAllMonthlyStatsQuery } from "../../redux/user/userApi";
 import noData from "../../utils/lottie/noData.json";
 
 const BreakdownChart = ({

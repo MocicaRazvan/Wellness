@@ -1,7 +1,7 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
 import MuiTypography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import * as React from "react";
 
 const markClassesMapping = {
 	center: {

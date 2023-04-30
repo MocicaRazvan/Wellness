@@ -1,7 +1,8 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import TimelineDot from "@mui/lab/TimelineDot";
 import {
 	alpha,
 	Box,
-	Button,
 	IconButton,
 	styled,
 	Tooltip,
@@ -9,16 +10,13 @@ import {
 	useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { useGetUserByIdQuery } from "../../redux/user/userApi";
-import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import { useSelector } from "react-redux";
-import { selectNotifications } from "../../redux/notifications/notificationsSlice";
-import { useDeleteSupportConversationMutation } from "../../redux/conversation/conversationApi";
-import UserAgreement from "../reusable/UserAgreement";
-import TimelineDot from "@mui/lab/TimelineDot";
 import { useNavigate } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
+import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { useDeleteSupportConversationMutation } from "../../redux/conversation/conversationApi";
+import { selectNotifications } from "../../redux/notifications/notificationsSlice";
 import { selectSocket } from "../../redux/socket/socketSlice";
+import UserAgreement from "../reusable/UserAgreement";
 
 const Conversation = ({
 	conversation,

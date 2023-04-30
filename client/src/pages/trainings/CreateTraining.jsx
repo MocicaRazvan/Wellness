@@ -1,9 +1,9 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Form from "./Form";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import Form from "./Form";
 
 const CreateTraining = () => {
 	const theme = useTheme();

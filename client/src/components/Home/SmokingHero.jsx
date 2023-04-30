@@ -1,15 +1,14 @@
-import { Typography } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
-import { useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import blackHug from "../../images/hug/blackHug.svg";
 import whiteHug from "../../images/hug/whiteHug.svg";
-import { useEffect, useRef } from "react";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import { setNotReload } from "../../redux/messages/messagesSlice";
 const SmokingHero = () => {
 	const navigate = useNavigate();

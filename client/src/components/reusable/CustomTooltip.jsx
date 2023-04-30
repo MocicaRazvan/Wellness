@@ -1,7 +1,7 @@
-import {IconButton } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import { IconButton } from "@mui/material";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
-import InfoIcon from "@mui/icons-material/Info";
 const CustomWidthTooltip = styled(({ className, ...props }) => (
 	<Tooltip {...props} classes={{ popper: className }} />
 ))({
@@ -14,7 +14,7 @@ const CustomTooltip = ({ text }) => {
 	return (
 		<CustomWidthTooltip title={text}>
 			<IconButton>
-				<InfoIcon color='primary' />
+				<InfoIcon color="primary" />
 			</IconButton>
 		</CustomWidthTooltip>
 	);

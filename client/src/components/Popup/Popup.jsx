@@ -1,20 +1,20 @@
+import MailIcon from "@mui/icons-material/Mail";
+import { Tooltip, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import Popper from "@mui/material/Popper";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useRef, useState } from "react";
-import IconBtn from "../reusable/IconBtn";
-import MailIcon from "@mui/icons-material/Mail";
-import { Tooltip, useTheme } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 import {
 	useDeleteNotifcationsBySenderMutation,
 	useDeleteNotificationsByReceiverMutation,
 } from "../../redux/notifications/notificationsApi";
-import { useDispatch } from "react-redux";
-import { setNotReload } from "../../redux/messages/messagesSlice";
+import IconBtn from "../reusable/IconBtn";
 
 export default function PopUp({
 	notifications,

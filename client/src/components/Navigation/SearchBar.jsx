@@ -1,15 +1,14 @@
-import Autocomplete from "@mui/material/Autocomplete";
-import { alpha, styled } from "@mui/system";
-import { Button, InputBase, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { InputBase, useMediaQuery } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import { styled } from "@mui/system";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
 	selectCurrentSearch,
 	setSearch,
 } from "../../redux/searchState/searchSlice";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 
 //getLimitTagsText
 function SearchBar() {

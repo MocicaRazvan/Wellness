@@ -1,19 +1,18 @@
-import React, { useEffect, useRef } from "react";
-import biceps from "../../images/categories/Biceps.jpg";
-import triceps from "../../images/categories/Triceps.jpg";
-import chest from "../../images/categories/Chest.png";
-import shoulders from "../../images/categories/Shoulder.jpg";
-import back from "../../images/categories/Back.jpg";
-import quades from "../../images/categories/Quads.jpg";
-import glutes from "../../images/categories/Glutes.jpg";
-import femural from "../../images/categories/Femural.jpg";
-import abs from "../../images/categories/Abs.jpg";
-import { styled } from "@mui/material/styles";
+import { Divider, Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
-import { Divider, Typography } from "@mui/material";
-import { useTheme } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import React, { useEffect, useRef } from "react";
+import abs from "../../images/categories/Abs.jpg";
+import back from "../../images/categories/Back.jpg";
+import biceps from "../../images/categories/Biceps.jpg";
+import chest from "../../images/categories/Chest.png";
+import femural from "../../images/categories/Femural.jpg";
+import glutes from "../../images/categories/Glutes.jpg";
+import quades from "../../images/categories/Quads.jpg";
+import shoulders from "../../images/categories/Shoulder.jpg";
+import triceps from "../../images/categories/Triceps.jpg";
 
 const images = [
 	{

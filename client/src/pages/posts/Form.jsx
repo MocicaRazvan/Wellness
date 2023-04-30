@@ -1,30 +1,30 @@
 import {
+	Button,
+	FormControl,
+	FormHelperText,
+	InputLabel,
+	MenuItem,
 	Select,
 	TextField,
-	useMediaQuery,
-	MenuItem,
-	InputLabel,
-	FormControl,
-	Button,
 	Typography,
-	FormHelperText,
+	useMediaQuery,
 } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 import { Formik } from "formik";
 import { useState } from "react";
+import Dropzone from "react-dropzone";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import tags from "../../utils/consts/tags";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
+import Loading from "../../components/reusable/Loading";
+import TextEditor from "../../components/reusable/TextEditor";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
 	useCreatePostMutation,
 	useUpdatePostMutation,
 } from "../../redux/posts/postsApiSlice";
-import TextEditor from "../../components/reusable/TextEditor";
-import Dropzone from "react-dropzone";
-import CustomCarousel from "../../components/reusable/CustomCarousel";
-import { useNavigate } from "react-router-dom";
-import Loading from "../../components/reusable/Loading";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
+import tags from "../../utils/consts/tags";
 
 const postSchema = yup.object().shape({
 	tags: yup

@@ -1,8 +1,8 @@
-import { useQuill } from "react-quilljs";
+import { FormHelperText, useTheme } from "@mui/material";
+import { Box } from "@mui/system";
 import "quill/dist/quill.snow.css";
 import { useEffect } from "react";
-import { Box } from "@mui/system";
-import { FormHelperText, useTheme } from "@mui/material";
+import { useQuill } from "react-quilljs";
 
 const TextEditor = ({
 	setValue,

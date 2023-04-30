@@ -1,27 +1,27 @@
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import {
 	Button,
 	CircularProgress,
 	IconButton,
+	Tooltip,
+	Typography,
 	useMediaQuery,
 	useTheme,
-	Typography,
-	Tooltip,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
+import Header from "../../components/reusable/Header";
+import LootieCustom from "../../components/reusable/LootieCustom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
 	useGetBoughtUserTrainingsQuery,
 	useTrainingActionsMutation,
 } from "../../redux/trainings/trainingsApi";
-import Header from "../../components/reusable/Header";
-import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
-import { format } from "date-fns";
-import LootieCustom from "../../components/reusable/LootieCustom";
 import cantSee from "../../utils/lottie/cantSee.json";
 
 const BoughtTrainings = () => {

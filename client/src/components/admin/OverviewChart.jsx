@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { ResponsiveLine } from "@nivo/line";
 import { Box, CircularProgress, useTheme } from "@mui/material";
-import { useGetEarningsQuery } from "../../redux/orders/orderApi";
+import { ResponsiveLine } from "@nivo/line";
+import { useMemo } from "react";
 import Lottie from "react-lottie-player";
+import { useGetEarningsQuery } from "../../redux/orders/orderApi";
 import noData from "../../utils/lottie/noData.json";
 
 const OverviewChart = ({

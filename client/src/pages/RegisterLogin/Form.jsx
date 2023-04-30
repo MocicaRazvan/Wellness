@@ -1,27 +1,25 @@
-import { useEffect, useState } from "react";
+import { Visibility } from "@mui/icons-material";
 import {
 	Box,
 	Button,
-	TextField,
-	useMediaQuery,
-	Typography,
-	useTheme,
 	InputAdornment,
+	TextField,
+	Typography,
+	useMediaQuery,
+	useTheme,
 } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
-import * as yup from "yup";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
-import FlexBetween from "../../components/reusable/FlexBetween";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import CustomCarousel from "../../components/reusable/CustomCarousel";
+import Loading from "../../components/reusable/Loading";
 import {
 	useLoginMutation,
 	useRegisterMutation,
 } from "../../redux/auth/authApiSlice";
 import { useUpdateUserMutation } from "../../redux/user/userApi";
-import Loading from "../../components/reusable/Loading";
-import CustomCarousel from "../../components/reusable/CustomCarousel";
-import { Visibility } from "@mui/icons-material";
 
 const registerSchema = yup.object().shape({
 	firstName: yup

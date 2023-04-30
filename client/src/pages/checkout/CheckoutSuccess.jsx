@@ -6,12 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { updateUser } from "../../redux/auth/authSlice";
 import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
-import { useGetSingleUserQuery } from "../../redux/user/userApi";
-import checkout from "../../utils/lottie/checkout.json";
-import success from "../../utils/lottie/success.json";
-import { selectSocket } from "../../redux/socket/socketSlice";
 import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 import { useUpdateOrderSessionQuery } from "../../redux/orders/orderApi";
+import { selectSocket } from "../../redux/socket/socketSlice";
+import { useGetSingleUserQuery } from "../../redux/user/userApi";
+import success from "../../utils/lottie/success.json";
 const CheckoutSuccess = () => {
 	const theme = useTheme();
 	const navigate = useNavigate();

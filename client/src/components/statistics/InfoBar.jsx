@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from "react";
 import {
 	Box,
 	CircularProgress,
@@ -7,10 +6,11 @@ import {
 	MenuItem,
 	Select,
 } from "@mui/material";
-import months from "../../utils/consts/months";
-import noData from "../../utils/lottie/noData.json";
+import React, { useMemo, useState } from "react";
 import Lottie from "react-lottie-player";
 import { useGetTotalUserMonthQuery } from "../../redux/orders/orderApi";
+import months from "../../utils/consts/months";
+import noData from "../../utils/lottie/noData.json";
 import Header from "../reusable/Header";
 import Bar from "./Bar";
 const InfoBar = ({

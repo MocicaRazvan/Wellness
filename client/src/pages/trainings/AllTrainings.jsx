@@ -1,4 +1,5 @@
 import { useTheme } from "@emotion/react";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import {
 	Box,
 	Button,
@@ -11,12 +12,11 @@ import { useSelector } from "react-redux";
 import CustomPagination from "../../components/reusable/CustomPagination";
 import Filter from "../../components/reusable/Filter";
 import GridList from "../../components/reusable/GridList";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { selectCartItems } from "../../redux/cart/cartSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import { useGetTrainingsQuery } from "../../redux/trainings/trainingsApi";
 import TrainingCard from "./TrainingCard";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
-import { selectCartItems } from "../../redux/cart/cartSlice";
 
 const AllTrainings = () => {
 	const [sorting, setSorting] = useState({});

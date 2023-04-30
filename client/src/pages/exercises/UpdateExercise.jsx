@@ -6,12 +6,7 @@ import {
 	useMediaQuery,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import {
-	Navigate,
-	useLocation,
-	useNavigate,
-	useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetExerciseByIdQuery } from "../../redux/exercises/exercisesApi";
 import Form from "./Form";

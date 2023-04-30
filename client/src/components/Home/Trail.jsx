@@ -1,4 +1,4 @@
-import { useTrail, a } from "@react-spring/web";
+import { a, useTrail } from "@react-spring/web";
 import React from "react";
 
 const Trail = ({ open, children, h = "80px" }) => {

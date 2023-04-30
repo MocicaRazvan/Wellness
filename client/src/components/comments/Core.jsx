@@ -1,11 +1,11 @@
 import { CircularProgress, Container, Stack } from "@mui/material";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetCommentsQuery } from "../../redux/comments/commentsApi";
+import CustomSnack from "../reusable/CustomSnack";
 import AddComment from "./AddComment";
 import Comment from "./Comment";
-import { useState } from "react";
-import CustomSnack from "../reusable/CustomSnack";
 
 const Core = ({ type, id }) => {
 	const [snackOpen, setSnackOpen] = useState(false);

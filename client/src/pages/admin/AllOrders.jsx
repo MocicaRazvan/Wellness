@@ -4,16 +4,15 @@ import {
 	Tooltip,
 	Typography,
 	styled,
+	useMediaQuery,
 	useTheme,
 } from "@mui/material";
+import { format } from "date-fns";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
 import Header from "../../components/reusable/Header";
 import { useGetAllOrdersQuery } from "../../redux/orders/orderApi";
-import { format } from "date-fns";
-import { useMediaQuery } from "@mui/material";
-import { useOutletContext } from "react-router-dom";
 
 const AllOrders = () => {
 	const [page, setPage] = useState(0);

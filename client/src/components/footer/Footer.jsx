@@ -1,7 +1,7 @@
-import { Box, styled, Typography, useTheme } from "@mui/material";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Box, Typography, styled, useTheme } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const Footer = () => {

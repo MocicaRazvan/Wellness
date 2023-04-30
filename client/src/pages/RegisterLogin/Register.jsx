@@ -1,9 +1,9 @@
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import Form from "./Form";
-import { useEffect, useState } from "react";
 
 const LoginPage = () => {
 	const user = useSelector(selectCurrentUser);

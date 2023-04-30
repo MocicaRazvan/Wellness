@@ -1,25 +1,24 @@
-import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import UsersDataGrid from "../../components/admin/UsersDataGrid";
-import Header from "../../components/reusable/Header";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
 	Accordion,
 	AccordionDetails,
 	AccordionSummary,
-	Button,
 	Fade,
 	Typography,
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import { useOutletContext } from "react-router-dom";
+import { Box } from "@mui/system";
 import moment from "moment";
-import TrainerOverview from "../../components/statistics/TrainerOverview";
-import TrainerDaily from "../../components/statistics/TrainerDaily";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import UsersDataGrid from "../../components/admin/UsersDataGrid";
+import Header from "../../components/reusable/Header";
 import InfoBar from "../../components/statistics/InfoBar";
-import Overview from "./Overview";
+import TrainerDaily from "../../components/statistics/TrainerDaily";
+import TrainerOverview from "../../components/statistics/TrainerOverview";
 import Daily from "./Daily";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Overview from "./Overview";
 
 const AllUsers = () => {
 	const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");

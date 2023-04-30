@@ -1,10 +1,10 @@
 import { Box, CircularProgress, useMediaQuery, useTheme } from "@mui/material";
-import React from "react";
-import { useGetOrdersLocationQuery } from "../../redux/orders/orderApi";
 import { ResponsiveChoropleth } from "@nivo/geo";
-import { geoData } from "../../utils/geoData/geoData";
-import Header from "../../components/reusable/Header";
+import React from "react";
 import { useOutletContext } from "react-router-dom";
+import Header from "../../components/reusable/Header";
+import { useGetOrdersLocationQuery } from "../../redux/orders/orderApi";
+import { geoData } from "../../utils/geoData/geoData";
 
 const Geography = () => {
 	const { data, isLoading } = useGetOrdersLocationQuery();

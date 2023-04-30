@@ -1,3 +1,4 @@
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
 	Box,
 	Button,
@@ -8,16 +9,15 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
-import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
-import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
-import { useState } from "react";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import CustomSnack from "../../components/reusable/CustomSnack";
+import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
 
 const SingleTraining = () => {
 	const { trainingId } = useParams();

@@ -1,20 +1,20 @@
-import { useEffect, useRef } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-import Navigation from "../components/Navigation/Navigation";
+import { Box } from "@mui/material";
+import jwtDecode from "jwt-decode";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useLocation } from "react-router-dom";
+import { io } from "socket.io-client";
+import Navigation from "../components/Navigation/Navigation";
+import Footer from "../components/footer/Footer";
+import ScrollTop from "../components/reusable/ScrollTop";
 import {
 	logOut,
 	selectCurrentToken,
 	selectCurrentUser,
 	setCredentials,
 } from "../redux/auth/authSlice";
-import jwtDecode from "jwt-decode";
-import { io } from "socket.io-client";
-import { initializeSocket } from "../redux/socket/socketSlice";
-import Footer from "../components/footer/Footer";
-import { Box } from "@mui/material";
-import ScrollTop from "../components/reusable/ScrollTop";
 import { clearCart } from "../redux/cart/cartSlice";
+import { initializeSocket } from "../redux/socket/socketSlice";
 
 const MainLayout = () => {
 	const dispatch = useDispatch();

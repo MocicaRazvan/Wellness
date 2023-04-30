@@ -1,5 +1,3 @@
-import React, { useMemo, useState } from "react";
-import { useGetEarningsQuery } from "../../redux/orders/orderApi";
 import {
 	Box,
 	CircularProgress,
@@ -9,12 +7,12 @@ import {
 	Select,
 	useMediaQuery,
 } from "@mui/material";
-import noData from "../../utils/lottie/noData.json";
+import React, { useMemo, useState } from "react";
 import Lottie from "react-lottie-player";
-import { useOutletContext } from "react-router-dom";
-import Bar from "../statistics/Bar";
+import { useGetEarningsQuery } from "../../redux/orders/orderApi";
+import noData from "../../utils/lottie/noData.json";
 import Header from "../reusable/Header";
-import months from "../../utils/consts/months";
+import Bar from "../statistics/Bar";
 
 const MonthBar = ({
 	maxYear = new Date().getFullYear() - 9,

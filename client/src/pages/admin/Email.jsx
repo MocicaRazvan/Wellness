@@ -6,14 +6,14 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import * as yup from "yup";
 import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useQuill } from "react-quilljs";
+import * as yup from "yup";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import Header from "../../components/reusable/Header";
 import Loading from "../../components/reusable/Loading";
 import { useSendEmailAdminMutation } from "../../redux/user/userApi";
-import { useQuill } from "react-quilljs";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const trainingSchema = yup.object().shape({
 	email: yup.string().email("invalid email").required("Please enter the email"),

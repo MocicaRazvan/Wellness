@@ -1,4 +1,10 @@
 import {
+	LocationOnOutlined,
+	ManageAccountsOutlined,
+	SupervisedUserCircleOutlined,
+	WorkOutlineOutlined,
+} from "@mui/icons-material";
+import {
 	Box,
 	CircularProgress,
 	Divider,
@@ -7,18 +13,12 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import FlexBetween from "../../components/reusable/FlexBetween";
-import UserImage from "../../components/reusable/UserImage";
-import {
-	ManageAccountsOutlined,
-	LocationOnOutlined,
-	WorkOutlineOutlined,
-	SupervisedUserCircleOutlined,
-} from "@mui/icons-material";
-import { useGetCountStatsQuery } from "../../redux/user/userApi";
-import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FlexBetween from "../../components/reusable/FlexBetween";
+import UserImage from "../../components/reusable/UserImage";
+import blankUser from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { useGetCountStatsQuery } from "../../redux/user/userApi";
 
 //username, email, role, subscription, image, location, occupation, phonenumber
 //tbd update user function

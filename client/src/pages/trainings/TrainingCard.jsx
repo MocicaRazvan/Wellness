@@ -1,3 +1,4 @@
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import {
 	Avatar,
 	Box,
@@ -7,28 +8,21 @@ import {
 	CardMedia,
 	Chip,
 	IconButton,
-	Slide,
-	Snackbar,
 	Stack,
 	styled,
 	Tooltip,
 	Typography,
 	useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
-import {
-	slideInBottom,
-	slideInLeft,
-	slideInRight,
-} from "../../animation/animations";
-import { useNavigate } from "react-router-dom";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import moment from "moment";
-import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { slideInRight } from "../../animation/animations";
 import CustomSnack from "../../components/reusable/CustomSnack";
+import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { addToCart, selectCartItems } from "../../redux/cart/cartSlice";
 
 const TrainingCard = ({ item }) => {
 	const [showOptions, setShowOptions] = useState(false);

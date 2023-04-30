@@ -1,33 +1,29 @@
-import { useContext, useEffect, useState } from "react";
+import { Delete, Edit } from "@mui/icons-material";
 import {
 	Avatar,
+	Box,
 	Button,
 	Card,
+	FormHelperText,
 	Stack,
-	Typography,
-	ThemeProvider,
 	TextField,
-	Box,
+	Tooltip,
+	Typography,
 	styled,
 	useTheme,
-	FormHelperText,
-	Tooltip,
 } from "@mui/material";
-import YouTag from "./YouTag";
-import Actions from "./Actions";
+import Perspective from "perspective-api-client";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { format } from "timeago.js";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { Delete, Edit } from "@mui/icons-material";
 import {
 	useDeleteCommentMutation,
 	useUpdateCommentMutation,
 } from "../../redux/comments/commentsApi";
-import { format } from "timeago.js";
-import Perspective from "perspective-api-client";
-import Loading from "../reusable/Loading";
-import { useNavigate } from "react-router-dom";
 import UserAgreement from "../reusable/UserAgreement";
-import CustomSnack from "../reusable/CustomSnack";
+import Actions from "./Actions";
 
 const perspective = new Perspective({
 	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,

@@ -1,3 +1,5 @@
+import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
+import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
 import {
 	Box,
 	Button,
@@ -12,25 +14,22 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
+import { format } from "date-fns";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import Header from "../../components/reusable/Header";
-import DoNotDisturbOnOutlinedIcon from "@mui/icons-material/DoNotDisturbOnOutlined";
-import BrowserNotSupportedIcon from "@mui/icons-material/BrowserNotSupported";
+import UserAgreement from "../../components/reusable/UserAgreement";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
 import {
 	useApprovePostMutation,
 	useDeletePostMutation,
 	useGetPostsAdminQuery,
 } from "../../redux/posts/postsApiSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
-import { format } from "date-fns";
-import UserAgreement from "../../components/reusable/UserAgreement";
-import { useOutletContext } from "react-router-dom";
 import { selectSocket } from "../../redux/socket/socketSlice";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const Post = ({
 	post,

@@ -1,5 +1,4 @@
 import {
-	alpha,
 	Checkbox,
 	FormControl,
 	InputLabel,
@@ -10,11 +9,11 @@ import {
 	styled,
 	useTheme,
 } from "@mui/material";
-import React, { useMemo, useRef } from "react";
-import tagValues from "../../utils/consts/tags";
-import muscleGroupValues from "../../utils/consts/muscleGorups.js";
-import { selectExercises } from "../../redux/exercises/exercisesSlice";
+import React from "react";
 import { useSelector } from "react-redux";
+import { selectExercises } from "../../redux/exercises/exercisesSlice";
+import muscleGroupValues from "../../utils/consts/muscleGorups.js";
+import tagValues from "../../utils/consts/tags";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

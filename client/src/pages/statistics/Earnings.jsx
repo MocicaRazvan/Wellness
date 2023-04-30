@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useNavigate } from "react-router-dom";
 import { Box, Typography, useTheme } from "@mui/material";
 import moment from "moment";
-import TrainerOverview from "../../components/statistics/TrainerOverview";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import TrainerDaily from "../../components/statistics/TrainerDaily";
+import TrainerOverview from "../../components/statistics/TrainerOverview";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const Earnings = () => {
 	const user = useSelector(selectCurrentUser);

@@ -1,19 +1,19 @@
 import { Box, Button, Tooltip, useMediaQuery, useTheme } from "@mui/material";
+import { format } from "date-fns";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
+import CustomSnack from "../../components/reusable/CustomSnack";
+import Header from "../../components/reusable/Header";
+import LootieCustom from "../../components/reusable/LootieCustom";
+import UserAgreement from "../../components/reusable/UserAgreement";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { format } from "date-fns";
 import {
 	useDeleteExerciseMutation,
 	useGetUsersExercisesQuery,
 } from "../../redux/exercises/exercisesApi";
-import Header from "../../components/reusable/Header";
-import UserAgreement from "../../components/reusable/UserAgreement";
-import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
-import LootieCustom from "../../components/reusable/LootieCustom";
 import cantSee from "../../utils/lottie/cantSee.json";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const UserExercises = () => {
 	const { state, pathname } = useLocation();

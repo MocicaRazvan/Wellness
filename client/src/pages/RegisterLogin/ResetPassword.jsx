@@ -1,9 +1,5 @@
-import * as yup from "yup";
-import { Formik } from "formik";
-import { useState } from "react";
-import { useResetPasswordMutation } from "../../redux/auth/authApiSlice";
-import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@emotion/react";
+import { Visibility } from "@mui/icons-material";
 import {
 	Button,
 	InputAdornment,
@@ -12,8 +8,12 @@ import {
 	useMediaQuery,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { Formik } from "formik";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
 import Loading from "../../components/reusable/Loading";
-import { Visibility } from "@mui/icons-material";
+import { useResetPasswordMutation } from "../../redux/auth/authApiSlice";
 
 const schema = yup.object().shape({
 	password: yup.string().min(6).max(25).required("Please enter the password"),

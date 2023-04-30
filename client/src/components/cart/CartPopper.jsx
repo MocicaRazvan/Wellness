@@ -1,3 +1,4 @@
+import RemoveIcon from "@mui/icons-material/Remove";
 import {
 	Button,
 	Divider,
@@ -7,11 +8,10 @@ import {
 	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeFormCart, selectCartItems } from "../../redux/cart/cartSlice";
-import RemoveIcon from "@mui/icons-material/Remove";
-import { useState } from "react";
 import CustomSnack from "../reusable/CustomSnack";
 
 const Item = ({ id, price, title, handleClose, setOpen, setCur }) => {

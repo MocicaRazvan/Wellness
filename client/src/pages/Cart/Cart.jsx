@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
 	Box,
 	Button,
@@ -9,21 +10,19 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 import CartList from "../../components/cart/CartList";
 import PayButton from "../../components/cart/PayButton";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { clearCart, selectCartItems } from "../../redux/cart/cartSlice";
 
 import {
 	CartItems,
 	CartTotal,
 	StackContainer,
 } from "../../components/reusable/CartWrappers";
-import UserAgreement from "../../components/reusable/UserAgreement";
-import Lottie from "react-lottie-player";
-import emptyCart from "../../utils/lottie/emptyCart.json";
-import LootieCustom from "../../components/reusable/LootieCustom";
 import CustomSnack from "../../components/reusable/CustomSnack";
+import LootieCustom from "../../components/reusable/LootieCustom";
+import UserAgreement from "../../components/reusable/UserAgreement";
+import emptyCart from "../../utils/lottie/emptyCart.json";
 const Cart = () => {
 	const cartItems = useSelector(selectCartItems);
 	const navigate = useNavigate();

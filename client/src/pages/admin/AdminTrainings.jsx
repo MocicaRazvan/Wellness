@@ -7,22 +7,22 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import CustomDataGrid from "../../components/dataGrid/CustomDataGrid";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import Header from "../../components/reusable/Header";
 import UserAgreement from "../../components/reusable/UserAgreement";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
+import { selectSocket } from "../../redux/socket/socketSlice";
 import {
 	useApproveTrainingMutation,
 	useDeleteTrainingMutation,
 	useGetTrainingsQuery,
 } from "../../redux/trainings/trainingsApi";
-import { format } from "date-fns";
-import { selectSocket } from "../../redux/socket/socketSlice";
-import { useCreateNotificationMutation } from "../../redux/notifications/notificationsApi";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const AdminTrainings = () => {
 	const [page, setPage] = useState(0);

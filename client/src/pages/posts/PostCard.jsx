@@ -6,22 +6,22 @@ import {
 	CardActions,
 	CardContent,
 	CardMedia,
-	Typography,
-	useTheme,
-	alpha,
 	Tooltip,
+	Typography,
+	alpha,
+	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import moment from "moment";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CustomSnack from "../../components/reusable/CustomSnack";
+import UserAgreement from "../../components/reusable/UserAgreement";
+import blankImage from "../../images/profile/blank-profile-picture-g212f720fb_640.png";
 import {
 	useDeletePostMutation,
 	useDisplayPostMutation,
 } from "../../redux/posts/postsApiSlice";
-import { useState } from "react";
-import UserAgreement from "../../components/reusable/UserAgreement";
-import CustomSnack from "../../components/reusable/CustomSnack";
 
 const PostCard = ({ item, user, setDeleteTitle }) => {
 	const navigate = useNavigate();

@@ -1,9 +1,9 @@
-import { useTheme, useMediaQuery, Box, Typography } from "@mui/material";
-import Form from "./Form";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import Form from "./Form";
 
 const CreatePost = () => {
 	const theme = useTheme();

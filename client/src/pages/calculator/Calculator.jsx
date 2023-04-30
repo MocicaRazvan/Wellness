@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import * as yup from "yup";
 import {
 	alpha,
 	Box,
@@ -17,6 +15,8 @@ import {
 	useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
+import React, { useState } from "react";
+import * as yup from "yup";
 
 const activity = {
 	BMR: 1,

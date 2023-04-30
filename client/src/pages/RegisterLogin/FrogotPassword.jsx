@@ -6,15 +6,14 @@ import {
 	useMediaQuery,
 	useTheme,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import * as yup from "yup";
-import { useForgotPasswordMutation } from "../../redux/auth/authApiSlice";
-import { Formik } from "formik";
-import Loading from "../../components/reusable/Loading";
 import CustomSnack from "../../components/reusable/CustomSnack";
+import { useForgotPasswordMutation } from "../../redux/auth/authApiSlice";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const schema = yup.object().shape({
 	email: yup

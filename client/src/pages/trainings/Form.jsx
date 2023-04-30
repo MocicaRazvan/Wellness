@@ -19,13 +19,13 @@ import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import Loading from "../../components/reusable/Loading";
+import LootieCustom from "../../components/reusable/LootieCustom";
 import TextEditor from "../../components/reusable/TextEditor";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetAllExercisesIdsByUserQuery } from "../../redux/exercises/exercisesApi";
 import { useCreateTriningMutation } from "../../redux/trainings/trainingsApi";
 import tags from "../../utils/consts/tags";
 import cantSee from "../../utils/lottie/cantSee.json";
-import LootieCustom from "../../components/reusable/LootieCustom";
 
 const trainingSchema = yup.object().shape({
 	title: yup

@@ -1,12 +1,12 @@
-import {
-	Box,
-	useTheme,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-	Typography,
-} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
+	Box,
+	Typography,
+	useTheme,
+} from "@mui/material";
 
 const faqArray = [
 	{

@@ -1,11 +1,11 @@
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import moment from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import Overview from "../admin/Overview";
-import moment from "moment";
 import InfoBar from "../../components/statistics/InfoBar";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import Daily from "../admin/Daily";
+import Overview from "../admin/Overview";
 
 const Spendings = () => {
 	const user = useSelector(selectCurrentUser);

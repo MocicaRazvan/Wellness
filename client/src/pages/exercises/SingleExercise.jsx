@@ -1,26 +1,21 @@
 import {
 	Box,
 	Button,
-	ButtonGroup,
-	Chip,
 	CircularProgress,
-	Container,
-	Stack,
-	styled,
 	Tooltip,
 	Typography,
 	useTheme,
 } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
+import UserAgreement from "../../components/reusable/UserAgreement";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
 	useDeleteExerciseMutation,
 	useGetExerciseByIdQuery,
 } from "../../redux/exercises/exercisesApi";
-import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import UserAgreement from "../../components/reusable/UserAgreement";
 
 const SingleExercise = ({ id = null }) => {
 	const { exerciseId } = useParams();

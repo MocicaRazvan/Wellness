@@ -1,25 +1,20 @@
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import {
-	alpha,
+	Checkbox,
 	CircularProgress,
 	FormControl,
 	FormControlLabel,
-	Grid,
 	Paper,
-	Radio,
-	RadioGroup,
-	styled,
 	Typography,
-	Checkbox,
-	useTheme,
+	styled,
 	useMediaQuery,
-	checkboxClasses,
+	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import FlexBetween from "./FlexBetween";
 import SelectTags from "./SelectTags";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const Filter = ({
 	sorting,

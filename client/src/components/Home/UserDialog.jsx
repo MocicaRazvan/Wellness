@@ -8,8 +8,7 @@ import {
 	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";

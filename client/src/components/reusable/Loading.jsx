@@ -1,8 +1,8 @@
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import { CircularProgress, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const Loading = ({ loading, type = "loading" }) => {
 	const { palette } = useTheme();

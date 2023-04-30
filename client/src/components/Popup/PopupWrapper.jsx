@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import PopUp from "./Popup";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { selectSocket } from "../../redux/socket/socketSlice";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {
 	useDeleteApprovedMutation,
 	useGetNotificationsByUserQuery,
 } from "../../redux/notifications/notificationsApi";
-import {
-	addSenderId,
-	selectSenderNotification,
-	setNotificationsRedux,
-} from "../../redux/notifications/notificationsSlice";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { setNotificationsRedux } from "../../redux/notifications/notificationsSlice";
+import { selectSocket } from "../../redux/socket/socketSlice";
+import PopUp from "./Popup";
 
 const PopupWrapper = ({ portal = false, left = false }) => {
 	const socketRedux = useSelector(selectSocket, shallowEqual);
@@ -37,7 +33,6 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 	);
 	const [deleteApproved] = useDeleteApprovedMutation();
 	const [searchParams] = useSearchParams();
-
 
 	useEffect(() => {
 		if (data?.notifications) setNotifications(data?.notifications);

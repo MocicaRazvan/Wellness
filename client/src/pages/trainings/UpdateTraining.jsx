@@ -1,10 +1,10 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import UpdateForm from "./UpdateForm";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { useGetSingleTrainingQuery } from "../../redux/trainings/trainingsApi";
+import UpdateForm from "./UpdateForm";
 
 const UpdateTraining = () => {
 	const params = useParams();

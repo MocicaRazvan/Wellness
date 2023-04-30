@@ -1,5 +1,5 @@
 import { Box, CircularProgress, useTheme } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import {

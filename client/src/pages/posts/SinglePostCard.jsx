@@ -1,13 +1,12 @@
-import Carousel from "react-material-ui-carousel";
-import { Paper, Button, Typography, useTheme, IconButton } from "@mui/material";
-import { Box, Container } from "@mui/system";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { usePostActionsMutation } from "../../redux/posts/postsApiSlice";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Container } from "@mui/system";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
+import { usePostActionsMutation } from "../../redux/posts/postsApiSlice";
 
 const SinglePostCard = ({ post }) => {
 	const theme = useTheme();
@@ -41,7 +40,6 @@ const SinglePostCard = ({ post }) => {
 					gap={0.5}>
 					<IconButton
 						disabled={isAuthor}
-						
 						onClick={async () => {
 							if (!user) {
 								navigate("/login");

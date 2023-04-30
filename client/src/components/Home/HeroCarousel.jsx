@@ -1,15 +1,12 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
+import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { useNavigate } from "react-router-dom";
 import backgroundImage from "../../images/hero/HeaderHeroCrop.jpg";
-import yogaHero from "../../images/hero/yogaHero.jpg";
-import bicepHero from "../../images/hero/bicepHero.jpg";
 import headerLast from "../../images/hero/HeaderLast.jpg";
 import motivationHero from "../../images/hero/motivationHero.jpg";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useTheme } from "@mui/material";
-import { useEffect, useRef } from "react";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from "react-responsive-carousel";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 const images = [backgroundImage, motivationHero, headerLast];
 

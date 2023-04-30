@@ -1,8 +1,7 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Fab, Fade, MobileStepper, Paper, useTheme } from "@mui/material";
-import { Box, Container } from "@mui/system";
+import { Fab, Fade, MobileStepper, useTheme } from "@mui/material";
+import { Box } from "@mui/system";
 import { useState } from "react";
-import Carousel from "react-material-ui-carousel";
 
 const CustomCarousel = ({ images, height, width = "80%" }) => {
 	// return (

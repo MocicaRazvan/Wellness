@@ -4,19 +4,18 @@ import {
 	styled,
 	Tooltip,
 	Typography,
-	useMediaQuery,
 	useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
 import {
 	useGetAllUsersAdminQuery,
 	useMakeUserTrainerMutationMutation,
 } from "../../redux/user/userApi";
 import CustomDataGrid from "../dataGrid/CustomDataGrid";
-import UserAgreement from "../reusable/UserAgreement";
-import { useCreateSupportConversationMutation } from "../../redux/conversation/conversationApi";
-import { useNavigate } from "react-router-dom";
 import CustomSnack from "../reusable/CustomSnack";
+import UserAgreement from "../reusable/UserAgreement";
 
 const UsersDataGrid = ({
 	height = "80vh",

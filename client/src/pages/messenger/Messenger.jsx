@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
 	Box,
 	Button,
@@ -9,26 +8,24 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Conversation from "../../components/messenger/Conversation";
 import Message from "../../components/messenger/Message";
-import { useDispatch, useSelector } from "react-redux";
+import CustomSnack from "../../components/reusable/CustomSnack";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetConversationsByUserQuery } from "../../redux/conversation/conversationApi";
-import { useState } from "react";
 import {
 	useCreateMessageMutation,
 	useGetMessagesByConversationQuery,
 } from "../../redux/messages/messagesApi";
-import { useRef } from "react";
 import {
 	useCreateNotificationMutation,
 	useDeleteNotifcationsBySenderMutation,
 } from "../../redux/notifications/notificationsApi";
-import useQuery from "../../utils/hooks/useQuery";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { addSenderId } from "../../redux/notifications/notificationsSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
-import CustomSnack from "../../components/reusable/CustomSnack";
+import useQuery from "../../utils/hooks/useQuery";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();

@@ -17,6 +17,7 @@ import Dropzone from "react-dropzone";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 import Loading from "../../components/reusable/Loading";
 import TextEditor from "../../components/reusable/TextEditor";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
@@ -25,7 +26,6 @@ import {
 	useUpdateExerciseMutation,
 } from "../../redux/exercises/exercisesApi";
 import muscleGroups from "../../utils/consts/muscleGorups";
-import CustomVideoCarousel from "../../components/reusable/CustomVideoCarousel";
 
 const exerciseSchema = yup.object().shape({
 	clips: yup

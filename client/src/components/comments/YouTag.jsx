@@ -1,4 +1,4 @@
-import { Chip, ThemeProvider } from "@mui/material";
+import { Chip } from "@mui/material";
 
 const YouTag = () => {
 	return (

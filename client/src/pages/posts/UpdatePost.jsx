@@ -1,15 +1,15 @@
 import {
-	useTheme,
-	useMediaQuery,
 	Box,
-	Typography,
 	CircularProgress,
+	Typography,
+	useMediaQuery,
+	useTheme,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 import Form from "./Form";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const UpdatePost = () => {
 	const theme = useTheme();

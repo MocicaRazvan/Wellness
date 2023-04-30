@@ -1,5 +1,5 @@
-import PageNotFound from "../../utils/lottie/PageNotFound.json";
 import LootieCustom from "../../components/reusable/LootieCustom";
+import PageNotFound from "../../utils/lottie/PageNotFound.json";
 const NotFound = () => {
 	return (
 		<LootieCustom

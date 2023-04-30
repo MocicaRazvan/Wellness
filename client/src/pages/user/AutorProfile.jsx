@@ -1,13 +1,10 @@
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useGetUserByIdQuery } from "../../redux/user/userApi";
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import UserInfo from "./UserInfo";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import Overview from "../admin/Overview";
-import Daily from "../admin/Daily";
-import InfoBar from "../../components/statistics/InfoBar";
+import { useGetUserByIdQuery } from "../../redux/user/userApi";
+import UserInfo from "./UserInfo";
 
 const AutorProfile = () => {
 	const location = useLocation();

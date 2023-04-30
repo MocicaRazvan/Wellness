@@ -1,5 +1,4 @@
 import { TablePagination } from "@mui/material";
-import { useState } from "react";
 const CustomPagination = ({
 	page,
 	rowsPerPage,

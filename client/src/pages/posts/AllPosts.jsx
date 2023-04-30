@@ -1,3 +1,5 @@
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import {
 	Box,
 	CircularProgress,
@@ -9,15 +11,13 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import CustomPagination from "../../components/reusable/CustomPagination";
 import Filter from "../../components/reusable/Filter";
+import GridList from "../../components/reusable/GridList";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { useGetPostsQuery } from "../../redux/posts/postsApiSlice";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import PostCard from "./PostCard";
-import GridList from "../../components/reusable/GridList";
-import CustomPagination from "../../components/reusable/CustomPagination";
-import { selectCurrentUser } from "../../redux/auth/authSlice";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 const AllPosts = () => {
 	const [sorting, setSorting] = useState({});

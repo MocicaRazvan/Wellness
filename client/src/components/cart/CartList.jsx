@@ -1,10 +1,10 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import { styled } from "@mui/system";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { Button, IconButton, Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/system";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeFormCart } from "../../redux/cart/cartSlice";
-import { useState } from "react";
 import CustomSnack from "../reusable/CustomSnack";
 
 const CartList = ({ cartItems, type = "cart" }) => {

@@ -1,7 +1,7 @@
-import React, { forwardRef } from "react";
-import { Box, Zoom, Fab, useTheme, Tooltip, Fade } from "@mui/material";
 import { KeyboardArrowUp } from "@mui/icons-material";
+import { Box, Fab, Zoom, useTheme } from "@mui/material";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
+import React, { forwardRef } from "react";
 
 const ScrollTop = () => {
 	const trigger = useScrollTrigger({

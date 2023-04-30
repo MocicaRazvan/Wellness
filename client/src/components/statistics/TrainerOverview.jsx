@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import {
 	Box,
@@ -12,8 +12,8 @@ import {
 import { ResponsiveLine } from "@nivo/line";
 
 import Lottie from "react-lottie-player";
-import noData from "../../utils/lottie/noData.json";
 import { useGetUserEarningsQuery } from "../../redux/orders/orderApi";
+import noData from "../../utils/lottie/noData.json";
 import Header from "../reusable/Header";
 
 const TrainerOverview = ({
