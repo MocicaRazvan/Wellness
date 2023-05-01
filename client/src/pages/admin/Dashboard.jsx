@@ -68,7 +68,7 @@ const Dashboard = () => {
 				gap="20px"
 				sx={{
 					"& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
-					overflowX: "hidden",
+					// overflowX: "hidden",
 				}}>
 				{/* row1 */}
 				<StatBox
