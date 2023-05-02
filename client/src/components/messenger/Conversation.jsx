@@ -81,7 +81,10 @@ const Conversation = ({
 			console.log("delnotif");
 
 			setCurrentChat(null);
-			navigate("/messenger", { replace: true });
+			navigate("/messenger", {
+				replace: true,
+				state: { conversationId: conversation?._id },
+			});
 		} catch (error) {
 			console.log(error);
 		}

@@ -26,7 +26,7 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 	// const senderId = useSelector(selectSenderNotification, shallowEqual);
 	const disaptch = useDispatch();
 
-	const { pathname } = useLocation();
+	const { pathname, state } = useLocation();
 	const { data, isLoading } = useGetNotificationsByUserQuery(
 		{ receiverId: user?.id },
 		{ refetchOnReconnect: true, refetchOnMountOrArgChange: true },
@@ -37,6 +37,14 @@ const PopupWrapper = ({ portal = false, left = false }) => {
 	useEffect(() => {
 		if (data?.notifications) setNotifications(data?.notifications);
 	}, [data?.notifications]);
+
+	useEffect(() => {
+		if (state?.conversationId) {
+			setNotifications((prev) =>
+				prev.filter(({ ref }) => ref !== state?.conversationId),
+			);
+		}
+	}, [state?.conversationId]);
 
 	useEffect(() => {
 		if (
