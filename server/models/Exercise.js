@@ -13,7 +13,6 @@ const exerciseSchema = new mongoose.Schema(
 		title: {
 			type: String,
 			required: [true, "Please Provide a title"],
-			// unique: true,
 		},
 		user: {
 			type: mongoose.Schema.Types.ObjectId,

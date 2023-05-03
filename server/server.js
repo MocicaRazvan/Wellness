@@ -38,6 +38,8 @@ app.use("/notifications", require("./routes/notification"));
 
 app.use("/stripe", require("./routes/stripe"));
 
+app.use("/backup", require("./routes/dbBackup"));
+
 app.all("*", (req, res) => {
 	res.status(404);
 	if (req.accepts("html")) {

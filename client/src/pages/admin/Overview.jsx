@@ -71,7 +71,8 @@ const Overview = ({
 				<Box
 					// sx={{ overflowY: "hidden" }}
 					width="100%"
-					height="100%">
+					height="100%"
+					px={{ xs: 2, md: 4 }}>
 					<OverviewChart
 						view={view}
 						year={year}

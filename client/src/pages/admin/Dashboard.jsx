@@ -97,7 +97,8 @@ const Dashboard = () => {
 					gridColumn="span 8"
 					gridRow="span 2"
 					bgcolor={theme.palette.background.alt}
-					borderRadius="0.55rem">
+					borderRadius="0.55rem"
+					px={1}>
 					<OverviewChart view="sales" isDashboard={true} />
 				</Box>
 				<StatBox
