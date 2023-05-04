@@ -16,7 +16,10 @@ import Loading from "../../components/reusable/Loading";
 import { useResetPasswordMutation } from "../../redux/auth/authApiSlice";
 
 const schema = yup.object().shape({
-	password: yup.string().min(6).max(25).required("Please enter the password"),
+	password: yup
+		.string()
+		.min(6, "Password should have at least 6 characters")
+		.required("Please enter the password"),
 	retypePassword: yup
 		.string()
 		.required("Please retype your password.")

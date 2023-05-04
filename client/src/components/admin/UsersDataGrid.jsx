@@ -147,7 +147,7 @@ const UsersDataGrid = ({
 			renderCell: ({ row: { role, id } }) => (
 				<Box>
 					{role === "user" ? (
-						<Tooltip title="Make Trainer" arrow placement="top">
+						<Tooltip title="Make Trainer" arrow placement="left">
 							<User
 								onClick={() => {
 									settrainerId(id);

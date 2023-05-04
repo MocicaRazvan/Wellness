@@ -31,7 +31,7 @@ const FrogotPassword = () => {
 	const user = useSelector(selectCurrentUser);
 	const theme = useTheme();
 	const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-	const initialValues = { email: userEmail || "" };
+	const initialValues = { email: userEmail || user?.email || "" };
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ const FrogotPassword = () => {
 				open={open}
 				setOpen={setOpen}
 				severity="success"
-				message="Email was send"
+				message="Email was sent"
 			/>
 			<Box
 				width={isNonMobileScreens ? "50%" : "93%"}

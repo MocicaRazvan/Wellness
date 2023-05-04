@@ -35,7 +35,10 @@ const registerSchema = yup.object().shape({
 		.email("invalid email")
 		.required("Please enter the email")
 		.transform((_, v) => v.trim()),
-	password: yup.string().required("Please enter the password"),
+	password: yup
+		.string()
+		.required("Please enter the password")
+		.min(6, "Password should have at least 6 characters"),
 	retypePassword: yup
 		.string()
 		.required("Please retype your password.")

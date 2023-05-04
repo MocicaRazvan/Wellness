@@ -50,7 +50,14 @@ export default function UserAgreement({
 					<DialogActions>
 						<Button
 							onClick={handleClose}
-							sx={{ color: theme.palette.secondary[300] }}>
+							sx={{
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.primary.main,
+								"&:hover": {
+									bgcolor: theme.palette.secondary[300],
+									color: theme.palette.background.default,
+								},
+							}}>
 							Disagree
 						</Button>
 						<Button
@@ -66,7 +73,14 @@ export default function UserAgreement({
 									handleClose();
 								}, 1000);
 							}}
-							sx={{ color: theme.palette.secondary[300] }}
+							sx={{
+								color: theme.palette.secondary[300],
+								bgcolor: theme.palette.primary.main,
+								"&:hover": {
+									bgcolor: theme.palette.secondary[300],
+									color: theme.palette.background.default,
+								},
+							}}
 							autoFocus>
 							Agree
 						</Button>
