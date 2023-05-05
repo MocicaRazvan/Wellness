@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import moment from "moment";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomSnack from "../../components/reusable/CustomSnack";
 import UserAgreement from "../../components/reusable/UserAgreement";
@@ -296,4 +296,4 @@ const PostCard = ({ item, user, setDeleteTitle }) => {
 	);
 };
 
-export default PostCard;
+export default React.memo(PostCard);
