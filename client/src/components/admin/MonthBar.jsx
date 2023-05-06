@@ -55,7 +55,7 @@ const MonthBar = ({
 	return (
 		<Box width="100%" height="75vh" m="1.5rem 2.5rem">
 			<Header
-				title={"Overviw Per Month"}
+				title={"Overview Per Month"}
 				subtitle={"Overview of general revenue and profit per month"}
 			/>
 			<FormControl sx={{ mt: "1rem", ml: 2 }}>
