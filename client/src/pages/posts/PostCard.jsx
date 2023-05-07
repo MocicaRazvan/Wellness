@@ -6,6 +6,7 @@ import {
 	CardActions,
 	CardContent,
 	CardMedia,
+	Chip,
 	Tooltip,
 	Typography,
 	alpha,
@@ -175,12 +176,32 @@ const PostCard = ({ item, user, setDeleteTitle }) => {
 							fontWeight="600">
 							{item?.title}
 						</Typography>
-						<Typography
+						{/* <Typography
 							variant="body2"
 							color={theme.palette.secondary[300]}
 							component="p">
 							{item.body.replace(/<\/?[^>]+>/gi, " ").slice(0, 90) + "..."}
-						</Typography>
+						</Typography> */}
+						<Box
+							sx={{ mt: 2 }}
+							display="flex"
+							justifyContent="start"
+							alignItems="center"
+							flexWrap="wrap">
+							<Typography
+								sx={{ display: "inline" }}
+								color={theme.palette.secondary[200]}>
+								Tags:
+							</Typography>
+
+							{item?.tags?.map((tag) => (
+								<Chip
+									key={tag}
+									label={tag}
+									sx={{ color: theme.palette.secondary[300], ml: 1 }}
+								/>
+							))}
+						</Box>
 					</CardContent>
 				</CardActionArea>
 				<CardActions

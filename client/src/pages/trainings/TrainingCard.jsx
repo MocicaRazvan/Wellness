@@ -111,7 +111,7 @@ const TrainingCard = ({ item }) => {
 						<Typography
 							sx={{ display: "inline" }}
 							color={theme.palette.secondary[200]}>
-							Targets:
+							Tags:
 						</Typography>
 
 						{item?.tags?.map((tag) => (
