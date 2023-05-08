@@ -143,6 +143,7 @@ const PostCard = ({ item, user, setDeleteTitle }) => {
 									textAlign: "center",
 									p: 1.2,
 									borderRadius: 3,
+									textTransform: "uppercase",
 									bgcolor: "rgba(0,0,0,0.66)",
 								}}>
 								NOT APPROVED
@@ -162,8 +163,9 @@ const PostCard = ({ item, user, setDeleteTitle }) => {
 									p: 1.2,
 									borderRadius: 3,
 									bgcolor: "rgba(0,0,0,0.66)",
+									textTransform: "uppercase",
 								}}>
-								NOT DISPLAYED
+								NOT publicly DISPLAYED
 							</Typography>
 						) : null}
 					</Box>

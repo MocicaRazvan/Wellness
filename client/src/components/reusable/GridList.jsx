@@ -13,7 +13,8 @@ const GridList = ({
 			<Grid container spacing={2} columnSpacing={2} justifyContent="center">
 				{items?.map((item) => (
 					<Grid
-						lg={3}
+						xl={3}
+						lg={4}
 						md={6}
 						xs={12}
 						item
