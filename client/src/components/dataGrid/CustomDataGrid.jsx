@@ -48,6 +48,12 @@ const CustomDataGrid = ({
 					color: theme.palette.secondary[200],
 					bgcolor: theme.palette.background.default,
 				},
+				"& .MuiDataGrid-cellContent,.MuiDataGrid-cell": {
+					color: theme.palette.secondary[200],
+				},
+				"& .MuiDataGrid-columnHeaderTitle": {
+					color: theme.palette.secondary[400],
+				},
 			}}>
 			<DataGrid
 				loading={isLoading}
