@@ -78,8 +78,13 @@ const CheckoutSuccess = () => {
 		data?.updated,
 	]);
 
-	if (isError || isUserError || !searchParams.get("session"))
-		navigate("/", { replace: true });
+	useEffect(() => {
+		return () => {
+			window.location.replace(window.location.href);
+		};
+	}, []);
+
+	if (isError || isUserError || !searchParams.get("session")) navigate("/");
 
 	return (
 		<Box
@@ -125,13 +130,13 @@ const CheckoutSuccess = () => {
 								color: theme.palette.primary.main,
 							},
 						}}
-						onClick={() => navigate("/orders", { replace: true })}
+						onClick={() => navigate("/orders")}
 						color={theme.palette.secondary[300]}>
 						Check the your orders page!
 					</Typography>
 					<Button
 						variant="contained"
-						onClick={() => navigate("/trainings", { replace: true })}
+						onClick={() => navigate("/trainings")}
 						color="secondary">
 						Continue Shopping
 					</Button>
