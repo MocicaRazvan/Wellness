@@ -379,7 +379,8 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 								<Box
 									sx={{
 										borderRadius: 2,
-										m: 2,
+										mx: { xs: 0.2, sm: 2 },
+										my: 2,
 										border:
 											searchParams.get("conv") === c.id &&
 											`1px solid ${theme.palette.secondary[100]}`,
@@ -496,13 +497,22 @@ const MessengerContainer = styled(Box)(({ theme }) => ({
 }));
 const ChatMenu = styled(Box)(({ theme }) => ({
 	flex: 2.5,
-	"& .chatMenuWrapper": { padding: 10, height: "100%", overflowY: "scroll" },
+	"& .chatMenuWrapper": {
+		padding: 10,
+		height: "100%",
+		overflowY: "scroll",
+	},
 	"& .chatMenuInput": {
 		width: "90%",
 		padding: "10px 0",
 		border: "none",
 		outline: "none",
 		borderBottom: `1px solid ${theme.palette.primary[200]}`,
+	},
+	[theme.breakpoints.down("sm")]: {
+		"& .chatMenuWrapper": {
+			padding: 0,
+		},
 	},
 }));
 const ChatBox = styled(Box)(({ theme }) => ({
@@ -524,5 +534,10 @@ const ChatBox = styled(Box)(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "space-between",
+	},
+	[theme.breakpoints.down("sm")]: {
+		"& .chatBoxWrapper": {
+			padding: 0,
+		},
 	},
 }));
