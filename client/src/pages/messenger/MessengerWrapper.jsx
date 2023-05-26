@@ -72,7 +72,11 @@ const MessengerWrapper = ({ admin = false }) => {
 			height={{ xs: "100%", md: "90%" }}
 			sx={{ mt: "80px !important" }}
 			width={{ xs: "100%", md: user?.role !== "admin" ? "70%" : "100%" }}
-			bgcolor={theme.palette.background.alt}>
+			minWidth={user?.role === "admin" ? "700px" : "none"}
+			bgcolor={{
+				xs: user?.role !== "admin" ? theme.palette.background.alt : "none",
+				md: theme.palette.background.alt,
+			}}>
 			{/* <Messenger ws={socketRedux} mounted={mounted} admin={admin} /> */}
 			<Messenger ws={socketRedux} mounted={notReload} admin={admin} />
 		</Box>
