@@ -53,9 +53,14 @@ const FrogotPassword = () => {
 			// } else {
 			// 	setMessage("Check your email!");
 			// }
-			setMessage("Check your email!");
-			setOpen(true);
-			onSubmitProps.resetForm();
+			if (res?.error) {
+				setMessage("");
+				onSubmitProps.setFieldError("email", res.error?.data?.message);
+			} else {
+				setMessage("Check your email!");
+				setOpen(true);
+				onSubmitProps.resetForm();
+			}
 		} catch (error) {
 			setMessage("Check your email!");
 			onSubmitProps.resetForm();
@@ -125,7 +130,7 @@ const FrogotPassword = () => {
 								/>
 								<Button
 									type="submit"
-									disabled={message ? true : false}
+									// disabled={message ? true : false}
 									sx={{
 										mt: 2,
 										width: "50%",

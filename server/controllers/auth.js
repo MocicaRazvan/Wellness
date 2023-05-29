@@ -95,7 +95,7 @@ exports.forgotPassowrd = async (req, res) => {
 	const user = await User.findOne({ email });
 
 	if (!user) {
-		return res.status(401).json({ message: "Credentails are not valid" });
+		return res.status(401).json({ message: "No user with this email exists!" });
 	}
 
 	const resetToken = user.getResetPasswordToken();
