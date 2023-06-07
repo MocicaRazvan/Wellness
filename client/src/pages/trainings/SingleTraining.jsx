@@ -182,8 +182,8 @@ const SingleTraining = () => {
 					variant="h4"
 					lineHeight={1.5}
 					color={theme.palette.secondary[100]}
-					width={{ xs: "100%", md: "50%" }}
-					textAlign="center"
+					width={{ xs: "100%", md: "60%" }}
+					// textAlign="center"
 					dangerouslySetInnerHTML={{ __html: training?.description }}
 				/>
 			</Box>
@@ -275,8 +275,8 @@ const SingleTraining = () => {
 													component="div"
 													sx={{ minHeight: "fit-content", p: 1 }}
 													color={theme.palette.secondary[100]}
-													width={{ xs: "100%", md: "50%" }}
-													textAlign="center"
+													width={{ xs: "100%", md: "60%" }}
+													// textAlign="center"
 													dangerouslySetInnerHTML={{ __html: exercise?.body }}
 												/>
 											</Box>

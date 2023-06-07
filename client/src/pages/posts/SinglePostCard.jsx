@@ -114,10 +114,11 @@ const SinglePostCard = ({ post }) => {
 			</Box>
 			<Container sx={{ mt: 8 }}>
 				<Typography
-					varint="body1"
+					varint="h4"
 					gutterBottom
 					component="div"
-					fontSize={17}
+					fontSize={{ xs: 17, md: 20 }}
+					lineHeight={1.5}
 					color={theme.palette.secondary[100]}>
 					<div dangerouslySetInnerHTML={{ __html: post?.body }} />
 				</Typography>
