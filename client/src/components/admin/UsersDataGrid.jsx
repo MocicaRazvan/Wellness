@@ -79,7 +79,16 @@ const UsersDataGrid = ({
 			try {
 				await makeTrainer({ id }).unwrap();
 				setTimeout(() => {
-					setSnackInfo((prev) => ({ ...prev, open: true }));
+					setSnackInfo((prev) => ({
+						...prev,
+						open: true,
+						message:
+							prev.message === ""
+								? `${
+										data?.users.find(({ _id }) => _id === id)?.username
+								  } is now a trainer`
+								: prev.message,
+					}));
 				}, 1000);
 			} catch (error) {
 				console.log(error);
