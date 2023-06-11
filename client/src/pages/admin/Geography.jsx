@@ -11,6 +11,7 @@ const Geography = () => {
 	const theme = useTheme();
 	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
 	const isSideBarOpen = useOutletContext();
+	console.log({ data });
 
 	if (isLoading || !data)
 		return (
@@ -20,6 +21,11 @@ const Geography = () => {
 				thickness={7}
 			/>
 		);
+	const max = data?.reduce(
+		(acc, cur) =>
+			cur?.value ? (cur.value > acc ? (acc = cur.value) : acc) : acc,
+		60,
+	);
 
 	return (
 		<Box m="1.5rem 2.5rem" pb={2} sx={{ overflowX: "hidden" }}>
@@ -78,7 +84,7 @@ const Geography = () => {
 					}}
 					features={geoData.features}
 					margin={{ top: 0, right: 0, bottom: 0, left: -50 }}
-					domain={[0, 60]} // min adn the max values of people/country
+					domain={[0, max + Math.floor(max / 10)]} // min adn the max values of people/country
 					unknownColor="#666666"
 					label="properties.name"
 					valueFormat=".2s"
