@@ -11,7 +11,6 @@ const Geography = () => {
 	const theme = useTheme();
 	const isNonSmallScreens = useMediaQuery("(min-width: 620px)");
 	const isSideBarOpen = useOutletContext();
-	console.log({ data });
 
 	if (isLoading || !data)
 		return (
@@ -84,7 +83,7 @@ const Geography = () => {
 					}}
 					features={geoData.features}
 					margin={{ top: 0, right: 0, bottom: 0, left: -50 }}
-					domain={[0, max + Math.floor(max / 10)]} // min adn the max values of people/country
+					domain={[0, max + Math.floor(max / 10)]}
 					unknownColor="#666666"
 					label="properties.name"
 					valueFormat=".2s"
