@@ -1,4 +1,4 @@
-import { Visibility } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
 	Box,
 	Button,
@@ -535,13 +535,23 @@ const Form = ({ user = null }) => {
 													password: !prev.password,
 												}))
 											}>
-											<Visibility
-												sx={{
-													"&:hover": {
-														color: palette.secondary[300],
-													},
-												}}
-											/>
+											{show?.password ? (
+												<VisibilityOff
+													sx={{
+														"&:hover": {
+															color: palette.secondary[300],
+														},
+													}}
+												/>
+											) : (
+												<Visibility
+													sx={{
+														"&:hover": {
+															color: palette.secondary[300],
+														},
+													}}
+												/>
+											)}
 										</InputAdornment>
 									),
 								}}
@@ -574,13 +584,23 @@ const Form = ({ user = null }) => {
 														retype: !prev.retype,
 													}))
 												}>
-												<Visibility
-													sx={{
-														"&:hover": {
-															color: palette.secondary[300],
-														},
-													}}
-												/>
+												{show?.retype ? (
+													<VisibilityOff
+														sx={{
+															"&:hover": {
+																color: palette.secondary[300],
+															},
+														}}
+													/>
+												) : (
+													<Visibility
+														sx={{
+															"&:hover": {
+																color: palette.secondary[300],
+															},
+														}}
+													/>
+												)}
 											</InputAdornment>
 										),
 									}}

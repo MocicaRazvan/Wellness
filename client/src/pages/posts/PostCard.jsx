@@ -189,7 +189,8 @@ const PostCard = ({ item, user, setDeleteTitle }) => {
 							display="flex"
 							justifyContent="start"
 							alignItems="center"
-							flexWrap="wrap">
+							overflow="hidden"
+							flexWrap="nowrap">
 							<Typography
 								sx={{ display: "inline" }}
 								color={theme.palette.secondary[200]}>

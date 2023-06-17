@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { Visibility } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
 	Button,
 	InputAdornment,
@@ -130,13 +130,23 @@ const ResetPassword = () => {
 														password: !prev.password,
 													}))
 												}>
-												<Visibility
-													sx={{
-														"&:hover": {
-															color: theme.palette.secondary[300],
-														},
-													}}
-												/>
+												{show?.password ? (
+													<VisibilityOff
+														sx={{
+															"&:hover": {
+																color: theme.palette.secondary[300],
+															},
+														}}
+													/>
+												) : (
+													<Visibility
+														sx={{
+															"&:hover": {
+																color: theme.palette.secondary[300],
+															},
+														}}
+													/>
+												)}
 											</InputAdornment>
 										),
 									}}
@@ -167,13 +177,23 @@ const ResetPassword = () => {
 														retype: !prev.retype,
 													}))
 												}>
-												<Visibility
-													sx={{
-														"&:hover": {
-															color: theme.palette.secondary[300],
-														},
-													}}
-												/>
+												{show?.retype ? (
+													<VisibilityOff
+														sx={{
+															"&:hover": {
+																color: theme.palette.secondary[300],
+															},
+														}}
+													/>
+												) : (
+													<Visibility
+														sx={{
+															"&:hover": {
+																color: theme.palette.secondary[300],
+															},
+														}}
+													/>
+												)}
 											</InputAdornment>
 										),
 									}}
