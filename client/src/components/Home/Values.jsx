@@ -59,7 +59,7 @@ const Values = ({ values, links }) => {
 							sx={{
 								opacity: 0,
 								filter: "blur(5px)",
-								transform: { xs: `translateY(-100%)`, sm: `translateX(-100%)` },
+								transform: { xs: `translateY(-100%)`, lg: `translateX(-100%)` },
 								transition: "all 1.5s",
 								transitionDelay: `${3 * i}00ms`,
 								"&.show": {
@@ -67,7 +67,7 @@ const Values = ({ values, links }) => {
 									filter: "blur(0)",
 									transform: {
 										xs: `translateY(0)`,
-										sm: `translateX(0)`,
+										lg: `translateX(0)`,
 									},
 								},
 							}}>
