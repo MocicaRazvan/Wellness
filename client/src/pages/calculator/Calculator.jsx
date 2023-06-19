@@ -11,7 +11,6 @@ import {
 	Switch,
 	TextField,
 	Typography,
-	useMediaQuery,
 	useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
@@ -65,7 +64,7 @@ const Calculator = () => {
 	const [inPds, setInPds] = useState(false);
 	const [submitted, setSubmitted] = useState({ show: false, BMR: 0 });
 
-	const isNonMobile = useMediaQuery("(min-width:1000px)");
+	// const isNonMobile = useMediaQuery("(min-width:1000px)");
 	const { palette } = useTheme();
 
 	const handleFormSubmit = async (
@@ -89,7 +88,8 @@ const Calculator = () => {
 	return (
 		<Box>
 			<Box
-				width={isNonMobile ? "42%" : "93%"}
+				// width={isNonMobile ? "52%" : "93%"}
+				width={{ sm: "93%", md: "52%", xl: "45%" }}
 				p="2rem"
 				m="2rem auto"
 				borderRadius="1.5rem"
@@ -352,7 +352,7 @@ const Calculator = () => {
 										display="flex"
 										justifyContent="space-between"
 										alignItems="center"
-										width={{ xs: "100%", lg: "40%" }}
+										width={{ xs: "100%", md: "45%", xl: "42%" }}
 										gap={1}>
 										<Box>
 											<Typography
