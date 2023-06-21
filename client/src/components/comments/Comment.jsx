@@ -92,6 +92,7 @@ const Comment = ({ comment, setSnackOpen }) => {
 			}
 			await updateComment({ id: comment.id, body }).unwrap();
 			setEditingComm(false);
+			setErr((prev) => ({ ...prev, show: false }));
 		} catch (error) {
 			console.log(error);
 
