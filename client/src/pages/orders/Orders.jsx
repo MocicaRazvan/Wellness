@@ -179,7 +179,7 @@ const Orders = () => {
 		},
 	];
 
-	if (data?.orders?.length === 0) {
+	if (data && !data?.exists) {
 		return (
 			<LootieCustom
 				lootie={noOrder}

@@ -304,7 +304,7 @@ const Trainings = () => {
 		navigate("/");
 	}
 
-	if (data?.trainings?.length === 0) {
+	if (data && !data?.exists) {
 		return (
 			<LootieCustom
 				lootie={cantSee}

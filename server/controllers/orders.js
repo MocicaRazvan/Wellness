@@ -28,7 +28,9 @@ exports.getAllOrders = async (req, res) => {
 		return sortFormatted;
 	};
 	const sortFormatted = Boolean(sort) ? generateSort() : {};
+	let exists = false;
 	if (userId) {
+		exists = await Orders.exists({ user: userId });
 		const orders = await Orders.find({
 			user: userId,
 			$or: [
@@ -51,6 +53,7 @@ exports.getAllOrders = async (req, res) => {
 		return res.status(200).json({
 			total,
 			orders,
+			exists: Boolean(exists),
 		});
 	} else {
 		const orders = await Orders.find({
@@ -70,10 +73,11 @@ exports.getAllOrders = async (req, res) => {
 		const total = await Orders.countDocuments({
 			deliveryStatus: { $regex: search, $options: "i" },
 		});
-
+		console.log({ exists });
 		return res.status(200).json({
 			total,
 			orders,
+			exists: Boolean(exists),
 		});
 	}
 };

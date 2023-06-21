@@ -73,14 +73,14 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				method: "GET",
 				params: credentials,
 			}),
-			transformResponse: ({ trainings, total }) => {
+			transformResponse: ({ trainings, total, exists }) => {
 				const loadedTrainings = trainings.map((training) => ({
 					...training,
 					id: training._id,
 					app: training?.approved ? "approved" : "not approved",
 					disp: training?.display ? "displayed" : "not displayed",
 				}));
-				return { trainings: loadedTrainings, total };
+				return { trainings: loadedTrainings, total, exists };
 			},
 			providesTags: (result, err, arg) => {
 				if (result) {
@@ -100,12 +100,12 @@ export const trainingApiSlice = apiSlice.injectEndpoints({
 				method: "GET",
 				params: credentials,
 			}),
-			transformResponse: ({ trainings, total }) => {
+			transformResponse: ({ trainings, total, exists }) => {
 				const loadedTrainings = trainings.map((training) => ({
 					...training,
 					id: training._id,
 				}));
-				return { trainings: loadedTrainings, total };
+				return { trainings: loadedTrainings, total, exists };
 			},
 			providesTags: (result, err, arg) => {
 				if (result) {

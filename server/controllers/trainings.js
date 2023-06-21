@@ -73,7 +73,9 @@ exports.getAllUserTrainings = async (req, res) => {
 		return sortFormatted;
 	};
 	const sortFormatted = Boolean(sort) ? generateSort() : {};
+	let exists = false;
 	if (userId) {
+		exists = await Trainings.exists({ user: userId });
 		const trainings = await Trainings.find({
 			user: userId,
 			$or: [
@@ -97,6 +99,7 @@ exports.getAllUserTrainings = async (req, res) => {
 		return res.status(200).json({
 			total,
 			trainings,
+			exists: Boolean(exists),
 		});
 	} else {
 		const trainings = await Trainings.find({
@@ -117,6 +120,7 @@ exports.getAllUserTrainings = async (req, res) => {
 		return res.status(200).json({
 			total,
 			trainings,
+			exists: Boolean(exists),
 		});
 	}
 };
@@ -426,13 +430,8 @@ exports.getBoughtUserTrainings = async (req, res) => {
 	// // console.log(orders);
 	// console.log(orders[0].total);
 	// const trainings = Trainings.find({ _id: { $in: subscriptions } });
-	const {
-		page = 1,
-		pageSize = 20,
-		sort = null,
-		search = "",
-		userId = null,
-	} = req.query;
+	const { page = 1, pageSize = 20, sort = null, search = "" } = req.query;
+	const exists = await Trainings.exists({ _id: { $in: subscriptions } });
 	const generateSort = () => {
 		const sortParsed = JSON.parse(sort);
 		const sortFormatted = {
@@ -462,6 +461,7 @@ exports.getBoughtUserTrainings = async (req, res) => {
 	return res.status(200).json({
 		total,
 		trainings,
+		exists: Boolean(exists),
 	});
 };
 

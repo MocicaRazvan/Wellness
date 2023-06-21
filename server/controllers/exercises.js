@@ -62,6 +62,7 @@ exports.getExercisesByUser = async (req, res) => {
 		};
 		return sortFormatted;
 	};
+	const exists = await Exercises.exists({ user: userId });
 	const sortFormatted = Boolean(sort) ? generateSort() : {};
 
 	const exercises = await Exercises.find({
@@ -83,10 +84,12 @@ exports.getExercisesByUser = async (req, res) => {
 		user: userId,
 		title: { $regex: search, $options: "i" },
 	});
+	console.log({ exists: Boolean(exists) });
 
 	res.status(200).json({
 		total,
 		exercises,
+		exists: Boolean(exists),
 	});
 };
 // //get: /exercises/user/:userId

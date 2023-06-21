@@ -20,12 +20,12 @@ export const exercisesApiSlice = apiSlice.injectEndpoints({
 				method: "GET",
 				params: { page, pageSize, sort, search },
 			}),
-			transformResponse: ({ exercises, total }) => {
+			transformResponse: ({ exercises, total, exists }) => {
 				const loadedExercises = exercises.map((exercise) => ({
 					...exercise,
 					id: exercise._id,
 				}));
-				return { exercises: loadedExercises, total };
+				return { exercises: loadedExercises, total, exists };
 			},
 			providesTags: (result, err, arg) => {
 				if (result) {

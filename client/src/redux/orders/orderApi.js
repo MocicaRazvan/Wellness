@@ -9,12 +9,12 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
 				url: "/orders",
 				params: credentials,
 			}),
-			transformResponse: ({ orders, total }) => {
+			transformResponse: ({ orders, total, exists }) => {
 				const loadedOrders = orders.map((order) => ({
 					...order,
 					id: order._id,
 				}));
-				return { orders: loadedOrders, total };
+				return { orders: loadedOrders, total, exists };
 			},
 			providesTags: (result, err, arg) => {
 				if (result) {
