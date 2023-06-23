@@ -15,7 +15,10 @@ import Conversation from "../../components/messenger/Conversation";
 import Message from "../../components/messenger/Message";
 import CustomSnack from "../../components/reusable/CustomSnack";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
-import { useGetConversationsByUserQuery } from "../../redux/conversation/conversationApi";
+import {
+	useCreateSupportConversationMutation,
+	useGetConversationsByUserQuery,
+} from "../../redux/conversation/conversationApi";
 import {
 	useCreateMessageMutation,
 	useGetMessagesByConversationQuery,
@@ -26,6 +29,7 @@ import {
 } from "../../redux/notifications/notificationsApi";
 import { selectCurrentSearch } from "../../redux/searchState/searchSlice";
 import useQuery from "../../utils/hooks/useQuery";
+import { setNotReload } from "../../redux/messages/messagesSlice";
 
 const Messenger = ({ ws, mounted, admin = false }) => {
 	let query = useQuery();
@@ -69,6 +73,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 
 	const [createMessage] = useCreateMessageMutation();
 	const [createNotification] = useCreateNotificationMutation();
+	const [createConv] = useCreateSupportConversationMutation();
 
 	const { data: dataMessages, isLoading: isLoadingMessages } =
 		useGetMessagesByConversationQuery(
@@ -86,6 +91,16 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 			setCurrentChat(null);
 		}
 	}, [query]);
+	useEffect(() => {
+		if (user?.role !== "admin" && user?.id) {
+			if (!query.get("conv") || query.get("conv") === "undefined") {
+				(async () => {
+					dispatch(setNotReload(true));
+					await createConv({ id: user?.id });
+				})();
+			}
+		}
+	}, [createConv, dispatch, navigate, query, user?.id, user?.role]);
 
 	useEffect(() => {
 		if (user?.role === "admin") {
@@ -209,7 +224,7 @@ const Messenger = ({ ws, mounted, admin = false }) => {
 	useEffect(() => {
 		if (user?.role !== "admin" && conversations) {
 			setCurrentChat(conversations[0]);
-			setSearchParams({ conv: conversations[0].id });
+			setSearchParams({ conv: conversations[0]?.id });
 		}
 		///!!!
 	}, [conversations, setSearchParams, user?.role]);
