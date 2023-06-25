@@ -49,10 +49,12 @@ const SingleTraining = () => {
 	const notShow = !training?.approved || !training?.display;
 	const [index, setIndex] = useState(0);
 	useEffect(() => {
-		if (notShow && !isAllowed) {
+		if (training && notShow && !isAllowed) {
+			console.log("herere");
 			navigate("/", { replace: true });
 		}
-	}, [isAllowed, navigate, notShow]);
+	}, [isAllowed, navigate, notShow, training]);
+	
 	if (isError) {
 		navigate("/", { replace: true });
 	}
