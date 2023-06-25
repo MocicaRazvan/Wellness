@@ -9,7 +9,7 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
@@ -23,7 +23,11 @@ const SingleTraining = () => {
 	const { trainingId } = useParams();
 	const theme = useTheme();
 	const [open, setOpen] = useState(false);
-	const { data: training, isLoading } = useGetSingleTrainingQuery(
+	const {
+		data: training,
+		isLoading,
+		isError,
+	} = useGetSingleTrainingQuery(
 		{
 			id: trainingId,
 		},
@@ -44,7 +48,14 @@ const SingleTraining = () => {
 	const isInCart = cartItems?.some(({ id }) => id === trainingId);
 	const notShow = !training?.approved || !training?.display;
 	const [index, setIndex] = useState(0);
-
+	useEffect(() => {
+		if (notShow && !isAllowed) {
+			navigate("/", { replace: true });
+		}
+	}, [isAllowed, navigate, notShow]);
+	if (isError) {
+		navigate("/", { replace: true });
+	}
 	if (isLoading || !training)
 		return (
 			<CircularProgress
@@ -53,9 +64,6 @@ const SingleTraining = () => {
 				thickness={7}
 			/>
 		);
-	if (notShow && !isAllowed) {
-		navigate("/", { replace: true });
-	}
 
 	const handleAddTocard = () => {
 		if (!user) {

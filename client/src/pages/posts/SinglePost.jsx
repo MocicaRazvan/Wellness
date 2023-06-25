@@ -1,14 +1,15 @@
 import { Box, CircularProgress, Stack } from "@mui/material";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetPostByIdQuery } from "../../redux/posts/postsApiSlice";
 
 import Core from "../../components/comments/Core";
 import SinglePostCard from "./SinglePostCard";
 
 const SinglePost = () => {
+	const navigate = useNavigate();
 	const { postId } = useParams();
-	const { data, isLoading } = useGetPostByIdQuery(
+	const { data, isLoading, isError } = useGetPostByIdQuery(
 		{ id: postId },
 		{
 			refetchOnMountOrArgChange: true,
@@ -23,6 +24,9 @@ const SinglePost = () => {
 				thickness={7}
 			/>
 		);
+	if (isError) {
+		navigate("/", { replace: true });
+	}
 
 	return (
 		<Box m="1.5rem 1rem">

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import CustomCarousel from "../../components/reusable/CustomCarousel";
 import { selectCurrentUser } from "../../redux/auth/authSlice";
 import { usePostActionsMutation } from "../../redux/posts/postsApiSlice";
+import { useEffect } from "react";
 
 const SinglePostCard = ({ post }) => {
 	const theme = useTheme();
@@ -21,9 +22,13 @@ const SinglePostCard = ({ post }) => {
 		}
 	};
 	const user = useSelector(selectCurrentUser);
-	if (notShow && user?.id !== post?.user?._id && user?.role !== "admin") {
-		navigate("/");
-	}
+	
+	useEffect(()=>{
+
+		if (notShow && user?.id !== post?.user?._id && user?.role !== "admin") {
+			navigate("/", { replace: true });
+		}
+	},[navigate, notShow, post?.user?._id, user?.id, user?.role])
 	const isAuthor = user && user?.id === post?.user?._id;
 
 	return (
