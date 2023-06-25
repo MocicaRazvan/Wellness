@@ -50,11 +50,10 @@ const SingleTraining = () => {
 	const [index, setIndex] = useState(0);
 	useEffect(() => {
 		if (training && notShow && !isAllowed) {
-			console.log("herere");
 			navigate("/", { replace: true });
 		}
 	}, [isAllowed, navigate, notShow, training]);
-	
+
 	if (isError) {
 		navigate("/", { replace: true });
 	}
