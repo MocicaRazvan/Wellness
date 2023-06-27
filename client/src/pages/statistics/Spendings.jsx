@@ -25,10 +25,10 @@ const Spendings = () => {
 			sx={{ overflowX: "hidden" }}>
 			<Typography
 				variant="h2"
-				color={palette.secondary[200]}
+				color={palette.secondary[300]}
 				fontWeight="bold"
 				textAlign="center"
-				fontSize={35}>
+				fontSize={{ md: 40, xs: 30 }}>
 				Your spendings on the platform
 			</Typography>
 			<Box

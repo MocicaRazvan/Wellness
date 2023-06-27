@@ -25,11 +25,11 @@ const Earnings = () => {
 		<Box sx={{ overflowX: "hidden" }}>
 			<Typography
 				fontSize={{ md: 40, xs: 30 }}
-				mt={12}
+				mt={2}
 				fontWeight="bold"
 				textAlign="center"
 				color={palette.secondary[300]}>
-				Your Earnings
+				Your earnings on the platform
 			</Typography>
 			<Box width="100%" mt={5} p={2} gap={1}>
 				<TrainerOverview userId={curUser?.id} maxYear={year} />
