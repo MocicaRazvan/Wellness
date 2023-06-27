@@ -51,7 +51,11 @@ const UsersPosts = () => {
 			notApproved,
 			notDisplayed,
 		} || "",
-		{ refetchOnMountOrArgChange: 60, refetchOnFocus: true },
+		{
+			refetchOnFocus: true,
+			refetchOnMountOrArgChange: true,
+			refetchOnReconnect: true,
+		},
 	);
 	useEffect(() => {
 		if (data) {
