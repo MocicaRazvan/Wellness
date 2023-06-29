@@ -84,6 +84,10 @@ const TrainerDaily = ({
 		const formattedData = [totalSalesLine, totalUnitsLine];
 		return [formattedData];
 	}, [data, theme.palette.secondary, startDate, endDate]);
+	const ticks = useMemo(
+		() => (formattedData ? formattedData[0]?.data?.map(({ x }) => x) : []),
+		[formattedData],
+	);
 
 	if (isLoading || !data)
 		return (
@@ -188,7 +192,8 @@ const TrainerDaily = ({
 							tickSize: 5,
 							tickPadding: 0,
 							tickRotation: 0,
-							legend: "Month",
+							legend: "Day",
+							tickValues: ticks ? (ticks?.length > 30 ? [] : ticks) : [],
 							legendOffset: -10,
 							legendPosition: "middle",
 						}}
