@@ -153,7 +153,7 @@ function App() {
 								/>
 							</Route>
 							<Route path="*" element={<NotFound />} />
-							<Route path="test" element={<Test />} />
+							{/* <Route path="test" element={<Test />} /> */}
 						</Route>
 					</Routes>
 				</ThemeProvider>
