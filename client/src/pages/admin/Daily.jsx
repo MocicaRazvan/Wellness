@@ -202,7 +202,7 @@ const Daily = ({
 								tickPadding: 0,
 								tickRotation: 0,
 								tickValues: ticks ? (ticks?.length > 30 ? [] : ticks) : [],
-								legend: "Month",
+								legend: "Day",
 								legendOffset: -10,
 								legendPosition: "middle",
 							}}
