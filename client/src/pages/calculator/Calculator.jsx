@@ -21,7 +21,7 @@ const activity = {
 	BMR: 1,
 	"Sedentary: little or no exercise": 1.2,
 	"Light: exercise 1-3 times/week": 1.375,
-	"Moderate: exercise 1-3 times/week": 1.455,
+	"Moderate: exercise 3-5 times/week": 1.455,
 	"Active: daily exercise": 1.55,
 	"Very Active: daily exercise and physical job": 1.725,
 };
