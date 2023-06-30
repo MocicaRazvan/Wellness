@@ -196,8 +196,13 @@ export default function PopUp({
 								alignItems="center"
 								mt={0.5}
 								gap={1}
-								// p={2}
-								sx={{ cursor: "pointer" }}
+								pb={1}
+								sx={{
+									cursor: "pointer",
+									"&:hover": {
+										bgcolor: theme.palette.background.alt,
+									},
+								}}
 								onClick={() => navigate("/posts/user")}>
 								{approved?.postApprove.length > 0 && (
 									<Box
@@ -272,10 +277,16 @@ export default function PopUp({
 								justifyContent="center"
 								flexDirection="column"
 								alignItems="center"
-								mt={0.5}
+								mt={1}
+								pb={1}
 								gap={1}
 								// p={2}
-								sx={{ cursor: "pointer" }}
+								sx={{
+									cursor: "pointer",
+									"&:hover": {
+										bgcolor: theme.palette.background.alt,
+									},
+								}}
 								onClick={() => navigate("/trainings/user")}>
 								{approved?.trainingApprove.length > 0 && (
 									<Box
