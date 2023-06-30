@@ -287,7 +287,8 @@ export default function PopUp({
 								pb={
 									approved?.trainingApprove.length > 0 ||
 									approved?.trainingDisapprove.length > 0 ||
-									approved?.trainingDelete.length > 0
+									approved?.trainingDelete.length > 0 ||
+									approved?.trainingBought.length
 										? 1
 										: 0
 								}
