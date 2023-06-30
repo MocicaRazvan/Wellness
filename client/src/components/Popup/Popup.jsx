@@ -196,7 +196,13 @@ export default function PopUp({
 								alignItems="center"
 								mt={0.5}
 								gap={1}
-								pb={1}
+								pb={
+									approved?.postApprove.length > 0 ||
+									approved?.postDisapprove.length > 0 ||
+									approved?.postDelete.length > 0
+										? 1
+										: 0
+								}
 								sx={{
 									cursor: "pointer",
 									"&:hover": {
@@ -278,7 +284,13 @@ export default function PopUp({
 								flexDirection="column"
 								alignItems="center"
 								mt={1}
-								pb={1}
+								pb={
+									approved?.trainingApprove.length > 0 ||
+									approved?.trainingDisapprove.length > 0 ||
+									approved?.trainingDelete.length > 0
+										? 1
+										: 0
+								}
 								gap={1}
 								// p={2}
 								sx={{
