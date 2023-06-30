@@ -604,11 +604,11 @@ const Navigation = () => {
 					onClick={() => void navigate("/cart")}
 				/>
 			</MenuItem>
-			<MenuItem onClick={handleMenuClose}>
+			{/* <MenuItem>
 				<Box>
 					<PopupWrapper left={true} />
 				</Box>
-			</MenuItem>
+			</MenuItem> */}
 			<MenuItem>
 				<IconButton onClick={() => navigate("/calculator")}>
 					<Calculate sx={{ fontSize: "25px" }} />
@@ -902,13 +902,28 @@ const Navigation = () => {
 									<Avatar src={user?.image?.url} />
 								</IconButton>
 							</Box>
-							<Box sx={{ display: { xs: "flex", md: "none" } }}>
-								<IconButton
-									size="large"
-									onClick={handleMobileMenuOpen}
-									color="inherit">
-									<MoreIcon />
-								</IconButton>
+							<Box
+								sx={{ display: { xs: "flex", md: "none" } }}
+								width={"100%"}
+								alignItems={"center"}
+								justifyContent={"flex-end"}>
+								<PopupWrapper portal={true} />
+								<Box mr={1}>
+									<IconButton
+										size="large"
+										onClick={handleMobileMenuOpen}
+										color="inherit">
+										<MoreIcon />
+									</IconButton>
+								</Box>
+								<Avatar
+									sx={{ cursor: "pointer" }}
+									src={user?.image?.url}
+									onClick={() => {
+										navigate("/user/profile");
+										handleMenuClose();
+									}}
+								/>
 							</Box>
 						</>
 					) : (
