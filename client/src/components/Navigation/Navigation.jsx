@@ -58,7 +58,7 @@ const Navigation = () => {
 	let isSearchBarOpen =
 		pathnames.includes(pathname) ||
 		(user?.role === "admin" && pathname === "/messenger");
-	const isNonMobile = useMediaQuery("(min-width:1155px)");
+	const isNonMobile = useMediaQuery("(min-width:900px)");
 	const isNotLogged = user === null;
 
 	const [direction, setDirection] = useState({
