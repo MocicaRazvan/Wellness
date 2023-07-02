@@ -864,6 +864,7 @@ const Navigation = () => {
 					<Box sx={{ flexGrow: 1 }} />
 					{user ? (
 						<>
+							<PopupWrapper portal={true} />
 							<Box
 								sx={{
 									display: { xs: "none", md: "flex" },
@@ -891,7 +892,7 @@ const Navigation = () => {
 									<Calculate sx={{ fontSize: "25px" }} />
 								</IconButton>
 
-								<PopupWrapper portal={true} />
+								{/* <PopupWrapper portal={true} /> */}
 								<IconButton
 									size="large"
 									edge="end"
@@ -904,10 +905,10 @@ const Navigation = () => {
 							</Box>
 							<Box
 								sx={{ display: { xs: "flex", md: "none" } }}
-								width={"100%"}
+								// width={"100%"}
 								alignItems={"center"}
 								justifyContent={"flex-end"}>
-								<PopupWrapper portal={true} />
+								{/* <PopupWrapper portal={true} /> */}
 								<Box mr={1}>
 									<IconButton
 										size="large"
